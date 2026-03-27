@@ -1062,22 +1062,22 @@ import{setBasePath as pe}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       max-width: 500px;
       --border-radius: 16px;
       border: none;
-      --sl-color-neutral-0: var(--color-wood-dark); 
-      --sl-panel-background-color: var(--color-wood-dark); 
-      box-shadow: 0 4px 15px rgba(127, 69, 29, 0.15); 
+      --sl-color-neutral-0: var(--color-wood-medium); 
+      --sl-panel-background-color: var(--color-wood-medium);
+      box-shadow: none; 
     }
 
     sl-card::part(header),
     sl-card::part(body) {
-      color: var(--color-sand-light);
+      color: var(--color-wood-dark);
     }
 
     sl-card::part(header) {
-      border-bottom: 1px solid var(--color-wood-medium);
+      border-bottom: 2px solid var(--color-wood-dark);
     }
 
     sl-card [slot="header"] sl-icon {
-      color: var(--color-sand-light);
+      color: var(--color-wood-dark);
     }
 
     .install-section {
@@ -1148,4 +1148,4 @@ import{setBasePath as pe}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       padding-bottom: 16px;
     }
   `;ht=Lr([yt("app-index")],ht);
-//# sourceMappingURL=index-C4vGsSh5.js.map
+//# sourceMappingURL=index-Cp3i40OP.js.map
