@@ -874,7 +874,6 @@ import{setBasePath as gt}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       </main>
     `}};E.styles=[wt,x`
     main {
-      /* Padding dopasowany tak, by nie dublował marginesów z shared-styles */
       padding: 16px;
       display: flex;
       flex-direction: column;
@@ -882,7 +881,6 @@ import{setBasePath as gt}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       gap: 10px;
     }
 
-    /* Styl dla napisu wewnątrz przycisków-kafelków */
     sl-button::part(base) {
       padding: 10px;
     }
@@ -892,21 +890,18 @@ import{setBasePath as gt}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       color: var(--color-wood-dark);
     }
 
-    /* Karta ogłoszeń */
     sl-card {
       width: 100%;
       max-width: 500px;
       --border-radius: 16px;
     }
 
-    /* Sekcja instalacji na samym dole */
     .install-section {
       margin-top: 30px;
       width: 100%;
       max-width: 400px;
     }
 
-    /* Naprawiamy wygląd siatki, by zawsze była wyśrodkowana i pełna */
     .grid-container {
       display: grid; 
       grid-template-columns: 1fr 1fr; 
@@ -977,4 +972,4 @@ import{setBasePath as gt}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       padding-bottom: 16px;
     }
   `;D=te([q("app-index")],D);
-//# sourceMappingURL=index-Bg21DEMk.js.map
+//# sourceMappingURL=index-B4yAkeP0.js.map
