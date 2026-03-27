@@ -1,4 +1,4 @@
-import{i as h,f as c,b as i,s as d,t as u}from"./chunk.3LWOA5DF-xa6AWMhW.js";const l=h`
+import{i as h,f as c,b as i,s as d,t as u}from"./shared-styles-4OK3jP6a.js";const l=h`
   @media(min-width: 1000px) {
     sl-card {
       max-width: 70vw;
@@ -24,4 +24,4 @@ import{i as h,f as c,b as i,s as d,t as u}from"./chunk.3LWOA5DF-xa6AWMhW.js";con
         </sl-card>
       </main>
     `}};s.styles=[d,l];s=b([u("app-about")],s);export{s as AppAbout};
-//# sourceMappingURL=app-about-BiAN1IRD.js.map
+//# sourceMappingURL=app-about-DT1m_rN_.js.map

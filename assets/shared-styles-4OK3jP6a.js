@@ -24,18 +24,7 @@
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
- */const jt={attribute:!0,type:String,converter:M,reflect:!1,hasChanged:z},Lt=(r=jt,t,e)=>{const{kind:s,metadata:i}=e;let o=globalThis.litPropertyMetadata.get(i);if(o===void 0&&globalThis.litPropertyMetadata.set(i,o=new Map),s==="setter"&&((r=Object.create(r)).wrapped=!0),o.set(e.name,r),s==="accessor"){const{name:n}=e;return{set(h){const a=t.get.call(this);t.set.call(this,h),this.requestUpdate(n,a,r,!0,h)},init(h){return h!==void 0&&this.C(n,void 0,r,h),h}}}if(s==="setter"){const{name:n}=e;return function(h){const a=this[n];t.call(this,h),this.requestUpdate(n,a,r,!0,h)}}throw Error("Unsupported decorator location: "+s)};function lt(r){return(t,e)=>typeof e=="object"?Lt(r,t,e):((s,i,o)=>{const n=i.hasOwnProperty(o);return i.constructor.createProperty(o,s),n?Object.getOwnPropertyDescriptor(i,o):void 0})(r,t,e)}const ne=I`
-  @media(min-width: 1000px) {
-    sl-card {
-      max-width: 70vw;
-    }
-  }
-
-  main {
-    margin-top: 34px;
-    padding: 12px;
-  }
-`;var It=I`
+ */const jt={attribute:!0,type:String,converter:M,reflect:!1,hasChanged:z},Lt=(r=jt,t,e)=>{const{kind:s,metadata:i}=e;let o=globalThis.litPropertyMetadata.get(i);if(o===void 0&&globalThis.litPropertyMetadata.set(i,o=new Map),s==="setter"&&((r=Object.create(r)).wrapped=!0),o.set(e.name,r),s==="accessor"){const{name:n}=e;return{set(h){const a=t.get.call(this);t.set.call(this,h),this.requestUpdate(n,a,r,!0,h)},init(h){return h!==void 0&&this.C(n,void 0,r,h),h}}}if(s==="setter"){const{name:n}=e;return function(h){const a=this[n];t.call(this,h),this.requestUpdate(n,a,r,!0,h)}}throw Error("Unsupported decorator location: "+s)};function lt(r){return(t,e)=>typeof e=="object"?Lt(r,t,e):((s,i,o)=>{const n=i.hasOwnProperty(o);return i.constructor.createProperty(o,s),n?Object.getOwnPropertyDescriptor(i,o):void 0})(r,t,e)}var It=I`
   :host {
     --border-color: var(--sl-color-neutral-200);
     --border-radius: var(--sl-border-radius-medium);
@@ -114,7 +103,7 @@
   [hidden] {
     display: none !important;
   }
-`,dt=Object.defineProperty,Vt=Object.defineProperties,qt=Object.getOwnPropertyDescriptor,Wt=Object.getOwnPropertyDescriptors,st=Object.getOwnPropertySymbols,Zt=Object.prototype.hasOwnProperty,Jt=Object.prototype.propertyIsEnumerable,ct=r=>{throw TypeError(r)},rt=(r,t,e)=>t in r?dt(r,t,{enumerable:!0,configurable:!0,writable:!0,value:e}):r[t]=e,Kt=(r,t)=>{for(var e in t||(t={}))Zt.call(t,e)&&rt(r,e,t[e]);if(st)for(var e of st(t))Jt.call(t,e)&&rt(r,e,t[e]);return r},ae=(r,t)=>Vt(r,Wt(t)),pt=(r,t,e,s)=>{for(var i=s>1?void 0:s?qt(t,e):t,o=r.length-1,n;o>=0;o--)(n=r[o])&&(i=(s?n(t,e,i):n(i))||i);return s&&i&&dt(t,e,i),i},ut=(r,t,e)=>t.has(r)||ct("Cannot "+e),Ft=(r,t,e)=>(ut(r,t,"read from private field"),t.get(r)),Gt=(r,t,e)=>t.has(r)?ct("Cannot add the same private member more than once"):t instanceof WeakSet?t.add(r):t.set(r,e),Xt=(r,t,e,s)=>(ut(r,t,"write to private field"),t.set(r,e),e),N,O=class extends S{constructor(){super(),Gt(this,N,!1),this.initialReflectedProperties=new Map,Object.entries(this.constructor.dependencies).forEach(([r,t])=>{this.constructor.define(r,t)})}emit(r,t){const e=new CustomEvent(r,Kt({bubbles:!0,cancelable:!1,composed:!0,detail:{}},t));return this.dispatchEvent(e),e}static define(r,t=this,e={}){const s=customElements.get(r);if(!s){try{customElements.define(r,t,e)}catch{customElements.define(r,class extends t{},e)}return}let i=" (unknown version)",o=i;"version"in t&&t.version&&(i=" v"+t.version),"version"in s&&s.version&&(o=" v"+s.version),!(i&&o&&i===o)&&console.warn(`Attempted to register <${r}>${i}, but <${r}>${o} has already been registered.`)}attributeChangedCallback(r,t,e){Ft(this,N)||(this.constructor.elementProperties.forEach((s,i)=>{s.reflect&&this[i]!=null&&this.initialReflectedProperties.set(i,this[i])}),Xt(this,N,!0)),super.attributeChangedCallback(r,t,e)}willUpdate(r){super.willUpdate(r),this.initialReflectedProperties.forEach((t,e)=>{r.has(e)&&this[e]==null&&(this[e]=t)})}};N=new WeakMap;O.version="2.20.1";O.dependencies={};pt([lt()],O.prototype,"dir",2);pt([lt()],O.prototype,"lang",2);/**
+`,dt=Object.defineProperty,Vt=Object.defineProperties,qt=Object.getOwnPropertyDescriptor,Wt=Object.getOwnPropertyDescriptors,st=Object.getOwnPropertySymbols,Zt=Object.prototype.hasOwnProperty,Jt=Object.prototype.propertyIsEnumerable,ct=r=>{throw TypeError(r)},rt=(r,t,e)=>t in r?dt(r,t,{enumerable:!0,configurable:!0,writable:!0,value:e}):r[t]=e,Kt=(r,t)=>{for(var e in t||(t={}))Zt.call(t,e)&&rt(r,e,t[e]);if(st)for(var e of st(t))Jt.call(t,e)&&rt(r,e,t[e]);return r},ne=(r,t)=>Vt(r,Wt(t)),pt=(r,t,e,s)=>{for(var i=s>1?void 0:s?qt(t,e):t,o=r.length-1,n;o>=0;o--)(n=r[o])&&(i=(s?n(t,e,i):n(i))||i);return s&&i&&dt(t,e,i),i},ut=(r,t,e)=>t.has(r)||ct("Cannot "+e),Ft=(r,t,e)=>(ut(r,t,"read from private field"),t.get(r)),Gt=(r,t,e)=>t.has(r)?ct("Cannot add the same private member more than once"):t instanceof WeakSet?t.add(r):t.set(r,e),Xt=(r,t,e,s)=>(ut(r,t,"write to private field"),t.set(r,e),e),N,O=class extends S{constructor(){super(),Gt(this,N,!1),this.initialReflectedProperties=new Map,Object.entries(this.constructor.dependencies).forEach(([r,t])=>{this.constructor.define(r,t)})}emit(r,t){const e=new CustomEvent(r,Kt({bubbles:!0,cancelable:!1,composed:!0,detail:{}},t));return this.dispatchEvent(e),e}static define(r,t=this,e={}){const s=customElements.get(r);if(!s){try{customElements.define(r,t,e)}catch{customElements.define(r,class extends t{},e)}return}let i=" (unknown version)",o=i;"version"in t&&t.version&&(i=" v"+t.version),"version"in s&&s.version&&(o=" v"+s.version),!(i&&o&&i===o)&&console.warn(`Attempted to register <${r}>${i}, but <${r}>${o} has already been registered.`)}attributeChangedCallback(r,t,e){Ft(this,N)||(this.constructor.elementProperties.forEach((s,i)=>{s.reflect&&this[i]!=null&&this.initialReflectedProperties.set(i,this[i])}),Xt(this,N,!0)),super.attributeChangedCallback(r,t,e)}willUpdate(r){super.willUpdate(r),this.initialReflectedProperties.forEach((t,e)=>{r.has(e)&&this[e]==null&&(this[e]=t)})}};N=new WeakMap;O.version="2.20.1";O.dependencies={};pt([lt()],O.prototype,"dir",2);pt([lt()],O.prototype,"lang",2);/**
  * @license
  * Copyright 2017 Google LLC
  * SPDX-License-Identifier: BSD-3-Clause
@@ -132,5 +121,16 @@
         <slot part="body" class="card__body"></slot>
         <slot name="footer" part="footer" class="card__footer"></slot>
       </div>
-    `}};_t.styles=[Bt,It];_t.define("sl-card");export{c as A,zt as H,O as S,ae as _,Kt as a,xt as b,Bt as c,pt as d,ee as e,S as f,I as i,lt as n,ne as s,oe as t};
-//# sourceMappingURL=chunk.3LWOA5DF-xa6AWMhW.js.map
+    `}};_t.styles=[Bt,It];_t.define("sl-card");const ae=I`
+  @media(min-width: 1000px) {
+    sl-card {
+      max-width: 70vw;
+    }
+  }
+
+  main {
+    margin-top: 34px;
+    padding: 12px;
+  }
+`;export{c as A,zt as H,O as S,ne as _,Kt as a,xt as b,Bt as c,pt as d,ee as e,S as f,I as i,lt as n,ae as s,oe as t};
+//# sourceMappingURL=shared-styles-4OK3jP6a.js.map

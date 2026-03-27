@@ -5,8 +5,6 @@
   <meta charset="utf-8" />
   <title>mParafia</title>
 
-  <!-- Usunąłem <base href="/" />, bo gryzie się z GitHub Pages -->
-
   <meta name="viewport"
     content="viewport-fit=cover, width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0" />
   <meta name="description" content="Aplikacja Twojej Parafii" />
@@ -18,13 +16,9 @@
   <meta name="apple-mobile-web-app-title" content="mParafia" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
-  <!-- Poprawiona ikonka - dodana kropka ./ -->
   <link rel="icon" href="./assets/icons/512x512.png" type="image/png" />
-
-  <!-- Poprawiony manifest - dodana kropka ./ -->
   <link rel="manifest" href="./manifest.json" />
 
-  <!-- Shoelace CSS -->
   <link rel="stylesheet" media="(prefers-color-scheme:light)"
     href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/dist/themes/light.css">
   <link rel="stylesheet" media="(prefers-color-scheme:dark)"
@@ -32,9 +26,8 @@
     onload="document.documentElement.classList.add('sl-theme-dark');">
 
 
-  <!-- Poprawiona ścieżka do skryptu - dodana kropka ./ -->
-  <script type="module" crossorigin src="/mParafia/assets/index-BFytrZGp.js"></script>
-  <link rel="modulepreload" crossorigin href="/mParafia/assets/chunk.3LWOA5DF-xa6AWMhW.js">
+  <script type="module" crossorigin src="/mParafia/assets/index-DLh1prUn.js"></script>
+  <link rel="modulepreload" crossorigin href="/mParafia/assets/shared-styles-4OK3jP6a.js">
   <link rel="stylesheet" crossorigin href="/mParafia/assets/index-BD2NGews.css">
 <link rel="manifest" href="/mParafia/manifest.webmanifest"><script id="vite-plugin-pwa:register-sw" src="/mParafia/registerSW.js"></script></head>
 
@@ -44,7 +37,6 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        // Rejestrujemy Service Worker relatywnie do folderu aplikacji
         navigator.serviceWorker.register('./sw.js');
       });
     }
