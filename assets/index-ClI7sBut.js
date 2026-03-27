@@ -971,8 +971,9 @@ import{setBasePath as pe}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
         </div>
 
         <sl-card>
-          <div slot="header" style="font-weight: bold; color: var(--color-wood-dark); display: flex; align-items: center; gap: 8px;">
-            <sl-icon name="megaphone"></sl-icon> Ogłoszenia parafialne
+          <div slot="header" style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+            <sl-icon name="megaphone"></sl-icon> 
+            Ogłoszenia parafialne
           </div>
           Zapraszamy na nabożeństwo majowe o godzinie 18:00.
         </sl-card>
@@ -1062,9 +1063,12 @@ import{setBasePath as pe}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       max-width: 500px;
       --border-radius: 16px;
       border: none;
+      --sl-panel-border-color: transparent; 
+      --sl-panel-border-width: 0px;
       --sl-color-neutral-0: var(--color-wood-medium); 
       --sl-panel-background-color: var(--color-wood-medium);
       box-shadow: none; 
+      outline: none;
     }
 
     sl-card::part(header),
@@ -1148,4 +1152,4 @@ import{setBasePath as pe}from"https://cdn.jsdelivr.net/npm/@shoelace-style/shoel
       padding-bottom: 16px;
     }
   `;ht=Lr([yt("app-index")],ht);
-//# sourceMappingURL=index-Cp3i40OP.js.map
+//# sourceMappingURL=index-ClI7sBut.js.map
