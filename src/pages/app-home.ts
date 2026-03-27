@@ -1,135 +1,171 @@
 import { LitElement, css, html } from 'lit';
-import { property, customElement } from 'lit/decorators.js';
-import { resolveRouterPath } from '../router';
+import { customElement, state } from 'lit/decorators.js';
 
 import '@shoelace-style/shoelace/dist/components/card/card.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 
 import { styles } from '../styles/shared-styles';
 
 @customElement('app-home')
 export class AppHome extends LitElement {
 
-  // For more information on using properties and state in lit
-  // check out this link https://lit.dev/docs/components/properties/
-  @property() message = 'Welcome!';
+  @state() private deferredPrompt: any = null;
 
-  static styles = [
+static styles = [
     styles,
     css`
-    #welcomeBar {
+    main {
+      padding: 16px;
       display: flex;
-      justify-content: center;
-      align-items: center;
       flex-direction: column;
+      align-items: center;
+      gap: 15px;
     }
 
-    #welcomeCard,
-    #infoCard {
-      padding: 18px;
-      padding-top: 0px;
+    sl-button.tile-button::part(base) {
+      background-color: var(--color-wood-dark);
+      border-color: var(--color-wood-dark);
+      transition: all 0.2s ease;
     }
 
-    sl-card::part(footer) {
-      display: flex;
-      justify-content: flex-end;
+    sl-button.tile-button::part(base):hover,
+    sl-button.tile-button::part(base):active {
+      background-color: var(--color-wood-medium);
+      border-color: var(--color-wood-medium);
+      transform: scale(0.98);
     }
 
-    @media(min-width: 750px) {
-      sl-card {
-        width: 70vw;
-      }
+    sl-button.tile-button sl-icon,
+    sl-button.tile-button span {
+      color: var(--color-sand-light); 
     }
 
-
-    @media (horizontal-viewport-segments: 2) {
-      #welcomeBar {
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: space-between;
-      }
-
-      #welcomeCard {
-        margin-right: 64px;
-      }
+    sl-button span {
+      font-weight: 500;
     }
-  `];
 
-  async firstUpdated() {
-    // this method is a lifecycle even in lit
-    // for more info check out the lit docs https://lit.dev/docs/components/lifecycle/
-    console.log('This is your home page');
+    .grid-container {
+      display: grid; 
+      grid-template-columns: 1fr 1fr; 
+      gap: 15px; 
+      width: 100%;
+      max-width: 500px;
+    }
+
+    sl-card {
+      width: 100%;
+      max-width: 500px;
+      --border-radius: 16px;
+      border: none;
+      --sl-panel-border-color: transparent; 
+      --sl-panel-border-width: 0px;
+      --sl-color-neutral-0: var(--color-wood-medium); 
+      --sl-panel-background-color: var(--color-wood-medium);
+      box-shadow: none; 
+      outline: none;
+    }
+
+    sl-card::part(header),
+    sl-card::part(body) {
+      color: var(--color-wood-dark);
+    }
+
+    sl-card::part(header) {
+      border-bottom: 2px solid var(--color-wood-dark);
+    }
+
+    sl-card [slot="header"] sl-icon {
+      color: var(--color-wood-dark);
+    }
+
+    .install-section {
+      margin-top: 20px;
+      width: 100%;
+      max-width: 400px;
+    }
+  `
+  ];
+
+  constructor() {
+    super();
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      this.deferredPrompt = e;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      this.deferredPrompt = null;
+    });
   }
 
-  share() {
-    if ((navigator as any).share) {
-      (navigator as any).share({
-        title: 'PWABuilder pwa-starter',
-        text: 'Check out the PWABuilder pwa-starter!',
-        url: 'https://github.com/pwa-builder/pwa-starter',
-      });
+  async installApp() {
+    if (!this.deferredPrompt) return;
+    
+    this.deferredPrompt.prompt();
+    const { outcome } = await this.deferredPrompt.userChoice;
+    
+    if (outcome === 'accepted') {
+      this.deferredPrompt = null;
     }
   }
 
-  render() {
+ render() {
     return html`
-      <app-header></app-header>
-
       <main>
-        <div id="welcomeBar">
-          <sl-card id="welcomeCard">
-            <div slot="header">
-              <h2>${this.message}</h2>
-            </div>
-
-            <p>
-              For more information on the PWABuilder pwa-starter, check out the
-              <a href="https://docs.pwabuilder.com/#/starter/quick-start">
-                documentation</a>.
-            </p>
-
-            <p id="mainInfo">
-              Welcome to the
-              <a href="https://pwabuilder.com">PWABuilder</a>
-              pwa-starter! Be sure to head back to
-              <a href="https://pwabuilder.com">PWABuilder</a>
-              when you are ready to ship this PWA to the Microsoft Store, Google Play
-              and the Apple App Store!
-            </p>
-
-            ${'share' in navigator
-              ? html`<sl-button slot="footer" variant="default" @click="${this.share}">
-                        <sl-icon slot="prefix" name="share"></sl-icon>
-                        Share this Starter!
-                      </sl-button>`
-              : null}
-          </sl-card>
-
-          <sl-card id="infoCard">
-            <h2>Technology Used</h2>
-
-            <ul>
-              <li>
-                <a href="https://www.typescriptlang.org/">TypeScript</a>
-              </li>
-
-              <li>
-                <a href="https://lit.dev">lit</a>
-              </li>
-
-              <li>
-                <a href="https://shoelace.style/">Shoelace</a>
-              </li>
-
-              <li>
-                <a href="https://github.com/thepassle/app-tools/blob/master/router/README.md"
-                  >App Tools Router</a>
-              </li>
-            </ul>
-          </sl-card>
-
-          <sl-button href="${resolveRouterPath('about')}" variant="primary">Navigate to About</sl-button>
+        <div style="text-align: center; margin-bottom: 20px;">
+          <img src="./assets/icons/icon_512.png" style="width: 90px; border-radius: 22px; box-shadow: 0 4px 15px rgba(127, 69, 29, 0.3);">
+          <h1 style="color: var(--color-wood-dark); margin-top: 15px;">mParafia</h1>
         </div>
+
+        <sl-card>
+          <div slot="header" style="font-weight: bold; display: flex; align-items: center; gap: 8px;">
+            <sl-icon name="megaphone"></sl-icon> 
+            Ogłoszenia parafialne
+          </div>
+          Zapraszamy na nabożeństwo majowe o godzinie 18:00.
+        </sl-card>
+
+        <div class="grid-container">
+          
+          <sl-button class="tile-button" style="height: 110px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sl-icon name="calendar3" style="font-size: 28px;"></sl-icon>
+              <span>Msze św.</span>
+            </div>
+          </sl-button>
+
+          <sl-button class="tile-button" style="height: 110px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sl-icon name="journal-text" style="font-size: 28px;"></sl-icon>
+              <span>Intencje</span>
+            </div>
+          </sl-button>
+
+          <sl-button class="tile-button" style="height: 110px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sl-icon name="person-lines-fill" style="font-size: 28px;"></sl-icon>
+              <span>Kancelaria</span>
+            </div>
+          </sl-button>
+
+          <sl-button class="tile-button" style="height: 110px;">
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <sl-icon name="geo-alt" style="font-size: 28px;"></sl-icon>
+              <span>Dojazd</span>
+            </div>
+          </sl-button>
+
+        </div>
+
+        ${this.deferredPrompt ? html`
+          <div class="install-section">
+            <sl-button variant="primary" pill @click="${this.installApp}" style="width: 100%;">
+              <sl-icon slot="prefix" name="download"></sl-icon>
+              Zainstaluj mParafię
+            </sl-button>
+          </div>
+        ` : null}
       </main>
     `;
   }
