@@ -1767,7 +1767,7 @@ try {
       sl-button.install-btn sl-icon {
         color: var(--color-sand-light);
       }
-    `];Or([et()],Nt.prototype,"deferredPrompt",2);Nt=Or([Et("app-home")],Nt);var Bn=Object.getOwnPropertyDescriptor,Vn=(e,t,r,o)=>{for(var n=o>1?void 0:o?Bn(t,r):t,i=e.length-1,s;i>=0;i--)(s=e[i])&&(n=s(n)||n);return n};let ne=class extends I{connectedCallback(){super.connectedCallback();const t=new CustomEvent("change-title",{detail:{title:"Wklej tu kurwa swój tytuł"},bubbles:!0,composed:!0});this.dispatchEvent(t)}render(){return R`
+    `];Or([et()],Nt.prototype,"deferredPrompt",2);Nt=Or([Et("app-home")],Nt);var Bn=Object.getOwnPropertyDescriptor,Vn=(e,t,r,o)=>{for(var n=o>1?void 0:o?Bn(t,r):t,i=e.length-1,s;i>=0;i--)(s=e[i])&&(n=s(n)||n);return n};let ne=class extends I{connectedCallback(){super.connectedCallback();const t=new CustomEvent("change-title",{detail:{title:"Wklej tu swój tytuł"},bubbles:!0,composed:!0});this.dispatchEvent(t)}render(){return R`
       <div>
         <!-- wnętrze podstrony -->
       </div>
@@ -1907,4 +1907,4 @@ try {
         --size: 350px;
       }
     `];xe([rt("sl-drawer")],$t.prototype,"drawer",2);xe([et()],$t.prototype,"pageTitle",2);$t=xe([Et("app-index")],$t);
-//# sourceMappingURL=index-OIbhF6Cz.js.map
+//# sourceMappingURL=index-CgQgDYA6.js.map
