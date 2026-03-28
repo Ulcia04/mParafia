@@ -11,16 +11,11 @@ export default defineConfig({
   },
   plugins: [
     VitePWA({
-      strategies: "injectManifest",
-      injectManifest: {
-        swSrc: 'public/sw.js',
-        swDest: 'dist/sw.js',
-        globDirectory: 'dist',
-        globPatterns: [
-          '**/*.{html,js,css,json,png,ico,svg}'
-        ],
-      },
       registerType: 'autoUpdate',
+      workbox: {
+        globPatterns: ['**/*.{html,js,css,json,png,ico,svg}'],
+        navigateFallback: 'index.html'
+      },
       devOptions: {
         enabled: true
       }
