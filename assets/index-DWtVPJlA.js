@@ -2267,7 +2267,7 @@ try {
       }
 
       sl-drawer {
-        --size: 260px;
+        --size: 290px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-xf-lGe8J.js.map
+//# sourceMappingURL=index-DWtVPJlA.js.map
