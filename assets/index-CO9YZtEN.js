@@ -2194,7 +2194,10 @@ try {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: calc(0px + env(safe-area-inset-top));
+        padding-top: calc(10px + env(safe-area-inset-top));
+        padding-bottom: 10px;
+        padding-left: 16px;
+        padding-right: 16px;
         background-color: var(--color-sand-light);
         color: var(--color-wood-dark);
         border-bottom: none;
@@ -2267,4 +2270,4 @@ try {
         --size: 260px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-ChRZVfj0.js.map
+//# sourceMappingURL=index-CO9YZtEN.js.map
