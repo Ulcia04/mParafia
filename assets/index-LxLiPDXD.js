@@ -1913,7 +1913,7 @@ try {
         <div class=${it({"list-day-row":!0,today:r})}>
           <div class="list-day-header">Wydarzenia</div>
 
-          ${t.length>0?this.renderEventTags(t,"day"):v`<span class="no-events" style="display:block; padding: 20px 0;">Brak wydarzeń zaplanowanych na ten dzień.</span>`}
+          ${t.length>0?this.renderEventTags(t,"day"):v`<span class="no-events" style="display:block; padding: 20px 0; font-size: 0.85rem; color: #666; text-align: center; font-style: italic;">Brak wydarzeń zaplanowanych na ten dzień.</span>`}
         </div>
       </div>
     `}renderEventTags(e,t){const r=t==="week"||t==="day",o=t==="day";return e.map(i=>v`
@@ -1994,7 +1994,7 @@ try {
 
       .day {
         background: var(--color-sand-light);
-        min-height: 55px;
+        min-height: 30px;
         padding: 2px;
         display: flex;
         flex-direction: column;
@@ -2270,4 +2270,4 @@ try {
         --size: 260px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-CO9YZtEN.js.map
+//# sourceMappingURL=index-LxLiPDXD.js.map
