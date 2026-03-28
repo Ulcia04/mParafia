@@ -9,7 +9,8 @@ import '@shoelace-style/shoelace/dist/components/divider/divider.js';
 import { Router } from '@vaadin/router';
 
 import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-setBasePath('https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/');
+const basePath = (import.meta as any).env.BASE_URL;
+setBasePath(`${basePath}shoelace-assets`);
 
 import { styles } from './styles/shared-styles';
 
@@ -38,7 +39,7 @@ export class AppIndex extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 16px;
+        padding-top: calc(0px + env(safe-area-inset-top));
         background-color: var(--color-sand-light);
         color: var(--color-wood-dark);
         border-bottom: none;
@@ -72,6 +73,7 @@ export class AppIndex extends LitElement {
         color: var(--color-wood-dark);
         font-weight: bold;
         font-size: 1.2rem;
+        padding-top: calc(0px + env(safe-area-inset-top));
       }
 
       sl-drawer::part(body) {
@@ -107,7 +109,7 @@ export class AppIndex extends LitElement {
       }
 
       sl-drawer {
-        --size: 350px;
+        --size: 260px;
       }
     `
   ];

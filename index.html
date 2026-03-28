@@ -5,8 +5,7 @@
   <meta charset="utf-8" />
   <title>mParafia</title>
   <meta name="description" content="Aplikacja Twojej Parafii" />
-
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=5.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#FFE9D4" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#7F451D" />
@@ -27,6 +26,13 @@
     onload="document.documentElement.classList.add('sl-theme-dark');">
 
   <script type="module" src="/src/app-index.ts"></script>
+  <style>
+    html, body {
+      overscroll-behavior-y: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+  </style>
+
 </head>
 <body>
   <app-index></app-index>

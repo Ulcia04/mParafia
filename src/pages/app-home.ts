@@ -133,6 +133,13 @@ export class AppHome extends LitElement {
     }
   }
 
+  private handleNavigation(path: string) {
+    const base = (import.meta as any).env.BASE_URL;
+    const fullPath = base === '/' ? path : base + path.substring(1);
+    window.history.pushState({}, '', fullPath);
+    window.dispatchEvent(new PopStateEvent('popstate'));
+  }
+
   render() {
     return html`
       <main>
@@ -143,22 +150,22 @@ export class AppHome extends LitElement {
 
         <div class="grid-container">
 
-          <sl-button class="tile-button">
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/kalendarz')}">
             <sl-icon name="calendar3"></sl-icon>
-            <span>Msze św.</span>
+            <span>Kalendarz</span>
           </sl-button>
 
-          <sl-button class="tile-button">
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/ogloszenia')}">
             <sl-icon name="journal-text"></sl-icon>
-            <span>Intencje</span>
+            <span>Ogłoszenia</span>
           </sl-button>
 
-          <sl-button class="tile-button">
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/kancelaria')}">
             <sl-icon name="person-lines-fill"></sl-icon>
             <span>Kancelaria</span>
           </sl-button>
 
-          <sl-button class="tile-button">
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/dojazd')}">
             <sl-icon name="geo-alt"></sl-icon>
             <span>Dojazd</span>
           </sl-button>
