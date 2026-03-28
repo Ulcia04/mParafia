@@ -1994,7 +1994,7 @@ try {
 
       .day {
         background: var(--color-sand-light);
-        min-height: 80px;
+        min-height: 55px;
         padding: 2px;
         display: flex;
         flex-direction: column;
@@ -2267,4 +2267,4 @@ try {
         --size: 260px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-DBNN0Tld.js.map
+//# sourceMappingURL=index-ChRZVfj0.js.map
