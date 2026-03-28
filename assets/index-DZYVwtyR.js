@@ -2194,7 +2194,10 @@ try {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 10px 16px;
+        padding-top: calc(10px + env(safe-area-inset-top));
+        padding-bottom: 10px;
+        padding-left: 16px;
+        padding-right: 16px;
         background-color: var(--color-sand-light);
         color: var(--color-wood-dark);
         border-bottom: none;
@@ -2266,4 +2269,4 @@ try {
         --size: 350px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([I()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-c_jdAgJU.js.map
+//# sourceMappingURL=index-DZYVwtyR.js.map
