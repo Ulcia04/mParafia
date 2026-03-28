@@ -2231,6 +2231,7 @@ try {
         color: var(--color-wood-dark);
         font-weight: bold;
         font-size: 1.2rem;
+        padding-top: calc(16px + env(safe-area-inset-top));
       }
 
       sl-drawer::part(body) {
@@ -2269,4 +2270,4 @@ try {
         --size: 350px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([I()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-m0ESqUmT.js.map
+//# sourceMappingURL=index-BXY9buUa.js.map
