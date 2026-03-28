@@ -2144,7 +2144,7 @@ try {
       </div>
     `}};he.styles=[dt,A`
       /* style  css tylko dla tej konkretnej podstrony */
-    `];he=en([st("app-events")],he);var rn=Object.defineProperty,on=Object.getOwnPropertyDescriptor,Se=(e,t,r,o)=>{for(var i=o>1?void 0:o?on(t,r):t,n=e.length-1,a;n>=0;n--)(a=e[n])&&(i=(o?a(t,r,i):a(i))||i);return o&&i&&rn(t,r,i),i};ae("https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/cdn/");let Pt=class extends z{constructor(){super(...arguments),this.pageTitle="mParafia"}firstUpdated(){const e=this.shadowRoot?.querySelector("#router-outlet"),t="/mParafia/";new Hi(e,{baseUrl:t}).setRoutes([{path:"/",component:"app-home"},{path:"/kalendarz",component:"app-calendar"},{path:"/grupy",component:"app-groups"},{path:"/wydarzenia",component:"app-events"},{path:"(.*)",redirect:"/"}])}handleTitleChange(e){this.pageTitle=e.detail.title}openMenu(){this.drawer.show()}handleNavigation(e){this.drawer.hide();const r="/mParafia/"+e.substring(1);window.history.pushState({},"",r),window.dispatchEvent(new PopStateEvent("popstate"))}render(){return v`
+    `];he=en([st("app-events")],he);var rn=Object.defineProperty,on=Object.getOwnPropertyDescriptor,Se=(e,t,r,o)=>{for(var i=o>1?void 0:o?on(t,r):t,n=e.length-1,a;n>=0;n--)(a=e[n])&&(i=(o?a(t,r,i):a(i))||i);return o&&i&&rn(t,r,i),i};ae("/shoelace-assets");let Pt=class extends z{constructor(){super(...arguments),this.pageTitle="mParafia"}firstUpdated(){const e=this.shadowRoot?.querySelector("#router-outlet"),t="/mParafia/";new Hi(e,{baseUrl:t}).setRoutes([{path:"/",component:"app-home"},{path:"/kalendarz",component:"app-calendar"},{path:"/grupy",component:"app-groups"},{path:"/wydarzenia",component:"app-events"},{path:"(.*)",redirect:"/"}])}handleTitleChange(e){this.pageTitle=e.detail.title}openMenu(){this.drawer.show()}handleNavigation(e){this.drawer.hide();const r="/mParafia/"+e.substring(1);window.history.pushState({},"",r),window.dispatchEvent(new PopStateEvent("popstate"))}render(){return v`
       <div class="app-layout">
 
         <sl-drawer label="Menu mParafii" placement="start">
@@ -2269,4 +2269,4 @@ try {
         --size: 350px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([I()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-DZYVwtyR.js.map
+//# sourceMappingURL=index-m0ESqUmT.js.map
