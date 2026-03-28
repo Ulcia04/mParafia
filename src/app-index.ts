@@ -39,7 +39,10 @@ export class AppIndex extends LitElement {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: calc(0px + env(safe-area-inset-top));
+        padding-top: calc(10px + env(safe-area-inset-top));
+        padding-bottom: 10px;
+        padding-left: 16px;
+        padding-right: 16px;
         background-color: var(--color-sand-light);
         color: var(--color-wood-dark);
         border-bottom: none;
