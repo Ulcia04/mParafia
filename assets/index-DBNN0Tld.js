@@ -2194,10 +2194,7 @@ try {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding-top: calc(10px + env(safe-area-inset-top));
-        padding-bottom: 10px;
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-top: calc(0px + env(safe-area-inset-top));
         background-color: var(--color-sand-light);
         color: var(--color-wood-dark);
         border-bottom: none;
@@ -2231,7 +2228,7 @@ try {
         color: var(--color-wood-dark);
         font-weight: bold;
         font-size: 1.2rem;
-        padding-top: calc(16px + env(safe-area-inset-top));
+        padding-top: calc(0px + env(safe-area-inset-top));
       }
 
       sl-drawer::part(body) {
@@ -2267,7 +2264,7 @@ try {
       }
 
       sl-drawer {
-        --size: 290px;
+        --size: 260px;
       }
     `];Se([X("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-DuS6yJOZ.js.map
+//# sourceMappingURL=index-DBNN0Tld.js.map
