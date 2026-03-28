@@ -36,7 +36,13 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js');
+        navigator.serviceWorker.register('/mParafia/sw.js', { scope: '/mParafia/' })
+          .then((registration) => {
+            console.log('Sukces! Service Worker działa w zasięgu:', registration.scope);
+          })
+          .catch((error) => {
+            console.error('Błąd instalacji Service Workera:', error);
+          });
       });
     }
   </script>
