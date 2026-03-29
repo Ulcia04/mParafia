@@ -64,21 +64,30 @@
     <link rel="stylesheet" media="(prefers-color-scheme:dark)" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.16.0/dist/themes/dark.css" onload="document.documentElement.classList.add('sl-theme-dark');">
     <style>
       :root {
-        --sl-focus-ring-width: 0 !important;
+        --sl-focus-ring-width: 0px !important;
         --sl-focus-ring-color: transparent !important;
+        --sl-focus-ring-style: none !important;
         --sl-focus-ring: none !important;
       }
 
-      html,
-      body {
+      html, body, * {
         margin: 0;
         padding: 0;
+        -webkit-tap-highlight-color: transparent !important;
+        -webkit-touch-callout: none !important;
+      }
+
+      html, body {
         width: 100%;
         height: 100%;
         overscroll-behavior: none;
+      }
+
+      sl-button::part(base),
+      sl-icon-button::part(base),
+      sl-drawer::part(panel) {
         -webkit-tap-highlight-color: transparent !important;
-        -webkit-touch-callout: none;
-        touch-action: pan-y;
+        outline: none !important;
       }
     </style>
     <script type="module" crossorigin src="/mParafia/assets/index-TtOFMbzh.js"></script>
@@ -86,6 +95,12 @@
   <body>
     <app-index></app-index>
     <script>
+      document.addEventListener('touchstart', (e) => {
+        if (e.touches[0].clientX < 20) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('/mParafia/sw.js', {
