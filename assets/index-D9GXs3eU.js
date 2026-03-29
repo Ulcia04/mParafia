@@ -1644,7 +1644,7 @@ try {
       <main>
 
         <div class="logo-container">
-          <img src="./assets/icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
+          <img src="./icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
         </div>
 
         <div class="grid-container">
@@ -2270,4 +2270,4 @@ try {
         --size: 260px;
       }
     `];Se([J("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-DEWgHkDW.js.map
+//# sourceMappingURL=index-D9GXs3eU.js.map
