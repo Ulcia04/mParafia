@@ -2542,14 +2542,14 @@ try {
       .groups-grid {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 20px;
       }
 
       .group-card {
         background-color: var(--color-sand-light);
         border: 2px solid var(--color-wood-medium);
         border-radius: 12px;
-        padding: 20px;
+        padding: 15px;
         display: flex;
         align-items: center;
         gap: 15px;
@@ -2894,4 +2894,4 @@ try {
         color: var(--color-wood-dark);
       }
     `];De([K("sl-drawer")],Dt.prototype,"drawer",2);De([C()],Dt.prototype,"pageTitle",2);Dt=De([at("app-index")],Dt);
-//# sourceMappingURL=index-CHm-mwNj.js.map
+//# sourceMappingURL=index-s30KASAI.js.map
