@@ -14,20 +14,38 @@ setBasePath(`${basePath}shoelace-assets`);
 
 import { styles } from './styles/shared-styles';
 
-// IMPORTY WIDOKÓW:
+// IMPORTY WIDOKÓW: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 import './pages/app-home';
 import './pages/app-calendar';
 import './pages/app-groups';
 import './pages/app-events';
+import './pages/app-event-mock-detail';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
   @query('sl-drawer') drawer!: any;
   @state() private pageTitle = 'mParafia';
 
+  private touchStartX = 0;
+  private touchStartY = 0;
+  private touchEndX = 0;
+  private touchEndY = 0;
+
   static styles = [
     styles,
     css`
+      * {
+        -webkit-tap-highlight-color: transparent !important;
+      }
+
+      sl-button::part(base),
+      sl-icon-button::part(base),
+      sl-drawer::part(base),
+      sl-drawer::part(panel) {
+        -webkit-tap-highlight-color: transparent !important;
+        outline: none !important;
+      }
+
       .app-layout {
         display: flex;
         flex-direction: column;
@@ -50,7 +68,7 @@ export class AppIndex extends LitElement {
 
         position: sticky;
         top: 0;
-        z-index: 10;
+        z-index: 100;
       }
 
       header h1 {
@@ -114,8 +132,85 @@ export class AppIndex extends LitElement {
       sl-drawer {
         --size: 260px;
       }
+
+      .menu-links sl-button,
+      .bottom-links sl-button {
+        width: 100%;
+        justify-content: flex-start;
+        transition: filter 0.2s ease;
+      }
+
+      .menu-links sl-button::part(base),
+      .bottom-links sl-button::part(base) {
+        color: var(--color-wood-dark) !important;
+      }
+
+      .menu-links sl-button::part(base):active,
+      .bottom-links sl-button::part(base):active {
+        filter: brightness(1.5) !important;
+      }
+
+      @media (hover: hover) {
+        .menu-links sl-button::part(base):hover,
+        .bottom-links sl-button::part(base):hover {
+          filter: brightness(1.5) !important;
+        }
+      }
+
+      .menu-links sl-icon,
+      .bottom-links sl-icon {
+        color: var(--color-wood-dark);
+      }
     `
   ];
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('touchstart', this.handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', this.handleTouchMove, { passive: false });
+    window.addEventListener('touchend', this.handleTouchEnd, { passive: true });
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('touchstart', this.handleTouchStart);
+    window.removeEventListener('touchmove', this.handleTouchMove);
+    window.removeEventListener('touchend', this.handleTouchEnd);
+  }
+
+  private handleTouchStart = (e: TouchEvent) => {
+    this.touchStartX = e.changedTouches[0].screenX;
+    this.touchStartY = e.changedTouches[0].screenY;
+  }
+
+  private handleTouchMove = (e: TouchEvent) => {
+    if (this.touchStartX <= 30) {
+      e.preventDefault();
+    }
+  }
+
+  private handleTouchEnd = (e: TouchEvent) => {
+    this.touchEndX = e.changedTouches[0].screenX;
+    this.touchEndY = e.changedTouches[0].screenY;
+    this.checkSwipe();
+  }
+
+  private checkSwipe() {
+    const distanceX = this.touchEndX - this.touchStartX;
+    const distanceY = this.touchEndY - this.touchStartY;
+    if (Math.abs(distanceY) > Math.abs(distanceX)) {
+      return;
+    }
+
+    const startedAtLeftEdge = this.touchStartX <= 40;
+    if (startedAtLeftEdge && distanceX > 50 && this.drawer && !this.drawer.open) {
+      this.drawer.show();
+    }
+
+    if (this.drawer && this.drawer.open && distanceX < -50) {
+      this.drawer.hide();
+    }
+  }
 
   firstUpdated() {
     const outlet = this.shadowRoot?.querySelector('#router-outlet');
@@ -123,11 +218,12 @@ export class AppIndex extends LitElement {
     // @ts-ignore
     const router = new Router(outlet, { baseUrl: base });
 
-    router.setRoutes([
+    router.setRoutes([ // ROUTSY !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       { path: '/', component: 'app-home' },
       { path: '/kalendarz', component: 'app-calendar' },
       { path: '/grupy', component: 'app-groups' },
       { path: '/wydarzenia', component: 'app-events' },
+      { path: '/mock-event', component: 'app-event-mock-detail'},
       { path: '(.*)', redirect: '/' }
     ]);
   }
@@ -148,7 +244,7 @@ export class AppIndex extends LitElement {
     window.dispatchEvent(new PopStateEvent('popstate'));
   }
 
-render() {
+  render() {
     return html`
       <div class="app-layout">
 

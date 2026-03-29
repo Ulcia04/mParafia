@@ -12,8 +12,9 @@ export default defineConfig({
   plugins: [
     VitePWA({
       registerType: 'autoUpdate',
+      manifest: false,
       workbox: {
-        globPatterns: ['**/*.{html,js,css,json,png,ico,svg}'],
+        globPatterns: ['**/*.{html,js,css,json,png,ico,svg,jpg}'],
         navigateFallback: 'index.html'
       },
       devOptions: {

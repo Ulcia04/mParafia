@@ -2,7 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { styles } from '../styles/shared-styles';
 
-@customElement('app-groups')
+@customElement('app-groups') // <-- !!!!!!!!!!! Koniecznie zmienic na nazwe pliku np
 export class AppHome extends LitElement {
   connectedCallback() {
     super.connectedCallback();

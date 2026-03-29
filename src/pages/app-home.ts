@@ -145,7 +145,7 @@ export class AppHome extends LitElement {
       <main>
 
         <div class="logo-container">
-          <img src="./assets/icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
+          <img src="./icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
         </div>
 
         <div class="grid-container">
@@ -158,6 +158,16 @@ export class AppHome extends LitElement {
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/ogloszenia')}">
             <sl-icon name="journal-text"></sl-icon>
             <span>Ogłoszenia</span>
+          </sl-button>
+
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/wydarzenia')}">
+            <sl-icon name="people-fill"></sl-icon>
+            <span>Wydarzenia</span>
+          </sl-button>
+
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/grupy')}">
+            <sl-icon name="star-fill"></sl-icon>
+            <span>Grupy</span>
           </sl-button>
 
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/kancelaria')}">

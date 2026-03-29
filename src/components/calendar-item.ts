@@ -19,9 +19,11 @@ export class CalendarItem extends LitElement {
         align-items: center;
         gap: 4px;
         color: var(--color-sand-light);
-        padding: 2px 4px;
+        padding: var(--item-padding, 2px 4px);
         border-radius: 4px;
-        font-size: 10px;
+        font-size: var(--item-font-size, 10px);
+        width: 100%;
+        box-sizing: border-box;
         cursor: pointer;
         transition: transform 0.1s, filter 0.1s;
         margin-bottom: 3px;
@@ -52,12 +54,15 @@ export class CalendarItem extends LitElement {
         overflow: hidden;
         text-overflow: ellipsis;
         flex: 1;
+        min-width: 0;
       }
 
       .item-container.is-multiline .name {
         white-space: normal;
         overflow: visible;
         line-height: 1.3;
+        word-break: break-word;
+        overflow-wrap: break-word;
       }
 
       sl-icon {
@@ -82,10 +87,10 @@ export class CalendarItem extends LitElement {
 
   private handleClick() {
     if (!this.targetUrl) return;
-
-    const base = (import.meta as any).env.BASE_URL;
-    const fullPath = base === '/' ? this.targetUrl : base + this.targetUrl.substring(1);
-
+    // POTEM ZMIENIĆ
+    // const base = (import.meta as any).env.BASE_URL;
+    // const fullPath = base === '/' ? this.targetUrl : base + this.targetUrl.substring(1);
+    const fullPath = '/mParafia/mock-event';
     window.history.pushState({}, '', fullPath);
     window.dispatchEvent(new PopStateEvent('popstate'));
   }

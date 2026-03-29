@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 
+import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 import '@shoelace-style/shoelace/dist/components/button-group/button-group.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
@@ -18,28 +19,63 @@ export interface ParishEvent {
 }
 
 export const mockEvents: ParishEvent[] = [
-  // Końcówka marca
+  // --- MARZEC 2026 ---
+  { date: '2026-03-01', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
+  { date: '2026-03-01', title: 'Domowy Kościół', time: '16:00', category: 'domowy', targetUrl: '/grupy/domowy' },
+  { date: '2026-03-04', title: 'Krąg Biblijny', time: '18:45', category: 'biblijna', targetUrl: '/grupy/biblijna' },
+  { date: '2026-03-06', title: 'Droga Krzyżowa', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/droga-krzyzowa' },
+  { date: '2026-03-07', title: 'Oaza Dzieci Bożych', time: '11:00', category: 'odb', targetUrl: '/grupy/odb' },
+  { date: '2026-03-08', title: 'Gorzkie Żale', time: '17:15', category: 'wydarzenie', targetUrl: '/wydarzenia/gorzkie-zale' },
+  { date: '2026-03-12', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
+  { date: '2026-03-13', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
+  { date: '2026-03-13', title: 'Droga Krzyżowa', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/droga-krzyzowa' },
+  { date: '2026-03-15', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
+  { date: '2026-03-18', title: 'Krąg Biblijny', time: '18:45', category: 'biblijna', targetUrl: '/grupy/biblijna' },
+  { date: '2026-03-20', title: 'Droga Krzyżowa', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/droga-krzyzowa' },
+  { date: '2026-03-21', title: 'Oaza Dzieci Bożych', time: '11:00', category: 'odb', targetUrl: '/grupy/odb' },
+  { date: '2026-03-22', title: 'Gorzkie Żale', time: '17:15', category: 'wydarzenie', targetUrl: '/wydarzenia/gorzkie-zale' },
+  { date: '2026-03-27', title: 'Droga Krzyżowa', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/droga-krzyzowa' },
   { date: '2026-03-28', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
-  { date: '2026-03-28', title: 'Msza Wieczorna', time: '18:00', category: 'wydarzenie', targetUrl: '/wydarzenia/msza' },
-  { date: '2026-03-29', title: 'Próba Scholi', time: '10:00', category: 'schola', targetUrl: '/grupy/schola' },
-  { date: '2026-03-29', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
+  { date: '2026-03-29', title: 'Niedziela Palmowa - Konkurs Palm', time: '11:00', category: 'wydarzenie', targetUrl: '/wydarzenia/palmy' },
+  { date: '2026-03-29', title: 'Gorzkie Żale', time: '17:15', category: 'wydarzenie', targetUrl: '/wydarzenia/gorzkie-zale' },
+  { date: '2026-03-30', title: 'Droga Krzyżowa (Oaza)', time: '17:30', category: 'oaza', targetUrl: '/grupy/oaza' },
+  { date: '2026-03-30', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
+  { date: '2026-03-31', title: 'Próba Scholi (Triduum)', time: '18:30', category: 'schola', targetUrl: '/grupy/schola' },
 
-  // Kwiecień
-  { date: '2026-04-02', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
-  { date: '2026-04-03', title: 'Droga Krzyżowa', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/droga-krzyzowa' },
-  { date: '2026-04-04', title: 'Oaza Dzieci Bożych', time: '11:00', category: 'odb', targetUrl: '/grupy/odb' },
-  { date: '2026-04-05', title: 'Domowy Kościół', time: '16:00', category: 'domowy', targetUrl: '/grupy/domowy' },
-  { date: '2026-04-05', title: 'Gorzkie Żale', time: '17:15', category: 'wydarzenie', targetUrl: '/wydarzenia/gorzkie-zale' },
-  { date: '2026-04-08', title: 'Grupa biblijna', time: '19:15', category: 'biblijna', targetUrl: '/grupy/biblijna' },
+  // --- KWIECIEŃ 2026  ---
+  { date: '2026-04-02', title: 'Msza Wieczerzy Pańskiej', time: '18:00', category: 'wydarzenie', targetUrl: '/wydarzenia/wielki-czwartek' },
+  { date: '2026-04-03', title: 'Ciemna Jutrznia', time: '08:00', category: 'wydarzenie', targetUrl: '/wydarzenia/jutrznia' },
+  { date: '2026-04-03', title: 'Liturgia Męki Pańskiej', time: '18:00', category: 'wydarzenie', targetUrl: '/wydarzenia/wielki-piatek' },
+  { date: '2026-04-04', title: 'Święcenie Pokarmów', time: '09:00', category: 'wydarzenie', targetUrl: '/wydarzenia/swiecenie' },
+  { date: '2026-04-04', title: 'Wigilia Paschalna', time: '20:00', category: 'wydarzenie', targetUrl: '/wydarzenia/wigilia-paschalna' },
+  { date: '2026-04-05', title: 'Rezurekcja', time: '06:00', category: 'wydarzenie', targetUrl: '/wydarzenia/wielkanoc' },
+  { date: '2026-04-07', title: 'Krąg Biblijny', time: '18:45', category: 'biblijna', targetUrl: '/grupy/biblijna' },
+  { date: '2026-04-09', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
   { date: '2026-04-10', title: 'Próba Scholi', time: '18:30', category: 'schola', targetUrl: '/grupy/schola' },
   { date: '2026-04-11', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
   { date: '2026-04-12', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
   { date: '2026-04-14', title: 'Krąg Biblijny', time: '18:45', category: 'biblijna', targetUrl: '/grupy/biblijna' },
   { date: '2026-04-16', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
+  { date: '2026-04-17', title: 'Próba Scholi', time: '18:30', category: 'schola', targetUrl: '/grupy/schola' },
   { date: '2026-04-18', title: 'Oaza Dzieci Bożych', time: '11:00', category: 'odb', targetUrl: '/grupy/odb' },
   { date: '2026-04-19', title: 'Domowy Kościół', time: '16:00', category: 'domowy', targetUrl: '/grupy/domowy' },
+  { date: '2026-04-23', title: 'Uroczystość św. Wojciecha (Odpust)', time: '18:00', category: 'wydarzenie', targetUrl: '/wydarzenia/odpust' },
   { date: '2026-04-24', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
   { date: '2026-04-26', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
+
+  // --- MAJ 2026 ---
+  { date: '2026-05-01', title: 'Rozpoczęcie Nabożeństw Majowych', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/majowe' },
+  { date: '2026-05-03', title: 'NMP Królowej Polski', time: '11:00', category: 'wydarzenie', targetUrl: '/wydarzenia/3-maja' },
+  { date: '2026-05-08', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
+  { date: '2026-05-09', title: 'Oaza Dzieci Bożych', time: '11:00', category: 'odb', targetUrl: '/grupy/odb' },
+  { date: '2026-05-10', title: 'Zbiórka LSO', time: '09:00', category: 'lso', targetUrl: '/grupy/lso' },
+  { date: '2026-05-13', title: 'Nabożeństwo Fatimskie', time: '20:00', category: 'wydarzenie', targetUrl: '/wydarzenia/fatimskie' },
+  { date: '2026-05-14', title: 'Rada Parafialna', time: '20:00', category: 'rada', targetUrl: '/grupy/rada' },
+  { date: '2026-05-17', title: 'Domowy Kościół', time: '16:00', category: 'domowy', targetUrl: '/grupy/domowy' },
+  { date: '2026-05-22', title: 'Spotkanie Oazy', time: '19:00', category: 'oaza', targetUrl: '/grupy/oaza' },
+  { date: '2026-05-24', title: 'Zesłanie Ducha Świętego', time: '11:00', category: 'wydarzenie', targetUrl: '/wydarzenia/zeslanie' },
+  { date: '2026-05-27', title: 'Krąg Biblijny', time: '18:45', category: 'biblijna', targetUrl: '/grupy/biblijna' },
+  { date: '2026-05-31', title: 'Zakończenie Nabożeństw Majowych', time: '17:30', category: 'wydarzenie', targetUrl: '/wydarzenia/majowe' },
 ];
 
 type CalendarView = 'month' | 'week' | 'day';
@@ -129,7 +165,7 @@ export class AppCalendar extends LitElement {
 
       .day {
         background: var(--color-sand-light);
-        min-height: 30px;
+        min-height: 35px;
         padding: 2px;
         display: flex;
         flex-direction: column;
@@ -180,6 +216,7 @@ export class AppCalendar extends LitElement {
         overflow-x: auto;
         scrollbar-width: thin;
         scrollbar-color: var(--color-wood-medium) var(--color-sand-light);
+        touch-action: pan-x pan-y;
       }
 
       .grid-week::-webkit-scrollbar {
@@ -201,7 +238,7 @@ export class AppCalendar extends LitElement {
         display: flex;
         flex-direction: column;
         color: var(--color-wood-dark);
-        min-width: 100px;
+        min-width: 140px;
         cursor: pointer;
         transition: filter 0.2s ease;
       }
@@ -267,19 +304,86 @@ export class AppCalendar extends LitElement {
       .list-day-row.today {
         background-color: #E8C09A;
       }
+
+ /* --- STYLE PRZEŁĄCZNIKA (FILTROWANIA) --- */
+      .filter-controls {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 25px;
+        width: 100%;
+      }
+
+      sl-switch {
+        --sl-toggle-size: 1.2rem;
+        display: flex;
+        align-items: center;
+      }
+
+      sl-switch::part(thumb) {
+        background-color: var(--color-wood-medium) !important;
+        border: 2px solid var(--color-wood-medium) !important;
+        transition: background-color 0.3s ease, border-color 0.3s ease !important;
+      }
+
+      sl-switch[checked]::part(thumb) {
+        background-color: var(--color-wood-dark) !important;
+        border-color: var(--color-wood-dark) !important;
+      }
+      sl-switch::part(control) {
+        background-color: var(--color-cookie-medium) !important;
+        border-color: var(--color-cookie-medium) !important;
+        box-shadow: none !important;
+        outline: none !important;
+        transition: background-color 0.3s ease, border-color 0.3s ease !important;
+      }
+
+      sl-switch[checked]::part(control) {
+        background-color: var(--color-wood-medium) !important;
+        border-color: var(--color-wood-medium) !important;
+      }
+
+      sl-switch::part(label) {
+        color: var(--color-wood-dark);
+        font-size: 0.9rem;
+        font-weight: 500;
+        margin-left: 8px;
+        transition: font-weight 0.1s ease !important;
+      }
+
+      sl-switch[checked]::part(label) {
+        font-weight: 530;
+      }
     `
   ];
 
   @state() private events: ParishEvent[] = mockEvents;
   @state() private currentView: CalendarView = 'month';
   @state() private currentDate = new Date();
+  @state() private showOnlyMyGroups = false;
+  private myGroups = ['oaza', 'schola']; // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!  HARDCODE
+
+  private getFilteredEvents() {
+    if (!this.showOnlyMyGroups) {
+      return this.events;
+    }
+
+    return this.events.filter(e =>
+      e.category === 'wydarzenie' ||
+      this.myGroups.includes(e.category)
+    );
+  }
 
   private _navigate(direction: 'prev' | 'next') {
     const newDate = new Date(this.currentDate);
     const amount = direction === 'next' ? 1 : -1;
 
     if (this.currentView === 'month') {
+      const expectedMonth = (newDate.getMonth() + amount + 12) % 12;
       newDate.setMonth(newDate.getMonth() + amount);
+      if (newDate.getMonth() !== expectedMonth) {
+        newDate.setDate(0);
+      }
     } else if (this.currentView === 'week') {
       newDate.setDate(newDate.getDate() + (7 * amount));
     } else if (this.currentView === 'day') {
@@ -287,11 +391,18 @@ export class AppCalendar extends LitElement {
     }
 
     this.currentDate = newDate;
+    this.requestUpdate();
   }
 
   private switchToDayView(date: Date) {
     this.currentDate = date;
     this.currentView = 'day';
+  }
+
+  private changeView(view: CalendarView) {
+    this.currentView = view;
+    this.currentDate = new Date();
+    this.requestUpdate();
   }
 
   private _getHeaderTitle() {
@@ -335,9 +446,9 @@ export class AppCalendar extends LitElement {
     return html`
       <div class="view-controls">
         <sl-button-group>
-          <sl-button variant=${this.currentView === 'month' ? 'primary' : 'default'} @click=${() => this.currentView = 'month'}>Miesiąc</sl-button>
-          <sl-button variant=${this.currentView === 'week' ? 'primary' : 'default'} @click=${() => this.currentView = 'week'}>Tydzień</sl-button>
-          <sl-button variant=${this.currentView === 'day' ? 'primary' : 'default'} @click=${() => this.currentView = 'day'}>Dzień</sl-button>
+          <sl-button variant=${this.currentView === 'month' ? 'primary' : 'default'} @click=${() => this.changeView('month')}>Miesiąc</sl-button>
+          <sl-button variant=${this.currentView === 'week' ? 'primary' : 'default'} @click=${() => this.changeView('week')}>Tydzień</sl-button>
+          <sl-button variant=${this.currentView === 'day' ? 'primary' : 'default'} @click=${() => this.changeView('day')}>Dzień</sl-button>
         </sl-button-group>
       </div>
 
@@ -346,6 +457,14 @@ export class AppCalendar extends LitElement {
         <h2>${this._getHeaderTitle()}</h2>
         <sl-icon-button name="chevron-right" @click=${() => this._navigate('next')}></sl-icon-button>
       </div>
+
+            <div class="filter-controls">
+              <sl-switch
+                ?checked=${this.showOnlyMyGroups}
+                @sl-change=${(e: any) => { this.showOnlyMyGroups = e.target.checked; this.requestUpdate(); }} >
+                Tylko moje grupy i główne wydarzenia
+              </sl-switch>
+            </div>
 
       ${this.currentView === 'month' ? this.renderMonthView() : null}
       ${this.currentView === 'week'  ? this.renderWeekView()  : null}
@@ -369,7 +488,7 @@ export class AppCalendar extends LitElement {
         ${emptyDays.map(() => html`<div class="day empty"></div>`)}
         ${calendarDays.map(day => {
           const dateString = this._formatDateString(new Date(year, month, day));
-          const dayEvents = this.events.filter(e => e.date === dateString);
+          const dayEvents = this.getFilteredEvents().filter(e => e.date === dateString);
           const isToday = this._isToday(new Date(year, month, day));
 
           return html`
@@ -398,7 +517,7 @@ export class AppCalendar extends LitElement {
       <div class="grid-week">
         ${weekDays.map(date => {
           const dateString = this._formatDateString(date);
-          const dayEvents = this.events.filter(e => e.date === dateString);
+          const dayEvents = this.getFilteredEvents().filter(e => e.date === dateString);
           const isToday = this._isToday(date);
 
           return html`
@@ -412,7 +531,11 @@ export class AppCalendar extends LitElement {
               </div>
 
               ${dayEvents.length > 0
-                ? this.renderEventTags(dayEvents, 'week')
+                ? html`
+                    <div class="week-events-container">
+                      ${this.renderEventTags(dayEvents, 'week')}
+                    </div>
+                  `
                 : html`<div class="no-events-small">Brak</div>`
               }
             </div>
@@ -424,7 +547,7 @@ export class AppCalendar extends LitElement {
 
   renderDayView() {
     const dateString = this._formatDateString(this.currentDate);
-    const dayEvents = this.events.filter(e => e.date === dateString);
+    const dayEvents = this.getFilteredEvents().filter(e => e.date === dateString);
     const isToday = this._isToday(this.currentDate);
 
     return html`
@@ -443,14 +566,22 @@ export class AppCalendar extends LitElement {
 
   renderEventTags(dayEvents: ParishEvent[], viewType: string) {
     const isMultiline = viewType === 'week' || viewType === 'day';
-    const isDayView = viewType === 'day';
+    const showUrl = viewType === 'day' || viewType === 'week';
+
     return dayEvents.map(e => html`
       <calendar-item
         time="${e.time}"
         name="${e.title}"
         category="${e.category}"
         ?multiline=${isMultiline}
-        targetUrl="${isDayView ? e.targetUrl : ''}">
+        targetUrl="${showUrl ? e.targetUrl : ''}"
+
+        @click=${(event: Event) => {
+          if (viewType === 'week') {
+            event.stopPropagation();
+          }
+        }}
+      >
       </calendar-item>
     `);
   }
