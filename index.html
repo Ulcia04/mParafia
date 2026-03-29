@@ -78,6 +78,7 @@
         overscroll-behavior: none;
         -webkit-tap-highlight-color: transparent !important;
         -webkit-touch-callout: none;
+        touch-action: pan-y;
       }
     </style>
     <script type="module" crossorigin src="/mParafia/assets/index-BHJxV0Rw.js"></script>
@@ -98,16 +99,6 @@
             });
         });
       }
-
-      document.addEventListener('touchstart', (event) => {
-        const touchX = event.touches[0].clientX;
-        if (touchX < 30) {
-           event.preventDefault()
-        }
-      }, { passive: false });
-      document.body.addEventListener('touchmove', function(e) {
-          e.preventDefault();
-      }, { passive: false });
     </script>
   </body>
 </html>
