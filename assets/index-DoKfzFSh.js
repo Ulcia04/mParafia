@@ -1635,20 +1635,39 @@ try {
     user-select: none !important;
   }
 
- a,
+  sl-button::part(base),
+  sl-icon-button::part(base),
+  sl-menu-item::part(base),
+  sl-drawer::part(close-button) {
+    -webkit-tap-highlight-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  a,
   sl-button::part(base),
   sl-button::part(label),
-  sl-menu-item::part(base) {
+  sl-menu-item::part(base),
+  sl-icon-button::part(base),
+  sl-drawer::part(close-button) {
     color: var(--color-wood-dark) !important;
     text-decoration: none !important;
-    transition: color 0.2s ease !important;
+    transition: color 0.2s ease, opacity 0.2s ease !important;
   }
 
   a:hover,
   a:active,
   sl-button::part(base):hover,
-  sl-button::part(base):active {
-    color: var(--color-wood-medium) !important;
+  sl-button::part(base):active,
+  sl-menu-item::part(base):hover,
+  sl-menu-item::part(base):active,
+  sl-icon-button::part(base):hover,
+  sl-icon-button::part(base):active,
+  sl-drawer::part(close-button):hover,
+  sl-drawer::part(close-button):active {
+    opacity: 0.6 !important;
+    color: var(--color-wood-dark) !important;
+    background-color: transparent !important;
   }
 
   sl-button[variant="primary"]::part(base),
@@ -1656,25 +1675,7 @@ try {
   sl-button.active::part(base),
   sl-button.active::part(label) {
     color: var(--color-sand-light) !important;
-  }
-
-  sl-button::part(base),
-  sl-icon-button::part(base),
-  sl-menu-item::part(base) {
-    -webkit-tap-highlight-color: transparent !important;
-    outline: none !important;
-    box-shadow: none !important;
-  }
-
-  sl-button::part(base):focus,
-  sl-button::part(base):active,
-  sl-button::part(base):focus-visible,
-  sl-icon-button::part(base):focus,
-  sl-icon-button::part(base):active,
-  sl-icon-button::part(base):focus-visible {
-    outline: none !important;
-    box-shadow: none !important;
-    background-color: inherit;
+    opacity: 1 !important;
   }
 
   :host {
@@ -2331,4 +2332,4 @@ try {
         --size: 260px;
       }
     `];Se([J("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-CLIQyGia.js.map
+//# sourceMappingURL=index-DoKfzFSh.js.map
