@@ -1653,21 +1653,29 @@ try {
     color: var(--color-wood-dark) !important;
     text-decoration: none !important;
     transition: color 0.2s ease, opacity 0.2s ease !important;
+    opacity: 1 !important;
   }
 
-  a:hover,
   a:active,
-  sl-button::part(base):hover,
   sl-button::part(base):active,
-  sl-menu-item::part(base):hover,
   sl-menu-item::part(base):active,
-  sl-icon-button::part(base):hover,
   sl-icon-button::part(base):active,
-  sl-drawer::part(close-button):hover,
   sl-drawer::part(close-button):active {
     opacity: 0.6 !important;
     color: var(--color-wood-dark) !important;
     background-color: transparent !important;
+  }
+
+  @media (hover: hover) {
+    a:hover,
+    sl-button::part(base):hover,
+    sl-menu-item::part(base):hover,
+    sl-icon-button::part(base):hover,
+    sl-drawer::part(close-button):hover {
+      opacity: 0.6 !important;
+      color: var(--color-wood-dark) !important;
+      background-color: transparent !important;
+    }
   }
 
   sl-button[variant="primary"]::part(base),
@@ -2332,4 +2340,4 @@ try {
         --size: 260px;
       }
     `];Se([J("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-DoKfzFSh.js.map
+//# sourceMappingURL=index-DcdDDRfz.js.map
