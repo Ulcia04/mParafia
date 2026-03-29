@@ -1635,15 +1635,27 @@ try {
     user-select: none !important;
   }
 
-  a,
-  a:active,
-  a:visited,
-  a:hover,
+ a,
   sl-button::part(base),
   sl-button::part(label),
   sl-menu-item::part(base) {
     color: var(--color-wood-dark) !important;
     text-decoration: none !important;
+    transition: color 0.2s ease !important;
+  }
+
+  a:hover,
+  a:active,
+  sl-button::part(base):hover,
+  sl-button::part(base):active {
+    color: var(--color-wood-medium) !important;
+  }
+
+  sl-button[variant="primary"]::part(base),
+  sl-button[variant="primary"]::part(label),
+  sl-button.active::part(base),
+  sl-button.active::part(label) {
+    color: var(--color-sand-light) !important;
   }
 
   sl-button::part(base),
@@ -2319,4 +2331,4 @@ try {
         --size: 260px;
       }
     `];Se([J("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-MEv_gmTA.js.map
+//# sourceMappingURL=index-CLIQyGia.js.map
