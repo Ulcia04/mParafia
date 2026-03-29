@@ -2542,7 +2542,7 @@ try {
       .groups-grid {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 25px;
       }
 
       .group-card {
@@ -2894,4 +2894,4 @@ try {
         color: var(--color-wood-dark);
       }
     `];De([K("sl-drawer")],Dt.prototype,"drawer",2);De([C()],Dt.prototype,"pageTitle",2);Dt=De([at("app-index")],Dt);
-//# sourceMappingURL=index-s30KASAI.js.map
+//# sourceMappingURL=index-Cnqzl032.js.map
