@@ -1642,7 +1642,7 @@ try {
   sl-button::part(base),
   sl-button::part(label),
   sl-menu-item::part(base) {
-    color: inherit !important;
+    color: var(--color-wood-dark) !important;
     text-decoration: none !important;
   }
 
@@ -2319,4 +2319,4 @@ try {
         --size: 260px;
       }
     `];Se([J("sl-drawer")],Pt.prototype,"drawer",2);Se([F()],Pt.prototype,"pageTitle",2);Pt=Se([st("app-index")],Pt);
-//# sourceMappingURL=index-D9sh55OL.js.map
+//# sourceMappingURL=index-MEv_gmTA.js.map
