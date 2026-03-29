@@ -2116,9 +2116,11 @@ try {
         align-items: center;
         gap: 4px;
         color: var(--color-sand-light);
-        padding: 2px 4px;
+        padding: var(--item-padding, 2px 4px);
         border-radius: 4px;
-        font-size: 10px;
+        font-size: var(--item-font-size, 10px);
+        width: 100%;
+        box-sizing: border-box;
         cursor: pointer;
         transition: transform 0.1s, filter 0.1s;
         margin-bottom: 3px;
@@ -2149,12 +2151,15 @@ try {
         overflow: hidden;
         text-overflow: ellipsis;
         flex: 1;
+        min-width: 0;
       }
 
       .item-container.is-multiline .name {
         white-space: normal;
         overflow: visible;
         line-height: 1.3;
+        word-break: break-word;
+        overflow-wrap: break-word;
       }
 
       sl-icon {
@@ -2601,13 +2606,15 @@ try {
       :host {
         display: block;
         padding: 15px;
-        max-width: 800px;
+        width: 100%;
+        max-width: 600px;
         margin: 0 auto;
         box-sizing: border-box;
       }
 
       .day-section {
         margin-bottom: 25px;
+        width: 100%;
       }
 
       .day-header {
@@ -2627,6 +2634,7 @@ try {
       .events-list {
         display: flex;
         flex-direction: column;
+        align-items: stretch;
         gap: 12px;
         padding: 5px 0;
         width: 100%;
@@ -2635,7 +2643,7 @@ try {
       calendar-item {
         display: block;
         width: 100%;
-        --item-font-size: 1.15rem;
+        --item-font-size: 12px;
         box-sizing: border-box;
         cursor: pointer;
       }
@@ -2885,4 +2893,4 @@ try {
         color: var(--color-wood-dark);
       }
     `];Oe([K("sl-drawer")],Ot.prototype,"drawer",2);Oe([C()],Ot.prototype,"pageTitle",2);Ot=Oe([at("app-index")],Ot);
-//# sourceMappingURL=index-COWvc9fb.js.map
+//# sourceMappingURL=index-XyxynnLc.js.map
