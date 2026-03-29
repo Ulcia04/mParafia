@@ -2479,13 +2479,16 @@ try {
  /* --- STYLE PRZEŁĄCZNIKA (FILTROWANIA) --- */
       .filter-controls {
         display: flex;
-        justify-content: flex-end;
-        margin-bottom: 15px;
-        padding-right: 5px;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 25px;
+        width: 100%;
       }
 
       sl-switch {
         --sl-toggle-size: 1.2rem;
+        display: flex;
+        align-items: center;
       }
 
       sl-switch::part(thumb) {
@@ -2662,4 +2665,4 @@ try {
         --size: 260px;
       }
     `];Oe([K("sl-drawer")],Dt.prototype,"drawer",2);Oe([P()],Dt.prototype,"pageTitle",2);Dt=Oe([ut("app-index")],Dt);
-//# sourceMappingURL=index-HQ13n42W.js.map
+//# sourceMappingURL=index-ORbA53jD.js.map
