@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+provider = "postgresql"
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  email         String         @unique
+  name          String?
+  groups        Group[]        
+  notifications Notification[] 
+}
+
+model Group {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String?
+  members     User[]    
+  events      Event[]   
+  photoUrl    String?
+}
+
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String   
+  description String?  
+  startTime   DateTime 
+  location    String?  
+  groupId     Int?
+  group       Group?   @relation(fields: [groupId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  content   String   
+  sendAt    DateTime 
+  isSent    Boolean  @default(false)
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Announcement {
+  id        Int      @id @default(autoincrement())
+  title     String   
+  content   String  
+  date      DateTime 
+  isMain    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
