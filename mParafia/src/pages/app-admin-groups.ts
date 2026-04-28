@@ -14,6 +14,7 @@ export class AppAdminGroups extends LitElement {
   @state() private groups: any[] = [];
   @query('sl-dialog') dialog!: any;
   @state() private editingGroup: any = null;
+  @state() private isSubmitting = false;
 
   static styles = [
     sharedStyles,
@@ -22,14 +23,14 @@ export class AppAdminGroups extends LitElement {
         display: block;
         padding: 10px 0;
       }
-      
+
       .header-actions {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-bottom: 25px;
       }
-      
+
       .header-actions h2 {
         margin: 0;
         color: var(--color-wood-dark);
@@ -93,7 +94,7 @@ export class AppAdminGroups extends LitElement {
         font-size: 1.3rem;
         color: var(--color-wood-dark);
       }
-      
+
       sl-icon-button::part(base):hover {
         color: var(--color-wood-medium);
       }
@@ -106,8 +107,8 @@ export class AppAdminGroups extends LitElement {
     `
   ];
 
-  async firstUpdated() { 
-    this.fetchGroups(); 
+  async firstUpdated() {
+    this.fetchGroups();
   }
 
   async fetchGroups() {
@@ -121,18 +122,40 @@ export class AppAdminGroups extends LitElement {
   }
 
   private async save() {
-    const method = this.editingGroup.id ? 'PUT' : 'POST';
-    const url = this.editingGroup.id 
-      ? `http://localhost:3000/api/groups/${this.editingGroup.id}` 
-      : 'http://localhost:3000/api/groups';
+    if (!this.editingGroup?.name || this.editingGroup.name.trim() === '') {
+      alert('Nazwa grupy jest wymagana!');
+      return;
+    }
 
-    await fetch(url, {
-      method,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(this.editingGroup)
-    });
-    this.dialog.hide();
-    this.fetchGroups();
+    if (this.isSubmitting) return;
+    this.isSubmitting = true;
+
+    try {
+      const method = this.editingGroup.id ? 'PUT' : 'POST';
+      const url = this.editingGroup.id
+        ? `http://localhost:3000/api/groups/${this.editingGroup.id}`
+        : 'http://localhost:3000/api/groups';
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(this.editingGroup)
+      });
+
+
+      if (res.ok) {
+        this.dialog.hide();
+        await this.fetchGroups();
+      } else {
+        alert('Wystąpił błąd przy zapisywaniu grupy.');
+      }
+    } catch (e) {
+      console.error(e);
+      alert('Nie udało się połączyć z serwerem.');
+    } finally {
+      // 4. Zdejmujemy blokadę
+      this.isSubmitting = false;
+    }
   }
 
   private async deleteGroup(id: number) {
@@ -154,26 +177,26 @@ export class AppAdminGroups extends LitElement {
       <div class="list-container">
         ${this.groups.map(g => html`
           <div class="list-item">
-            
+
             <div class="logo-container">
-              <sl-avatar 
-                image="${g.photoUrl || ''}" 
-                label="${g.name}" 
-                initials="${g.name.substring(0, 2).toUpperCase()}" 
+              <sl-avatar
+                image="${g.photoUrl || ''}"
+                label="${g.name}"
+                initials="${g.name.substring(0, 2).toUpperCase()}"
                 style="--size: 50px;">
               </sl-avatar>
             </div>
-            
+
             <div class="content-container">
               <span class="entity-name">${g.name}</span>
               ${g.description ? html`<span class="entity-desc">${g.description}</span>` : ''}
             </div>
-            
+
             <div class="actions-container">
               <sl-button size="small" variant="default" @click=${() => this.openEdit(g)}>
                 <sl-icon slot="prefix" name="pencil"></sl-icon> Edytuj
               </sl-button>
-              
+
               <sl-button size="small" variant="danger" outline @click=${() => this.deleteGroup(g.id)}>
                 <sl-icon slot="prefix" name="trash"></sl-icon> Usuń
               </sl-button>
@@ -191,7 +214,7 @@ export class AppAdminGroups extends LitElement {
         </form>
         <sl-button slot="footer" variant="primary" @click=${this.save}>Zapisz zmiany</sl-button>
       </sl-dialog>
-      
+
     `;
   }
 }

@@ -6,6 +6,8 @@ import '@shoelace-style/shoelace/dist/components/switch/switch.js';
 import '@shoelace-style/shoelace/dist/components/icon-button/icon-button.js';
 import '@shoelace-style/shoelace/dist/components/button-group/button-group.js';
 import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/radio-group/radio-group.js';
+import '@shoelace-style/shoelace/dist/components/radio-button/radio-button.js';
 
 import { styles as sharedStyles } from '../styles/shared-styles';
 import '../components/calendar-item';
@@ -13,8 +15,8 @@ import '../components/calendar-item';
 export interface ParishEvent {
   id: number;
   title: string;
-  description: string; 
-  startTime: string;   
+  description: string;
+  startTime: string;
   location: string;
   category?: string;
   groupId?: number | null;
@@ -329,19 +331,26 @@ export class AppCalendar extends LitElement {
   @state() private currentView: CalendarView = 'month';
   @state() private currentDate = new Date();
   @state() private showOnlyMyGroups = false;
+  @state() private displayMode: 'all' | 'events' | 'intentions' = 'all';
 
   private getFilteredEvents() {
-    if (!this.showOnlyMyGroups) {
-      return this.events;
+    let filtered = this.events;
+
+    if (this.displayMode === 'events') {
+      filtered = filtered.filter(e => !e.title.startsWith('Intencja:'));
+    } else if (this.displayMode === 'intentions') {
+      filtered = filtered.filter(e => e.title.startsWith('Intencja:'));
     }
 
-    const dynamicGroupNames = this.groups.map((g: any) => g.name.toLowerCase());
+    if (this.showOnlyMyGroups && this.displayMode !== 'intentions') {
+      const dynamicGroupNames = this.groups.map((g: any) => g.name.toLowerCase());
+      filtered = filtered.filter(e => {
+         const category = e.category ? e.category.toLowerCase() : 'wydarzenie';
+         return category === 'wydarzenie' || dynamicGroupNames.includes(category);
+      });
+    }
 
-    return this.events.filter(e => {
-       const category = e.category ? e.category.toLowerCase() : 'wydarzenie';
-       
-       return category === 'wydarzenie' || dynamicGroupNames.includes(category);
-    });
+    return filtered;
   }
 
   private _navigate(direction: 'prev' | 'next') {
@@ -428,12 +437,20 @@ render() {
         <sl-icon-button name="chevron-right" @click=${() => this._navigate('next')}></sl-icon-button>
       </div>
 
-      <div class="filter-controls">
-        <sl-switch
-          ?checked=${this.showOnlyMyGroups}
-          @sl-change=${(e: any) => { this.showOnlyMyGroups = e.target.checked; this.requestUpdate(); }} >
-          Tylko moje grupy i główne wydarzenia
-        </sl-switch>
+      <div class="filter-controls" style="flex-direction: column; gap: 15px;">
+        <sl-radio-group value=${this.displayMode} @sl-change=${(e: any) => { this.displayMode = e.target.value; this.requestUpdate(); }}>
+          <sl-radio-button value="all">Wszystko</sl-radio-button>
+          <sl-radio-button value="events">Wydarzenia</sl-radio-button>
+          <sl-radio-button value="intentions">Intencje</sl-radio-button>
+        </sl-radio-group>
+
+        ${this.displayMode !== 'intentions' ? html`
+          <sl-switch
+            ?checked=${this.showOnlyMyGroups}
+            @sl-change=${(e: any) => { this.showOnlyMyGroups = e.target.checked; this.requestUpdate(); }} >
+            Tylko moje grupy i główne wydarzenia
+          </sl-switch>
+        ` : ''}
       </div>
 
       ${this.currentView === 'month' ? this.renderMonthView() : null}
@@ -445,9 +462,9 @@ render() {
   private _getEventsForDate(date: Date) {
     return this.getFilteredEvents().filter(e => {
       if (!e.startTime) return false;
-      
+
       const eventDate = new Date(e.startTime);
-      
+
       return eventDate.getFullYear() === date.getFullYear() &&
              eventDate.getMonth() === date.getMonth() &&
              eventDate.getDate() === date.getDate();
@@ -469,8 +486,8 @@ renderMonthView() {
         ${emptyDays.map(() => html`<div class="day empty"></div>`)}
         ${calendarDays.map(day => {
           const cellDate = new Date(year, month, day);
-          
-          const dayEvents = this._getEventsForDate(cellDate); 
+
+          const dayEvents = this._getEventsForDate(cellDate);
           const isToday = this._isToday(cellDate);
 
           return html`
@@ -552,7 +569,7 @@ renderMonthView() {
   //   return dayEvents.map(e => {
   //     const eventDate = new Date(e.startTime);
   //     const timeStr = eventDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-      
+
   //     // Magia: Szukamy nazwy grupy w pobranej liście z bazy danych
   //     const group = this.groups.find(g => g.id === e.groupId);
   //     // Tworzymy "klasę css" z nazwy grupy, a jeśli nie ma przypisanej grupy, wpisujemy 'wydarzenie'
@@ -577,7 +594,7 @@ renderMonthView() {
     return dayEvents.map(e => {
       const eventDate = new Date(e.startTime);
       const timeStr = eventDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-      
+
       // FIX: Tymczasowo wymuszamy kategorię 'wydarzenie' dla wszystkich wpisów z bazy,
       // aby miały gwarantowany kolor tła (np. brązowy/szary) i nie znikały!
       const category = 'wydarzenie';

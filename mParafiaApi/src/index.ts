@@ -11,7 +11,7 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
 
 app.get('/api/status', (req, res) => {
@@ -20,7 +20,7 @@ app.get('/api/status', (req, res) => {
 
 app.get('/api/events', async (req, res) => {
   const events = await prisma.event.findMany({
-    where: { startTime: { gte: new Date() } }, 
+    where: { startTime: { gte: new Date() } },
     orderBy: { startTime: 'asc' }
   });
   res.json(events);
@@ -43,15 +43,15 @@ app.get('/api/groups', async (req, res) => {
 
 app.post('/api/groups', async (req, res) => {
   try {
-    const { name, description } = req.body; 
+    const { name, description } = req.body;
     const nowaGrupa = await prisma.group.create({
       data: {
         name: name,
         description: description,
       },
     });
-    
-    res.json(nowaGrupa); 
+
+    res.json(nowaGrupa);
 
   } catch (error) {
     console.error("Błąd zapisu do bazy:", error);
@@ -63,7 +63,7 @@ app.put('/api/events/:id', async (req, res) => {
   const { title, description, startTime, location, groupId } = req.body;
   const updated = await prisma.event.update({
     where: { id: Number(id) },
-    data: { title, description, startTime: new Date(startTime), location, groupId: Number(groupId) }
+    data: { title, description, startTime: new Date(startTime), location, groupId: groupId ? Number(groupId) : null }
   });
   res.json(updated);
 });
@@ -92,7 +92,7 @@ app.post('/api/events', async (req, res) => {
         description,
         startTime: new Date(startTime),
         location,
-        groupId: groupId ? Number(groupId) : null 
+        groupId: groupId ? Number(groupId) : null
       }
     });
     res.json(newEvent);
@@ -121,7 +121,7 @@ app.put('/api/events/:id', async (req, res) => {
   try {
     const { id } = req.params;
     const { title, description, startTime, location, groupId } = req.body;
-    
+
     const updatedEvent = await prisma.event.update({
       where: { id: Number(id) },
       data: {
@@ -156,7 +156,7 @@ app.delete('/api/events/:id', async (req, res) => {
 app.get('/api/announcements', async (req, res) => {
   try {
     const announcements = await prisma.announcement.findMany({
-      orderBy: { date: 'desc' }, 
+      orderBy: { date: 'desc' },
     });
     res.json(announcements);
   } catch (error) {
@@ -216,7 +216,7 @@ app.delete('/api/announcements/:id', async (req, res) => {
     await prisma.announcement.delete({
       where: { id: parseInt(id) },
     });
-    res.status(204).send(); 
+    res.status(204).send();
   } catch (error) {
     res.status(500).json({ error: 'Nie udało się usunąć ogłoszenia' });
   }
@@ -226,7 +226,7 @@ app.put('/api/announcements/:id/toggle-main', async (req, res) => {
   const { id } = req.params;
   try {
     const current = await prisma.announcement.findUnique({ where: { id: parseInt(id) } });
-    
+
     if (!current) {
       return res.status(404).json({ error: 'Nie znaleziono ogłoszenia' });
     }
@@ -235,10 +235,36 @@ app.put('/api/announcements/:id/toggle-main', async (req, res) => {
       where: { id: parseInt(id) },
       data: { isMain: !current.isMain }
     });
-    
+
     res.json(updated);
   } catch (error) {
     res.status(500).json({ error: 'Błąd serwera' });
+  }
+});
+
+app.post('/api/events/bulk', async (req, res) => {
+  try {
+    const { events } = req.body;
+
+    if (!events || !Array.isArray(events)) {
+      return res.status(400).json({ error: "Brak danych lub zły format" });
+    }
+
+    // Tworzenie wielu wydarzeń (intencji) na raz
+    const created = await prisma.event.createMany({
+      data: events.map((e: any) => ({
+        title: e.title,
+        description: e.description || '',
+        startTime: new Date(e.startTime),
+        location: 'Kościół',
+        groupId: null
+      }))
+    });
+
+    res.json({ message: `Pomyślnie dodano ${created.count} intencji!`, count: created.count });
+  } catch (error) {
+    console.error("Błąd importu:", error);
+    res.status(500).json({ error: "Błąd serwera podczas zapisywania intencji." });
   }
 });
 
