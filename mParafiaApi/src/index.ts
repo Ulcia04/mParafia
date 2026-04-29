@@ -268,6 +268,70 @@ app.post('/api/events/bulk', async (req, res) => {
   }
 });
 
+// --- STREFA Q&A ---
+
+app.get('/api/questions', async (req, res) => {
+  try {
+    const publishedQuestions = await prisma.question.findMany({
+      where: { isPublished: true },
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(publishedQuestions);
+  } catch (error) {
+    res.status(500).json({ error: 'Nie udało się pobrać opublikowanych pytań' });
+  }
+});
+
+app.post('/api/questions', async (req, res) => {
+  try {
+    const { content, author } = req.body;
+    const newQuestion = await prisma.question.create({
+      data: { content, author }
+    });
+    res.json(newQuestion);
+  } catch (error) {
+    res.status(500).json({ error: 'Nie udało się wysłać pytania' });
+  }
+});
+
+app.get('/api/questions/all', async (req, res) => {
+  try {
+    const questions = await prisma.question.findMany({
+      orderBy: { createdAt: 'desc' }
+    });
+    res.json(questions);
+  } catch (error) {
+    res.status(500).json({ error: 'Błąd serwera' });
+  }
+});
+
+
+
+app.put('/api/questions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { answer, isPublished } = req.body;
+    const updated = await prisma.question.update({
+      where: { id: Number(id) },
+      data: { answer, isPublished }
+    });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Nie udało się zaktualizować pytania' });
+  }
+});
+
+app.delete('/api/questions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.question.delete({
+      where: { id: Number(id) }
+    });
+    res.json({ message: 'Usunięto pytanie' });
+  } catch (error) {
+    res.status(500).json({ error: 'Nie udało się usunąć pytania' });
+  }
+});
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Serwer odpalony na porcie http://localhost:${PORT} 🚀`);

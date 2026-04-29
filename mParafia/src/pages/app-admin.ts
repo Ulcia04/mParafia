@@ -10,6 +10,7 @@ import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import './app-admin-groups';
 import './app-admin-announcements';
 import './app-admin-events';
+import './app-admin-qa';
 
 @customElement('app-admin')
 export class AppAdmin extends LitElement {
@@ -28,7 +29,7 @@ export class AppAdmin extends LitElement {
       :host {
         display: block;
         padding: 20px;
-        max-width: 900px; /* Lekko poszerzamy, żeby karty miały miejsce */
+        max-width: 900px;
         margin: 0 auto;
       }
 
@@ -36,14 +37,14 @@ export class AppAdmin extends LitElement {
         background-color: var(--color-sand-light);
         border: 2px solid var(--color-wood-medium);
         border-radius: 12px;
-        overflow: hidden; 
+        overflow: hidden;
       }
 
       sl-tab-group::part(nav) {
         background-color: var(--color-cookie-medium);
         border-bottom: 2px solid var(--color-wood-medium);
       }
-      
+
       sl-tab::part(base) {
         color: var(--color-wood-dark);
         font-weight: 500;
@@ -62,17 +63,21 @@ export class AppAdmin extends LitElement {
     return html`
       <div class="admin-container">
         <sl-tab-group>
-          
+
           <sl-tab slot="nav" panel="groups">
             <sl-icon name="people-fill" style="margin-right: 8px;"></sl-icon> Zarządzaj Grupami
           </sl-tab>
-          
+
           <sl-tab slot="nav" panel="events">
             <sl-icon name="calendar3" style="margin-right: 8px;"></sl-icon> Wydarzenia
           </sl-tab>
-          
-        <sl-tab slot="nav" panel="announcements">
+
+          <sl-tab slot="nav" panel="announcements">
             <sl-icon name="journal-text" style="margin-right: 8px;"></sl-icon> Ogłoszenia
+          </sl-tab>
+
+          <sl-tab slot="nav" panel="qa">
+            <sl-icon name="patch-question" style="margin-right: 8px;"></sl-icon> Q&A
           </sl-tab>
 
           <sl-tab-panel name="groups">
@@ -86,6 +91,11 @@ export class AppAdmin extends LitElement {
           <sl-tab-panel name="announcements">
             <app-admin-announcements></app-admin-announcements>
           </sl-tab-panel>
+
+          <sl-tab-panel name="qa">
+            <app-admin-qa></app-admin-qa>
+          </sl-tab-panel>
+
         </sl-tab-group>
       </div>
     `;

@@ -2,6 +2,8 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styles } from '../styles/shared-styles';
 
+import './app-qa';
+
 @customElement('app-home')
 export class AppHome extends LitElement {
 
@@ -178,6 +180,11 @@ export class AppHome extends LitElement {
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/dojazd')}">
             <sl-icon name="geo-alt"></sl-icon>
             <span>Dojazd</span>
+          </sl-button>
+
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/qa')}">
+            <sl-icon name="patch-question"></sl-icon>
+            <span>Pytania (Q&A)</span>
           </sl-button>
 
         </div>

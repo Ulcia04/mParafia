@@ -23,6 +23,7 @@ import './pages/app-admin';
 import './pages/app-admin-events';
 import './pages/app-group-detail';
 import './pages/app-announcements';
+import './pages/app-qa';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -220,7 +221,7 @@ export class AppIndex extends LitElement {
     const base = (import.meta as any).env.BASE_URL;
     const router = new Router(outlet, { baseUrl: base });
 
-    router.setRoutes([ 
+    router.setRoutes([
       { path: '/', component: 'app-home' },
       { path: '/kalendarz', component: 'app-calendar' },
       { path: '/grupy', component: 'app-groups' },
@@ -230,6 +231,7 @@ export class AppIndex extends LitElement {
       { path: '/admin', component: 'app-admin' },
       { path: '/admin/events', component: 'app-admin-events' },
       { path: '/ogloszenia', component: 'app-announcements' },
+      { path: '/qa', component: 'app-qa' },
       { path: '(.*)', redirect: '/' }
     ]);
   }
@@ -269,19 +271,12 @@ export class AppIndex extends LitElement {
             <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/wydarzenia')}">
               <sl-icon slot="prefix" name="star-fill"></sl-icon> Wydarzenia
             </sl-button>
-          </div>
-
-          <div class="bottom-links">
-            <sl-divider></sl-divider>
-            
-            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/admin/events')}">
-              <sl-icon slot="prefix" name="shield-lock"></sl-icon> Panel Wydarzeń
-            </sl-button>
-
-            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/ustawienia')}">
-              <sl-icon slot="prefix" name="gear"></sl-icon> Ustawienia
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/qa')}">
+              <sl-icon slot="prefix" name="patch-question"></sl-icon> Pytania (Q&A)
             </sl-button>
           </div>
+
+
 
         </sl-drawer>
 
