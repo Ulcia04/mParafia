@@ -4,7 +4,13 @@ import cors from 'cors';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { fileURLToPath } from 'url';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const app = express();
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
@@ -13,6 +19,32 @@ const prisma = new PrismaClient({ adapter });
 
 app.use(cors());
 app.use(express.json());
+
+const uploadDir = path.join(__dirname, '../../public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir)
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, uniqueSuffix + path.extname(file.originalname))
+  }
+});
+const upload = multer({ storage: storage });
+
+app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads')));
+
+app.post('/api/upload', upload.single('photo'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'Brak pliku' });
+  }
+  const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  res.json({ url: fileUrl });
+});
 
 app.get('/api/status', (req, res) => {
   res.json({ message: 'Serwer mParafia z Prisma v7 działa jak marzenie! ✨' });
@@ -43,11 +75,13 @@ app.get('/api/groups', async (req, res) => {
 
 app.post('/api/groups', async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, photoUrl, color } = req.body;
     const nowaGrupa = await prisma.group.create({
       data: {
         name: name,
         description: description,
+        photoUrl: photoUrl,
+        color: color,
       },
     });
 
@@ -58,19 +92,20 @@ app.post('/api/groups', async (req, res) => {
     res.status(500).json({ error: "Nie udało się stworzyć grupy" });
   }
 });
-app.put('/api/events/:id', async (req, res) => {
-  const { id } = req.params;
-  const { title, description, startTime, location, groupId } = req.body;
-  const updated = await prisma.event.update({
-    where: { id: Number(id) },
-    data: { title, description, startTime: new Date(startTime), location, groupId: groupId ? Number(groupId) : null }
-  });
-  res.json(updated);
-});
-app.delete('/api/events/:id', async (req, res) => {
-  await prisma.event.delete({ where: { id: Number(req.params.id) } });
-  res.json({ message: "Usunięto" });
-});
+
+// app.put('/api/events/:id', async (req, res) => {
+//   const { id } = req.params;
+//   const { title, description, startTime, location, groupId } = req.body;
+//   const updated = await prisma.event.update({
+//     where: { id: Number(id) },
+//     data: { title, description, startTime: new Date(startTime), location, groupId: groupId ? Number(groupId) : null }
+//   });
+//   res.json(updated);
+// });
+// app.delete('/api/events/:id', async (req, res) => {
+//   await prisma.event.delete({ where: { id: Number(req.params.id) } });
+//   res.json({ message: "Usunięto" });
+// });
 
 app.get('/api/events/all', async (req, res) => {
   try {
@@ -104,10 +139,10 @@ app.post('/api/events', async (req, res) => {
 
 app.put('/api/groups/:id', async (req, res) => {
   const { id } = req.params;
-  const { name, description, photoUrl } = req.body;
+  const { name, description, photoUrl, color } = req.body;
   const updated = await prisma.group.update({
     where: { id: Number(id) },
-    data: { name, description, photoUrl }
+    data: { name, description, photoUrl, color }
   });
   res.json(updated);
 });

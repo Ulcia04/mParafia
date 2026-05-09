@@ -9,6 +9,8 @@ interface ParishGroup {
   id: number;
   name: string;
   description?: string;
+  photoUrl?: string;
+  color?: string;
 }
 
 interface ParishEvent {
@@ -16,12 +18,12 @@ interface ParishEvent {
   title: string;
   startTime: string;
   category?: string;
-  groupId?: number; 
+  groupId?: number;
 }
 
 @customElement('app-group-detail')
 export class AppGroupDetail extends LitElement {
-  
+
   @state() private groupId: number | null = null;
   @state() private group: ParishGroup | null = null;
   @state() private events: ParishEvent[] = [];
@@ -29,10 +31,10 @@ export class AppGroupDetail extends LitElement {
 
   connectedCallback() {
     super.connectedCallback();
-    
+
     const params = new URLSearchParams(window.location.search);
     const idParam = params.get('id');
-    
+
     if (idParam) {
       this.groupId = parseInt(idParam, 10);
     }
@@ -48,15 +50,10 @@ export class AppGroupDetail extends LitElement {
 
   async fetchGroupDetails() {
     try {
-      // 1. Pobieramy wszystkie grupy z endpointu, o którym wiemy, że działa
       const groupResponse = await fetch('http://localhost:3000/api/groups');
       if (groupResponse.ok) {
         const allGroups: ParishGroup[] = await groupResponse.json();
-        
-        // Szukamy w tablicy grupy o naszym ID
         this.group = allGroups.find(g => g.id === this.groupId) || null;
-        
-        // Jeśli udało się znaleźć grupę, zmieniamy tytuł
         if (this.group) {
           this.dispatchEvent(new CustomEvent('change-title', {
             detail: { title: this.group.name },
@@ -68,7 +65,6 @@ export class AppGroupDetail extends LitElement {
       const eventsResponse = await fetch('http://localhost:3000/api/events');
       if (eventsResponse.ok) {
         const allEvents: ParishEvent[] = await eventsResponse.json();
-        
         this.events = allEvents.filter(event => event.groupId === this.groupId);
       }
     } catch (error) {
@@ -165,32 +161,11 @@ export class AppGroupDetail extends LitElement {
         width: 100%;
       }
 
-     /* POPRAWIONE STYLE DLA KALENDARZA */
       calendar-item {
-        display: block;
-        width: 100%;
-        box-sizing: border-box;
-        cursor: pointer;
-        
-        /* 1. Dodajemy ciemne tło, aby jasny tekst był widoczny */
-        background-color: var(--color-wood-dark);
-        
-        /* 2. Zabezpieczamy jasny kolor tekstu (dla Shadow DOM) */
-        color: var(--color-sand-light);
-        --item-text-color: var(--color-sand-light);
-        
-        /* 3. Estetyka kafelka */
-        border-radius: 12px;
-        padding: 5px;
-        box-shadow: 0 4px 10px rgba(127, 69, 29, 0.15);
-        transition: transform 0.2s ease, background-color 0.2s ease;
-      }
-
-      /* Efekt wizualny przy kliknięciu */
-      calendar-item:active {
-        transform: scale(0.98);
-        background-color: var(--color-wood-medium);
-      }
+      display: block;
+      width: 100%;
+      cursor: pointer;
+    }
     `
   ];
 
@@ -214,31 +189,36 @@ export class AppGroupDetail extends LitElement {
     return html`
       <div class="header-section">
         <div class="group-photo-large">
-          <sl-icon name="people-fill"></sl-icon>
+          ${this.group.photoUrl
+            ? html`<img src="${this.group.photoUrl}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`
+            : html`<sl-icon name="people-fill"></sl-icon>`
+          }
         </div>
         <h2 class="group-name">${this.group.name}</h2>
-        ${this.group.description 
-          ? html`<p class="group-description">${this.group.description}</p>` 
+        ${this.group.description
+          ? html`<p class="group-description">${this.group.description}</p>`
           : html`<p class="group-description">Ta grupa nie ma jeszcze opisu.</p>`
         }
       </div>
 
       <div class="events-section">
         <h3 class="section-title">Wydarzenia grupy</h3>
-        
-        ${this.events.length === 0 
-          ? html`<p style="color: #666; text-align: center;">Brak nadchodzących wydarzeń dla tej grupy.</p>` 
+
+        ${this.events.length === 0
+          ? html`<p style="color: #666; text-align: center;">Brak nadchodzących wydarzeń dla tej grupy.</p>`
           : html`
               <div class="events-list">
                 ${this.events.map(event => {
                   const timeStr = this.formatDate(event.startTime);
-                  const category = event.category || 'spotkanie';
+                  // const category = event.category || 'spotkanie';
 
                   return html`
                     <calendar-item
-                      time="${timeStr}"
-                      name="${event.title}"
-                      category="${category}"
+                      .time="${timeStr}"
+                      .name="${event.title}"
+                      .groupColor="${this.group?.color || ''}"
+                      .targetUrl="/mParafia/wydarzenie?id=${event.id}"
+                      category="grupa"
                       multiline
                     ></calendar-item>
                   `;

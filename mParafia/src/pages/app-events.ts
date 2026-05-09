@@ -2,13 +2,14 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
 
-import { ParishEvent } from './app-calendar'; 
+import { ParishEvent } from './app-calendar';
 import '../components/calendar-item';
 
 @customElement('app-events')
 export class AppEvents extends LitElement {
-  
+
   @state() private events: ParishEvent[] = [];
+  @state() private groups: any[] = []; // NOWE: Miejsce na grupy
 
   connectedCallback() {
     super.connectedCallback();
@@ -19,11 +20,24 @@ export class AppEvents extends LitElement {
   }
 
   async firstUpdated() {
+    await this.fetchGroups();
     await this.fetchEvents();
+  }
+
+  async fetchGroups() {
+    try {
+      const response = await fetch('http://localhost:3000/api/groups');
+      if (response.ok) {
+        this.groups = await response.json();
+      }
+    } catch (error) {
+      console.error('Nie udało się pobrać grup:', error);
+    }
   }
 
   async fetchEvents() {
     try {
+      // Zostawiamy zwykłe /api/events, bo tu chcemy tylko nadchodzące!
       const response = await fetch('http://localhost:3000/api/events');
       if (!response.ok) throw new Error('Błąd połączenia');
       this.events = await response.json();
@@ -35,15 +49,15 @@ export class AppEvents extends LitElement {
   private getGroupedEvents() {
     const grouped: { [key: string]: ParishEvent[] } = {};
     const today = new Date();
-    today.setHours(0, 0, 0, 0); 
+    today.setHours(0, 0, 0, 0);
 
     const filteredAndSorted = [...this.events]
       .filter(event => new Date(event.startTime) >= today)
       .sort((a, b) => new Date(a.startTime).getTime() - new Date(b.startTime).getTime());
 
     filteredAndSorted.forEach(event => {
-      const dateStr = event.startTime.split('T')[0]; 
-      
+      const dateStr = event.startTime.split('T')[0];
+
       if (!grouped[dateStr]) grouped[dateStr] = [];
       grouped[dateStr].push(event);
     });
@@ -119,15 +133,28 @@ export class AppEvents extends LitElement {
           <div class="events-list">
             ${grouped[date].map(event => {
               const timeStr = new Date(event.startTime).toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-              const category = event.category || 'wydarzenie';
+
+              const isIntention = event.title.startsWith('Intencja:');
+              const displayName = isIntention ? event.title.replace('Intencja:', '').trim() : event.title;
+
+              const group = this.groups.find(g => g.id === event.groupId);
+
+              let category = group ? 'grupa' : 'wydarzenie';
+              let color = group && group.color ? group.color : '';
+
+              if (isIntention) {
+                category = 'intencja';
+                color = '#C18756';
+              }
 
               return html`
                 <calendar-item
-                  time="${timeStr}"
-                  name="${event.title}"
-                  category="${category}"
+                  .time="${timeStr}"
+                  .name="${displayName}"
+                  .category="${category}"
+                  .groupColor="${color}"
+                  .targetUrl="/mParafia/wydarzenie?id=${event.id}"
                   multiline
-                  @click=${() => window.location.href = '/mParafia/mock-event'}
                 ></calendar-item>
               `;
             })}

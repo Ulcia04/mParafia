@@ -10,6 +10,7 @@ export class CalendarItem extends LitElement {
   @property({ type: String }) targetUrl = '';
   @property({ type: String }) category = 'wydarzenie';
   @property({ type: Boolean }) multiline = false;
+  @property({ type: String }) groupColor = '';
 
   static styles = [
     styles,
@@ -74,14 +75,14 @@ export class CalendarItem extends LitElement {
         margin-top: 2px;
       }
 
-      .wydarzenie { background-color: var(--color-wood-dark); }
-      .domowy { background-color: #B87333; }
-      .lso { background-color: #4A69BD; }
-      .schola { background-color: #D4AF37; }
-      .biblijna { background-color: #6B8E23; }
-      .oaza { background-color: #829583; }
-      .rada { background-color: #535C68; }
-      .odb { background-color: #C98B8B; }
+      // .wydarzenie { background-color: var(--color-wood-dark); }
+      // .domowy { background-color: #B87333; }
+      // .lso { background-color: #4A69BD; }
+      // .schola { background-color: #D4AF37; }
+      // .biblijna { background-color: #6B8E23; }
+      // .oaza { background-color: #829583; }
+      // .rada { background-color: #535C68; }
+      // .odb { background-color: #C98B8B; }
     `
   ];
 
@@ -97,15 +98,23 @@ export class CalendarItem extends LitElement {
 
   render() {
     const isEvent = this.category === 'wydarzenie';
+    const isIntention = this.category === 'intencja';
+    const bgColor = this.groupColor ? this.groupColor : 'var(--color-wood-dark)';
 
     return html`
-      <div class="item-container ${this.category} ${this.multiline ? 'is-multiline' : ''}" @click="${this.handleClick}">
+      <div
+        class="item-container ${this.multiline ? 'is-multiline' : ''}"
+        style="background-color: ${bgColor};"
+        @click="${this.handleClick}"
+      >
         <span class="time">${this.time}</span>
         <span class="name">${this.name}</span>
 
-        ${isEvent
-          ? html`<sl-icon name="star-fill"></sl-icon>`
-          : html`<sl-icon name="people-fill"></sl-icon>`
+        ${isIntention
+          ? html`<sl-icon name="bookmark-fill"></sl-icon>`
+          : isEvent
+            ? html`<sl-icon name="star-fill"></sl-icon>`
+            : html`<sl-icon name="people-fill"></sl-icon>`
         }
       </div>
     `;

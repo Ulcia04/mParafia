@@ -45,7 +45,7 @@ export class AppCalendar extends LitElement {
 
   async fetchEvents() {
     try {
-      const response = await fetch('http://localhost:3000/api/events');
+      const response = await fetch('http://localhost:3000/api/events/all');
       if (!response.ok) throw new Error('Błąd połączenia');
       this.events = await response.json();
       console.log('Dane pobrane:', this.events);
@@ -414,12 +414,12 @@ export class AppCalendar extends LitElement {
            d.getFullYear() === today.getFullYear();
   }
 
-  private _formatDateString(date: Date) {
-    const y = date.getFullYear();
-    const m = String(date.getMonth() + 1).padStart(2, '0');
-    const d = String(date.getDate()).padStart(2, '0');
-    return `${y}-${m}-${d}`;
-  }
+  // private _formatDateString(date: Date) {
+  //   const y = date.getFullYear();
+  //   const m = String(date.getMonth() + 1).padStart(2, '0');
+  //   const d = String(date.getDate()).padStart(2, '0');
+  //   return `${y}-${m}-${d}`;
+  // }
 
 render() {
     return html`
@@ -438,11 +438,23 @@ render() {
       </div>
 
       <div class="filter-controls" style="flex-direction: column; gap: 15px;">
-        <sl-radio-group value=${this.displayMode} @sl-change=${(e: any) => { this.displayMode = e.target.value; this.requestUpdate(); }}>
-          <sl-radio-button value="all">Wszystko</sl-radio-button>
-          <sl-radio-button value="events">Wydarzenia</sl-radio-button>
-          <sl-radio-button value="intentions">Intencje</sl-radio-button>
-        </sl-radio-group>
+        <sl-button-group>
+          <sl-button
+            variant=${this.displayMode === 'all' ? 'primary' : 'default'}
+            @click=${() => { this.displayMode = 'all'; this.requestUpdate(); }}>
+            Wszystko
+          </sl-button>
+          <sl-button
+            variant=${this.displayMode === 'events' ? 'primary' : 'default'}
+            @click=${() => { this.displayMode = 'events'; this.requestUpdate(); }}>
+            Wydarzenia
+          </sl-button>
+          <sl-button
+            variant=${this.displayMode === 'intentions' ? 'primary' : 'default'}
+            @click=${() => { this.displayMode = 'intentions'; this.requestUpdate(); }}>
+            Intencje
+          </sl-button>
+        </sl-button-group>
 
         ${this.displayMode !== 'intentions' ? html`
           <sl-switch
@@ -562,31 +574,6 @@ renderMonthView() {
     `;
   }
 
-  // renderEventTags(dayEvents: any[], viewType: string) {
-  //   const isMultiline = viewType === 'week' || viewType === 'day';
-  //   const showUrl = viewType === 'day' || viewType === 'week';
-
-  //   return dayEvents.map(e => {
-  //     const eventDate = new Date(e.startTime);
-  //     const timeStr = eventDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-  //     // Magia: Szukamy nazwy grupy w pobranej liście z bazy danych
-  //     const group = this.groups.find(g => g.id === e.groupId);
-  //     // Tworzymy "klasę css" z nazwy grupy, a jeśli nie ma przypisanej grupy, wpisujemy 'wydarzenie'
-  //     const category = group ? group.name.replace(/\s+/g, '-').toLowerCase() : 'wydarzenie';
-
-  //     return html`
-  //       <calendar-item
-  //         .time="${timeStr}"
-  //         .name="${e.title}"
-  //         .category="${category}"
-  //         ?multiline=${isMultiline}
-  //         targetUrl="${showUrl ? `/wydarzenia/${e.id}` : ''}"
-  //       >
-  //       </calendar-item>
-  //     `;
-  //   });
-  // }
   renderEventTags(dayEvents: any[], viewType: string) {
     const isMultiline = viewType === 'week' || viewType === 'day';
     const showUrl = viewType === 'day' || viewType === 'week';
@@ -594,16 +581,22 @@ renderMonthView() {
     return dayEvents.map(e => {
       const eventDate = new Date(e.startTime);
       const timeStr = eventDate.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-
-      // FIX: Tymczasowo wymuszamy kategorię 'wydarzenie' dla wszystkich wpisów z bazy,
-      // aby miały gwarantowany kolor tła (np. brązowy/szary) i nie znikały!
-      const category = 'wydarzenie';
+      const isIntention = e.title.startsWith('Intencja:');
+      const displayName = isIntention ? e.title.replace('Intencja:', '').trim() : e.title;
+      const group = this.groups.find(g => g.id === e.groupId);
+      let category = group ? 'grupa' : 'wydarzenie';
+      let color = group && group.color ? group.color : '';
+      if (isIntention) {
+        category = 'intencja';
+        color ='#C18756'
+      }
 
       return html`
         <calendar-item
           .time="${timeStr}"
-          .name="${e.title}"
+          .name="${displayName}"
           .category="${category}"
+          .groupColor="${color}"
           ?multiline=${isMultiline}
           targetUrl="${showUrl ? `/wydarzenia/${e.id}` : ''}"
         >

@@ -7,14 +7,15 @@ import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 interface ParishGroup {
   id: number;
   name: string;
-  description?: string; 
+  description?: string;
+  photoUrl?: string;
 }
 
 @customElement('app-groups')
 export class AppGroups extends LitElement {
 
   @state() private groups: ParishGroup[] = [];
-  @state() private isLoading = true; 
+  @state() private isLoading = true;
 
   connectedCallback() {
     super.connectedCallback();
@@ -106,7 +107,7 @@ export class AppGroups extends LitElement {
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
-      
+
       .center-content {
         display: flex;
         justify-content: center;
@@ -124,7 +125,7 @@ export class AppGroups extends LitElement {
         </div>
       `;
     }
-    
+
     if (this.groups.length === 0) {
       return html`
         <div class="center-content">
@@ -137,16 +138,19 @@ export class AppGroups extends LitElement {
       <div class="groups-grid">
         ${this.groups.map(group => html`
           <div class="group-card" @click=${() => window.location.href = `/mParafia/grupa?id=${group.id}`}>
-            
+
             <div class="group-photo">
-              <sl-icon name="people-fill" style="font-size: 24px; color: var(--color-wood-dark);"></sl-icon>
+              ${group.photoUrl
+                ? html`<img src="${group.photoUrl}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`
+                : html`<sl-icon name="people-fill" style="font-size: 24px; color: var(--color-wood-dark);"></sl-icon>`
+              }
             </div>
-            
+
             <div class="group-info">
               <h3>${group.name}</h3>
               ${group.description ? html`<p class="group-desc">${group.description}</p>` : ''}
             </div>
-            
+
             <sl-icon name="chevron-right" style="margin-left: auto; color: var(--color-wood-medium);"></sl-icon>
           </div>
         `)}

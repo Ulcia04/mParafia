@@ -117,7 +117,7 @@ export class AppAdminGroups extends LitElement {
   }
 
   private openEdit(group: any = null) {
-    this.editingGroup = group || { name: '', description: '', photoUrl: '' };
+    this.editingGroup = group || { name: '', description: '', photoUrl: '' , color: '#B87333'};
     this.dialog.show();
   }
 
@@ -165,6 +165,32 @@ export class AppAdminGroups extends LitElement {
     }
   }
 
+private async handleFileUpload(e: any) {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const formData = new FormData();
+  formData.append('photo', file);
+
+  try {
+    const res = await fetch('http://localhost:3000/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      this.editingGroup = { ...this.editingGroup, photoUrl: data.url };
+      this.requestUpdate();
+    } else {
+      alert('Błąd podczas wgrywania zdjęcia.');
+    }
+  } catch (err) {
+    console.error(err);
+    alert('Nie udało się połączyć z serwerem.');
+  }
+}
+
   render() {
     return html`
       <div class="header-actions">
@@ -208,10 +234,17 @@ export class AppAdminGroups extends LitElement {
 
       <sl-dialog label="${this.editingGroup?.id ? 'Edytuj Grupę' : 'Nowa Grupa'}">
         <form>
-          <sl-input label="Nazwa" required .value=${this.editingGroup?.name} @sl-input=${(e:any) => this.editingGroup.name = e.target.value}></sl-input>
-          <sl-input label="URL do Logo (Link do zdjęcia)" placeholder="np. https://mojastrona.pl/logo.png" .value=${this.editingGroup?.photoUrl} @sl-input=${(e:any) => this.editingGroup.photoUrl = e.target.value}></sl-input>
-          <sl-textarea label="Opis" .value=${this.editingGroup?.description} @sl-input=${(e:any) => this.editingGroup.description = e.target.value}></sl-textarea>
-        </form>
+        <sl-input label="Nazwa" required .value=${this.editingGroup?.name} @sl-input=${(e:any) => this.editingGroup.name = e.target.value}></sl-input>
+        <sl-input type="color" label="Kolor grupy" .value=${this.editingGroup?.color} @sl-input=${(e:any) => this.editingGroup.color = e.target.value}></sl-input>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="font-size: 0.9rem; color: var(--color-wood-dark);">Logo grupy (Zdjęcie z komputera)</label>
+          <input type="file" accept="image/*" @change=${this.handleFileUpload} />
+          ${this.editingGroup?.photoUrl
+            ? html`<img src="${this.editingGroup.photoUrl}" style="max-width: 100px; border-radius: 8px; border: 1px solid var(--color-wood-medium);" />`
+            : ''}
+        </div>
+        <sl-textarea label="Opis" .value=${this.editingGroup?.description} @sl-input=${(e:any) => this.editingGroup.description = e.target.value}></sl-textarea>
+      </form>
         <sl-button slot="footer" variant="primary" @click=${this.save}>Zapisz zmiany</sl-button>
       </sl-dialog>
 
