@@ -78,9 +78,9 @@ export class AppEvents extends LitElement {
     css`
       :host {
         display: block;
-        padding: 15px;
+        padding: 10px;
         width: 100%;
-        max-width: 600px;
+        max-width: 900px;
         margin: 0 auto;
         box-sizing: border-box;
       }

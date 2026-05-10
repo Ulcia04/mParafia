@@ -2,11 +2,10 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
 
-import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
-import '@shoelace-style/shoelace/dist/components/divider/divider.js';
+import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
 interface Question {
   id: number;
@@ -22,7 +21,7 @@ export class AppQa extends LitElement {
   @state() private isSubmitting = false;
 
   @query('#new-question') questionInput!: any;
-  @query('#author-input') authorInput!: any; // <--- NOWE POLE
+  @query('#author-input') authorInput!: any;
 
   connectedCallback() {
     super.connectedCallback();
@@ -35,20 +34,143 @@ export class AppQa extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      :host { display: block; padding: 15px; max-width: 800px; margin: 0 auto; }
-      .qa-container { background-color: #fff; border: 2px solid var(--color-wood-medium); border-radius: 12px; padding: 25px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-      .title { color: var(--color-wood-dark); margin-top: 0; display: flex; align-items: center; gap: 10px; }
-      .ask-section { background: var(--color-sand-light); padding: 15px; border-radius: 8px; margin-bottom: 25px; border: 1px dashed var(--color-wood-medium); display: flex; flex-direction: column; gap: 10px;}
-      .ask-section p { margin: 0; color: var(--color-wood-dark); font-weight: bold; }
+      :host {
+        display: block;
+        padding: 10px;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
 
-      .qa-item { margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
-      .qa-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+      .qa-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
 
-      .question { font-size: 1.05rem; color: var(--color-wood-dark); margin-bottom: 10px; display: flex; gap: 10px; align-items: flex-start; }
-      .question sl-icon { margin-top: 3px; color: var(--color-wood-medium); }
+      .page-title {
+        color: var(--color-wood-dark);
+        margin: 0 0 5px 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-size: 1.6rem;
+      }
 
-      .answer { background: #f9fdfa; border-left: 4px solid #198754; padding: 12px 15px; border-radius: 0 8px 8px 0; margin-left: 25px; color: #333; line-height: 1.5; white-space: pre-wrap;}
-      .date { font-size: 0.8rem; color: #999; margin-left: 25px; margin-top: 5px; display: block; }
+      .ask-section {
+        background-color: var(--color-sand-light);
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .ask-section p {
+        margin: 0;
+        color: var(--color-wood-dark);
+        font-weight: bold;
+        font-size: 1.1rem;
+      }
+
+      sl-input, sl-textarea {
+        --sl-input-background-color: var(--color-sand-light);
+        --sl-input-background-color-hover: var(--color-sand-light);
+        --sl-input-background-color-focus: var(--color-sand-light);
+
+        --sl-input-border-color: var(--color-wood-medium);
+        --sl-input-border-color-hover: var(--color-wood-dark);
+        --sl-input-border-color-focus: var(--color-wood-dark);
+
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+
+        --sl-input-placeholder-color: var(--color-wood-dark);
+        --sl-focus-ring-color: var(--color-wood-dark)
+      }
+
+      .custom-btn {
+        background-color: var(--color-wood-medium);
+        border: none;
+        color: var(--color-sand-light);
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        font-weight: bold;
+        font-family: inherit;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+        align-self: flex-end;
+      }
+
+      .custom-btn:active {
+        transform: scale(0.98);
+        background-color: var(--color-wood-dark);
+      }
+
+      @media (hover: hover) {
+        .custom-btn:hover {
+          background-color: var(--color-wood-dark);
+        }
+      }
+
+      .custom-btn:disabled {
+        opacity: 0.7;
+        cursor: not-allowed;
+        transform: none;
+      }
+
+      .qa-item {
+        background-color: var(--color-sand-light);
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .question {
+        font-size: 1.05rem;
+        color: var(--color-wood-dark);
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .question sl-icon {
+        font-size: 1.4rem;
+        color: var(--color-wood-medium);
+        flex-shrink: 0;
+        margin-top: 1px;
+      }
+
+      .answer {
+        background-color: var(--color-cookie-medium);
+        border-left: 4px solid var(--color-wood-dark);
+        padding: 10px 15px;
+        border-radius: 0 8px 8px 0;
+        color: var(--color-wood-dark);
+        line-height: 1.5;
+      }
+
+      .answer-text {
+        white-space: pre-wrap;
+      }
+
+      .date {
+        font-size: 0.8rem;
+        color: var(--color-wood-medium);
+        text-align: right;
+        margin-top: -2px;
+      }
     `
   ];
 
@@ -66,7 +188,6 @@ export class AppQa extends LitElement {
   async submitQuestion() {
     const content = this.questionInput.value;
     const authorRaw = this.authorInput.value;
-    // Jeśli pole imienia jest puste, wysyłamy null (czyli anonim)
     const author = authorRaw && authorRaw.trim() !== '' ? authorRaw.trim() : null;
 
     if (!content || content.trim() === '') {
@@ -95,20 +216,25 @@ export class AppQa extends LitElement {
 
   render() {
     return html`
-      <div class="qa-container">
-        <h2 class="title"><sl-icon name="chat-dots"></sl-icon> Pytania do Księdza</h2>
-
+      <div class="qa-wrapper">
         <div class="ask-section">
           <p>Masz pytanie dotyczące życia parafii? Zadaj je tutaj!</p>
           <sl-input id="author-input" placeholder="Twoje imię (zostaw puste, aby zapytać anonimowo)"></sl-input>
-          <sl-textarea id="new-question" placeholder="Napisz swoje pytanie..." rows="3"></sl-textarea>
-          <sl-button variant="primary" ?loading=${this.isSubmitting} @click=${this.submitQuestion}>
-            <sl-icon slot="prefix" name="send"></sl-icon> Wyślij pytanie
-          </sl-button>
+
+          <sl-textarea id="new-question" placeholder="Napisz swoje pytanie..." rows="4" resize="auto"></sl-textarea>
+
+          <button class="custom-btn" @click=${this.submitQuestion} ?disabled=${this.isSubmitting}>
+            ${this.isSubmitting
+              ? html`Wysyłanie... <sl-spinner style="--indicator-color: white;"></sl-spinner>`
+              : html`Wyślij pytanie <sl-icon name="send-fill-sand"></sl-icon>`
+            }
+          </button>
         </div>
 
         ${this.publishedQuestions.length === 0 ? html`
-          <p style="text-align: center; color: #777;">Brak opublikowanych odpowiedzi. Bądź pierwszy i zadaj pytanie!</p>
+          <div class="qa-item" style="text-align: center; color: var(--color-wood-medium);">
+            Brak opublikowanych odpowiedzi. Bądź pierwszy i zadaj pytanie!
+          </div>
         ` : ''}
 
         ${this.publishedQuestions.map(q => html`
@@ -120,10 +246,10 @@ export class AppQa extends LitElement {
               </div>
             </div>
             <div class="answer">
-              <strong>Odpowiedź duszpasterza:</strong><br />
-              ${q.answer ? q.answer : html`<span style="color: red;">Błąd: Brak tekstu odpowiedzi w bazie danych!</span>`}
+              <strong style="display:block; margin-bottom: 2px;">Odpowiedź duszpasterza:</strong>
+              <div class="answer-text">${q.answer ? q.answer.trim() : html`<span style="color: red;">Błąd: Brak tekstu odpowiedzi w bazie danych!</span>`}</div>
             </div>
-            <span class="date">${new Date(q.createdAt).toLocaleDateString('pl-PL')}</span>
+            <div class="date">${new Date(q.createdAt).toLocaleDateString('pl-PL')}</div>
           </div>
         `)}
       </div>

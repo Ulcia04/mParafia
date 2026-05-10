@@ -147,6 +147,8 @@ export class AppIndex extends LitElement {
       .menu-links sl-button::part(base),
       .bottom-links sl-button::part(base) {
         color: var(--color-wood-dark) !important;
+        justify-content: flex-start;
+        text-align: left;
       }
 
       .menu-links sl-button::part(base):active,
@@ -256,27 +258,43 @@ export class AppIndex extends LitElement {
     return html`
       <div class="app-layout">
 
-        <sl-drawer label="Menu mParafii" placement="start">
+        <sl-drawer label="Menu" placement="start">
 
           <div class="menu-links">
             <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/')}">
-              <sl-icon slot="prefix" name="house"></sl-icon> Strona Główna
+              <sl-icon slot="prefix" name="house-fill"></sl-icon> Strona Główna
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/ogloszenia')}">
+              <sl-icon slot="prefix" name="megaphone-fill"></sl-icon> Ogłoszenia
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/nabozenstwa')}">
+              <sl-icon slot="prefix" name="bell-fill"></sl-icon> Nabożeństwa
             </sl-button>
             <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/kalendarz')}">
-              <sl-icon slot="prefix" name="calendar3"></sl-icon> Kalendarz
-            </sl-button>
-            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/grupy')}">
-              <sl-icon slot="prefix" name="people-fill"></sl-icon> Grupy
+              <sl-icon slot="prefix" name="calendar2-check-fill"></sl-icon> Kalendarz
             </sl-button>
             <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/wydarzenia')}">
               <sl-icon slot="prefix" name="star-fill"></sl-icon> Wydarzenia
             </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/grupy')}">
+              <sl-icon slot="prefix" name="people-fill"></sl-icon> Grupy
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/spowiedz')}">
+              <sl-icon slot="prefix" name="heart-fill"></sl-icon> Spowiedź
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/kancelaria')}">
+              <sl-icon slot="prefix" name="person-heart"></sl-icon> Kancelaria
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/dojazd')}">
+              <sl-icon slot="prefix" name="geo-alt-fill"></sl-icon> Dojazd
+            </sl-button>
+            <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/dokumenty')}">
+              <sl-icon slot="prefix" name="file-earmark-text-fill"></sl-icon> Dokumenty
+            </sl-button>
             <sl-button variant="text" size="large" @click="${() => this.handleNavigation('/qa')}">
-              <sl-icon slot="prefix" name="patch-question"></sl-icon> Pytania (Q&A)
+              <sl-icon slot="prefix" name="chat-quote-fill"></sl-icon> Pytania (Q&A)
             </sl-button>
           </div>
-
-
 
         </sl-drawer>
 

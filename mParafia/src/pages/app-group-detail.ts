@@ -90,8 +90,9 @@ export class AppGroupDetail extends LitElement {
     css`
       :host {
         display: block;
-        padding: 15px;
-        max-width: 600px;
+        padding: 10px;
+        width: 100%;
+        max-width: 900px;
         margin: 0 auto;
         box-sizing: border-box;
       }
@@ -141,9 +142,12 @@ export class AppGroupDetail extends LitElement {
 
       .group-description {
         font-size: 1rem;
-        color: #555;
+        color: var(--color-wood-dark);
         line-height: 1.5;
         margin: 0;
+        white-space: pre-wrap;
+        text-align: justify;
+        width: 100%;
       }
 
       .section-title {
@@ -205,7 +209,7 @@ export class AppGroupDetail extends LitElement {
         <h3 class="section-title">Wydarzenia grupy</h3>
 
         ${this.events.length === 0
-          ? html`<p style="color: #666; text-align: center;">Brak nadchodzących wydarzeń dla tej grupy.</p>`
+          ? html`<p style="color: #7F451D; text-align: center;">Brak nadchodzących wydarzeń dla tej grupy.</p>`
           : html`
               <div class="events-list">
                 ${this.events.map(event => {

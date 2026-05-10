@@ -46,9 +46,11 @@ export class AppGroups extends LitElement {
     css`
       :host {
         display: block;
-        padding: 15px;
-        max-width: 800px;
+        padding: 10px;
+        width: 100%;
+        max-width: 900px;
         margin: 0 auto;
+        box-sizing: border-box;
       }
 
       .groups-grid {
@@ -96,12 +98,14 @@ export class AppGroups extends LitElement {
         margin: 0;
         color: var(--color-wood-dark);
         font-size: 1.1rem;
+        flex: 1;
+        min-width: 0;
       }
 
       .group-desc {
         margin: 4px 0 0 0;
         font-size: 0.85rem;
-        color: #666;
+        color: var(--color-wood-dark);
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
@@ -151,10 +155,21 @@ export class AppGroups extends LitElement {
               ${group.description ? html`<p class="group-desc">${group.description}</p>` : ''}
             </div>
 
-            <sl-icon name="chevron-right" style="margin-left: auto; color: var(--color-wood-medium);"></sl-icon>
+            <sl-icon name="chevron-right" style="margin-left: auto; color: var(--color-wood-medium); flex-shrink: 0;"></sl-icon>
           </div>
         `)}
       </div>
     `;
   }
 }
+
+
+// KOLORKI
+      // .wydarzenie { background-color: var(--color-wood-dark); }
+      // .domowy { background-color: #B87333; }
+      // .lso { background-color: #4A69BD; }
+      // .schola { background-color: #D4AF37; }
+      // .biblijna { background-color: #6B8E23; }
+      // .oaza { background-color: #829583; }
+      // .rada { background-color: #535C68; }
+      // .odb { background-color: #C98B8B; }

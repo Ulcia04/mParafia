@@ -58,7 +58,7 @@ export class AppHome extends LitElement {
         border-color: var(--color-wood-dark);
         transition: all 0.2s ease;
         padding: 0;
-        height: 110px;
+        height: 100px;
         width: 100%;
       }
 
@@ -150,43 +150,59 @@ export class AppHome extends LitElement {
           <img src="./icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
         </div>
 
-        <div class="grid-container">
-
-          <sl-button class="tile-button" @click="${() => this.handleNavigation('/kalendarz')}">
-            <sl-icon name="calendar3"></sl-icon>
-            <span>Kalendarz</span>
-          </sl-button>
+<div class="grid-container">
 
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/ogloszenia')}">
-            <sl-icon name="journal-text"></sl-icon>
+            <sl-icon name="megaphone-fill"></sl-icon>
             <span>Ogłoszenia</span>
           </sl-button>
 
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/nabozenstwa')}">
+            <sl-icon name="bell-fill"></sl-icon>
+            <span>Nabożeństwa</span>
+          </sl-button>
+
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/kalendarz')}">
+            <sl-icon name="calendar2-check-fill"></sl-icon>
+            <span>Kalendarz</span>
+          </sl-button>
+
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/wydarzenia')}">
-            <sl-icon name="people-fill"></sl-icon>
+            <sl-icon name="star-fill"></sl-icon>
             <span>Wydarzenia</span>
           </sl-button>
 
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/grupy')}">
-            <sl-icon name="star-fill"></sl-icon>
+            <sl-icon name="people-fill"></sl-icon>
             <span>Grupy</span>
           </sl-button>
 
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/spowiedz')}">
+            <sl-icon name="heart-fill"></sl-icon>
+            <span>Spowiedź</span>
+          </sl-button>
+
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/kancelaria')}">
-            <sl-icon name="person-lines-fill"></sl-icon>
+            <sl-icon name="person-heart"></sl-icon>
             <span>Kancelaria</span>
           </sl-button>
 
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/dojazd')}">
-            <sl-icon name="geo-alt"></sl-icon>
+            <sl-icon name="geo-alt-fill"></sl-icon>
             <span>Dojazd</span>
           </sl-button>
 
+          <sl-button class="tile-button" @click="${() => this.handleNavigation('/dokumenty')}">
+            <sl-icon name="file-earmark-text-fill"></sl-icon>
+            <span>Dokumenty</span>
+          </sl-button>
+
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/qa')}">
-            <sl-icon name="patch-question"></sl-icon>
+            <sl-icon name="chat-quote-fill"></sl-icon>
             <span>Pytania (Q&A)</span>
           </sl-button>
 
+        </div>
         </div>
 
         ${this.deferredPrompt ? html`
