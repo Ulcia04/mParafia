@@ -24,6 +24,10 @@ import './pages/app-admin-events';
 import './pages/app-group-detail';
 import './pages/app-announcements';
 import './pages/app-qa';
+import './pages/app-nabozenstwa';
+import './pages/app-spowiedz';
+import './pages/app-kancelaria';
+import './pages/app-dojazd';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -234,7 +238,12 @@ export class AppIndex extends LitElement {
       { path: '/admin/events', component: 'app-admin-events' },
       { path: '/ogloszenia', component: 'app-announcements' },
       { path: '/qa', component: 'app-qa' },
+      { path: '/nabozenstwa', component: 'app-nabozenstwa' },
+      { path: '/spowiedz', component: 'app-spowiedz' },
+      { path: '/kancelaria', component: 'app-kancelaria' },
+      { path: '/dojazd', component: 'app-dojazd' },
       { path: '(.*)', redirect: '/' }
+
     ]);
   }
 
