@@ -16,12 +16,16 @@ export class AppAdminGroups extends LitElement {
   @state() private editingGroup: any = null;
   @state() private isSubmitting = false;
 
-  static styles = [
+static styles = [
     sharedStyles,
     css`
       :host {
         display: block;
-        padding: 10px 0;
+        padding: 10px;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
       }
 
       .header-actions {
@@ -40,46 +44,42 @@ export class AppAdminGroups extends LitElement {
       .list-container {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 15px;
       }
 
-      /* GŁÓWNY STYL DLA ELEMENTU LISTY */
       .list-item {
         display: flex;
         align-items: center;
         background-color: var(--color-sand-light);
-        border: 1px solid var(--color-wood-medium);
-        border-radius: 10px;
-        padding: 12px 15px;
-        transition: background-color 0.2s ease, transform 0.1s ease;
-      }
-
-      .list-item:hover {
-        background-color: var(--color-cookie-medium);
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 15px 20px;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
       }
 
       .logo-container {
-        margin-right: 15px;
+        margin-right: 20px;
       }
 
       .content-container {
-        flex: 1; /* Wypełnia środek */
+        flex: 1;
         display: flex;
         flex-direction: column;
       }
 
       .entity-name {
         font-weight: bold;
-        font-size: 1.1rem;
+        font-size: 1.15rem;
         color: var(--color-wood-dark);
       }
 
       .entity-desc {
-        font-size: 0.85rem;
-        color: #666;
-        margin-top: 4px;
+        font-size: 0.9rem;
+        color: var(--color-wood-dark);
+        opacity: 0.8;
+        margin-top: 6px;
         display: -webkit-box;
-        -webkit-line-clamp: 1; /* Przycina za długi opis do 1 linijki */
+        -webkit-line-clamp: 1;
         -webkit-box-orient: vertical;
         overflow: hidden;
       }
@@ -87,22 +87,90 @@ export class AppAdminGroups extends LitElement {
       .actions-container {
         display: flex;
         gap: 10px;
-        margin-left: 10px;
+        margin-left: 15px;
       }
 
-      sl-icon-button {
-        font-size: 1.3rem;
-        color: var(--color-wood-dark);
+      /* SPECJALNE STYLE DLA PRZYCISKÓW AKCJI */
+      .btn-edit::part(base) {
+        background-color: #d97706;
+        border-color: #d97706;
+      }
+      .btn-edit::part(base):hover {
+        background-color: #db6104;
+        border-color: #db6104;
+      }
+      .btn-edit::part(label),
+      .btn-edit::part(prefix) {
+        color: var(--color-sand-light) !important;
       }
 
-      sl-icon-button::part(base):hover {
-        color: var(--color-wood-medium);
+      .btn-delete::part(base) {
+        background-color: rgba(220, 38, 38, 0.8);
+        border-color: transparent;
+      }
+      .btn-delete::part(base):hover {
+        background-color: rgba(220, 38, 38, 1);
+      }
+      .btn-delete::part(label),
+      .btn-delete::part(prefix) {
+        color: var(--color-sand-light) !important;
       }
 
       form {
         display: flex;
         flex-direction: column;
         gap: 15px;
+        color: var(--color-wood-dark); /* Wymuszenie brązu dla tekstów w formularzu */
+      }
+
+      /* Poprawka tła pól przy najechaniu (hover) i kliknięciu (focus) */
+      sl-input, sl-textarea {
+        --sl-input-background-color: var(--color-sand-light);
+        --sl-input-background-color-hover: var(--color-sand-light);
+        --sl-input-background-color-focus: var(--color-sand-light);
+        --sl-input-border-color: var(--color-wood-medium);
+        --sl-input-border-color-hover: var(--color-wood-medium);
+        --sl-input-border-color-focus: var(--color-wood-medium);
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+        --sl-input-label-color: var(--color-wood-dark);
+      }
+
+      /* Stylowanie surowego przycisku dodawania pliku */
+      input[type="file"] {
+        color: var(--color-wood-dark);
+      }
+
+      input[type="file"]::file-selector-button {
+        border: 1px solid var(--color-wood-medium);
+        padding: 8px 16px;
+        border-radius: 8px;
+        background-color: var(--color-sand-light);
+        color: var(--color-wood-dark);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-right: 10px;
+        font-weight: bold;
+      }
+
+      input[type="file"]::file-selector-button:hover {
+        background-color: var(--color-cookie-medium);
+        border-color: var(--color-wood-medium);
+      }
+
+      sl-dialog {
+        --sl-panel-background-color: var(--color-sand-light);
+        color: var(--color-wood-dark);
+      }
+
+      sl-dialog::part(title) {
+        color: var(--color-wood-dark);
+        font-weight: bold;
+      }
+
+      sl-dialog::part(close-button) {
+        color: var(--color-wood-dark);
       }
     `
   ];
@@ -153,7 +221,6 @@ export class AppAdminGroups extends LitElement {
       console.error(e);
       alert('Nie udało się połączyć z serwerem.');
     } finally {
-      // 4. Zdejmujemy blokadę
       this.isSubmitting = false;
     }
   }
@@ -165,31 +232,31 @@ export class AppAdminGroups extends LitElement {
     }
   }
 
-private async handleFileUpload(e: any) {
-  const file = e.target.files[0];
-  if (!file) return;
+  private async handleFileUpload(e: any) {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const formData = new FormData();
-  formData.append('photo', file);
+    const formData = new FormData();
+    formData.append('photo', file);
 
-  try {
-    const res = await fetch('http://localhost:3000/api/upload', {
-      method: 'POST',
-      body: formData
-    });
+    try {
+      const res = await fetch('http://localhost:3000/api/upload', {
+        method: 'POST',
+        body: formData
+      });
 
-    if (res.ok) {
-      const data = await res.json();
-      this.editingGroup = { ...this.editingGroup, photoUrl: data.url };
-      this.requestUpdate();
-    } else {
-      alert('Błąd podczas wgrywania zdjęcia.');
+      if (res.ok) {
+        const data = await res.json();
+        this.editingGroup = { ...this.editingGroup, photoUrl: data.url };
+        this.requestUpdate();
+      } else {
+        alert('Błąd podczas wgrywania zdjęcia.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Nie udało się połączyć z serwerem.');
     }
-  } catch (err) {
-    console.error(err);
-    alert('Nie udało się połączyć z serwerem.');
   }
-}
 
   render() {
     return html`
@@ -219,11 +286,11 @@ private async handleFileUpload(e: any) {
             </div>
 
             <div class="actions-container">
-              <sl-button size="small" variant="default" @click=${() => this.openEdit(g)}>
+              <sl-button size="small" class="btn-edit" @click=${() => this.openEdit(g)}>
                 <sl-icon slot="prefix" name="pencil"></sl-icon> Edytuj
               </sl-button>
 
-              <sl-button size="small" variant="danger" outline @click=${() => this.deleteGroup(g.id)}>
+              <sl-button size="small" class="btn-delete" @click=${() => this.deleteGroup(g.id)}>
                 <sl-icon slot="prefix" name="trash"></sl-icon> Usuń
               </sl-button>
             </div>
@@ -234,17 +301,17 @@ private async handleFileUpload(e: any) {
 
       <sl-dialog label="${this.editingGroup?.id ? 'Edytuj Grupę' : 'Nowa Grupa'}">
         <form>
-        <sl-input label="Nazwa" required .value=${this.editingGroup?.name} @sl-input=${(e:any) => this.editingGroup.name = e.target.value}></sl-input>
-        <sl-input type="color" label="Kolor grupy" .value=${this.editingGroup?.color} @sl-input=${(e:any) => this.editingGroup.color = e.target.value}></sl-input>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <label style="font-size: 0.9rem; color: var(--color-wood-dark);">Logo grupy (Zdjęcie z komputera)</label>
-          <input type="file" accept="image/*" @change=${this.handleFileUpload} />
-          ${this.editingGroup?.photoUrl
-            ? html`<img src="${this.editingGroup.photoUrl}" style="max-width: 100px; border-radius: 8px; border: 1px solid var(--color-wood-medium);" />`
-            : ''}
-        </div>
-        <sl-textarea label="Opis" .value=${this.editingGroup?.description} @sl-input=${(e:any) => this.editingGroup.description = e.target.value}></sl-textarea>
-      </form>
+          <sl-input label="Nazwa" required .value=${this.editingGroup?.name} @sl-input=${(e:any) => this.editingGroup.name = e.target.value}></sl-input>
+          <sl-input type="color" label="Kolor grupy" .value=${this.editingGroup?.color} @sl-input=${(e:any) => this.editingGroup.color = e.target.value}></sl-input>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <label style="font-size: 0.9rem; color: var(--color-wood-dark);">Logo grupy (Zdjęcie z komputera)</label>
+            <input type="file" accept="image/*" @change=${this.handleFileUpload} />
+            ${this.editingGroup?.photoUrl
+              ? html`<img src="${this.editingGroup.photoUrl}" style="max-width: 100px; border-radius: 8px; border: 1px solid var(--color-wood-medium);" />`
+              : ''}
+          </div>
+          <sl-textarea label="Opis" .value=${this.editingGroup?.description} @sl-input=${(e:any) => this.editingGroup.description = e.target.value}></sl-textarea>
+        </form>
         <sl-button slot="footer" variant="primary" @click=${this.save}>Zapisz zmiany</sl-button>
       </sl-dialog>
 

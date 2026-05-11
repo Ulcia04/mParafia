@@ -17,29 +17,48 @@ export class AppKancelaria extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      :host { display: block; padding: 10px; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
-      .wrapper { display: flex; flex-direction: column; gap: 20px; }
-      .paper { background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; padding: 25px; }
-      .title-container { display: flex; align-items: center; gap: 12px; color: var(--color-wood-dark); margin-bottom: 10px; }
-      .title-container h2 { margin: 0; font-size: 1.3rem; }
-      .content { color: var(--color-wood-dark); line-height: 1.6; }
+      :host {
+        display: block;
+        padding: 10px;
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+
+      .wrapper { display: flex; flex-direction: column; gap: 15px; }
+
+      .paper {
+        background-color: var(--color-sand-light);
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 15px;
+      }
+
+      .title-container { display: flex; align-items: center; gap: 10px; color: var(--color-wood-dark); margin-bottom: 8px; }
+      .title-container h2 { margin: 0; font-size: 1.25rem; }
+      .title-container sl-icon { font-size: 1.25rem; }
+
+      .content { color: var(--color-wood-dark); line-height: 1.5; font-size: 1rem; }
+      .content p { margin: 8px 0; }
 
       .bank-section { text-align: center; }
-      .piggy-icon { font-size: 8rem; color: var(--color-wood-dark); margin-bottom: 10px; }
-      .account-name { color: var(--color-wood-dark); font-size: 1.1rem; margin-bottom: 5px; }
-      .account-number { font-family: monospace; font-size: 1.2rem; color: var(--color-wood-dark); letter-spacing: 1px; }
+      .piggy-icon { font-size: 7rem; color: var(--color-wood-dark); margin-bottom: 10px; }
+      .account-name { color: var(--color-wood-dark); font-size: 1rem; margin-bottom: 5px; }
+      .account-number { font-family: monospace; font-size: 1.1rem; color: var(--color-wood-dark); letter-spacing: 1px; }
 
-      .contact-list { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+      .contact-list { display: flex; flex-direction: column; gap: 8px; margin-top: 5px; }
       .contact-item {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         color: var(--color-wood-dark);
         text-decoration: none;
         font-size: 1rem;
         transition: color 0.2s ease;
       }
-      .contact-item sl-icon { font-size: 1.5rem; color: var(--color-wood-medium); }
+      .contact-item sl-icon { font-size: 1.25rem; color: var(--color-wood-medium); }
+
       @media (hover: hover) {
         .contact-item:hover { color: var(--color-wood-medium); }
       }
@@ -88,7 +107,7 @@ export class AppKancelaria extends LitElement {
         </div>
 
         <div class="paper bank-section">
-            <div class="account-name"> #zbieram punkty do nieba </div>
+          <div class="account-name"> #zbieram punkty do nieba </div>
           <sl-icon name="piggy-bank" class="piggy-icon"></sl-icon>
           <div class="account-name">Parafia Rzymsko-katolicka pw. Matki Bożej Królowej Polski</div>
           <sl-divider style="--color: var(--color-wood-medium); margin: 15px 0;"></sl-divider>

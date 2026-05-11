@@ -19,6 +19,7 @@ export class AppDojazd extends LitElement {
       :host {
         display: block;
         padding: 10px;
+        width: 100%;
         max-width: 900px;
         margin: 0 auto;
         box-sizing: border-box;
@@ -36,8 +37,8 @@ export class AppDojazd extends LitElement {
       .address-link {
         display: flex;
         align-items: center;
-        gap: 15px;
-        padding: 20px;
+        gap: 12px;
+        padding: 15px;
         color: var(--color-wood-dark);
         text-decoration: none;
         transition: background-color 0.2s ease;
@@ -50,22 +51,23 @@ export class AppDojazd extends LitElement {
       }
 
       .address-link sl-icon {
-        font-size: 2.2rem;
+        font-size: 1.8rem;
         color: var(--color-wood-medium);
       }
 
       .address-text {
-        font-size: 1.2rem;
+        font-size: 1rem;
         line-height: 1.4;
       }
 
       .address-text strong {
         display: block;
+        font-size: 1rem;
         color: var(--color-wood-dark);
       }
 
       .hint {
-        padding: 10px 20px;
+        padding: 10px 15px;
         font-size: 0.85rem;
         color: var(--color-wood-medium);
         background-color: var(--color-cookie-medium);

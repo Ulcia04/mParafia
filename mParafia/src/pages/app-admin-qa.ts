@@ -21,12 +21,20 @@ interface Question {
 export class AppAdminQa extends LitElement {
   @state() private questions: Question[] = [];
   @state() private isSubmitting = false;
-  @state() private editingPublishedId: number | null = null;
+  // Zmiana nazwy zmiennej, aby obsługiwała i nowe i opublikowane pytania
+  @state() private editingId: number | null = null;
 
   static styles = [
     sharedStyles,
     css`
-      :host { display: block; padding: 10px 0; }
+      :host {
+        display: block;
+        padding: 10px;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
 
       p { color: var(--color-wood-dark); }
 
@@ -35,26 +43,85 @@ export class AppAdminQa extends LitElement {
 
       .question-card {
         background: var(--color-sand-light);
-        border: 1px solid var(--color-wood-medium);
-        border-radius: 8px;
-        padding: 15px;
-        margin-bottom: 15px;
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
       }
 
-      .q-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-      .date { font-size: 0.85rem; color: #666; }
-      .content { font-size: 1.1rem; color: var(--color-wood-dark); font-weight: 500; margin-bottom: 15px; }
+      .question-card[style*="border-left"] {
+        border-left: 6px solid var(--sl-color-warning-500) !important;
+      }
+
+      .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+      .date { font-size: 0.9rem; color: var(--color-wood-dark); opacity: 0.8; }
+      .content { font-size: 1.1rem; color: var(--color-wood-dark); font-weight: 500; margin-bottom: 15px; line-height: 1.5; }
 
       .answer-section {
-        background: rgba(255,255,255,0.6);
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 10px;
+        background: var(--color-cookie-medium);
+        padding: 15px 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
         color: var(--color-wood-dark);
-        border-left: 3px solid #198754;
+        border-left: 4px solid var(--sl-color-success-600);
+        line-height: 1.5;
       }
 
-      .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;}
+      .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;}
+
+      sl-textarea {
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+
+        --sl-input-label-color: var(--color-wood-dark);
+        --sl-input-placeholder-color: var(--color-wood-medium);
+
+        --sl-input-background-color: var(--color-sand-light);
+        --sl-input-background-color-hover: var(--color-sand-light);
+        --sl-input-background-color-focus: var(--color-sand-light);
+
+        --sl-input-border-color: var(--color-wood-medium);
+        --sl-input-border-color-hover: var(--color-wood-medium);
+        --sl-input-border-color-focus: var(--color-wood-medium);
+      }
+
+      .btn-edit::part(base) {
+        background-color: #d97706;
+        border-color: #d97706;
+      }
+      .btn-edit::part(base):hover { background-color: #db6104; border-color: #db6104; }
+      .btn-edit::part(label), .btn-edit::part(prefix) { color: var(--color-sand-light) !important; }
+
+      .btn-delete::part(base) {
+        background-color: rgba(220, 38, 38, 0.8);
+        border-color: transparent;
+      }
+      .btn-delete::part(base):hover { background-color: rgba(220, 38, 38, 1); }
+      .btn-delete::part(label), .btn-delete::part(prefix) { color: var(--color-sand-light) !important; }
+
+      .btn-save::part(base) {
+        background-color: #15803d;
+        border-color: #15803d;
+      }
+      .btn-save::part(base):hover { background-color: #166534; border-color: #166534; }
+      .btn-save::part(label), .btn-save::part(prefix) { color: var(--color-sand-light) !important; }
+
+      .btn-cancel::part(base) {
+        color: var(--color-wood-dark);
+        border-color: var(--color-wood-medium);
+        background-color: transparent;
+      }
+      .btn-cancel::part(base):hover {
+        background-color: var(--color-cookie-medium);
+        border-color: var(--color-wood-dark);
+      }
+
+      sl-divider {
+        --color: var(--color-wood-medium);
+        margin: 25px 0;
+      }
     `
   ];
 
@@ -71,12 +138,20 @@ export class AppAdminQa extends LitElement {
     }
   }
 
-  async handleSave(id: number) {
-    const textarea = this.shadowRoot?.getElementById(`answer-${id}`) as any;
-    const answer = textarea?.value;
+  async handleSave(id: number, originalContent: string) {
+    const textareaAnswer = this.shadowRoot?.getElementById(`answer-${id}`) as any;
+    const textareaQuestion = this.shadowRoot?.getElementById(`question-${id}`) as any;
+
+    const answer = textareaAnswer?.value;
+    const content = textareaQuestion ? textareaQuestion.value : originalContent;
 
     if (!answer || answer.trim() === '') {
       alert('Odpowiedź nie może być pusta!');
+      return;
+    }
+
+    if (!content || content.trim() === '') {
+      alert('Treść pytania nie może być pusta!');
       return;
     }
 
@@ -85,11 +160,11 @@ export class AppAdminQa extends LitElement {
       const res = await fetch(`http://localhost:3000/api/questions/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ answer, isPublished: true })
+        body: JSON.stringify({ answer, content, isPublished: true })
       });
 
       if (res.ok) {
-        this.editingPublishedId = null;
+        this.editingId = null;
         await this.fetchQuestions();
       }
     } catch (e) {
@@ -127,19 +202,35 @@ export class AppAdminQa extends LitElement {
             <sl-badge variant="warning">Nowe</sl-badge>
             <span class="date">${new Date(q.createdAt).toLocaleString('pl-PL')}</span>
           </div>
-          <div class="content">
-            <sl-icon name="person-circle"></sl-icon>
-            <strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}
-          </div>
 
-          <sl-textarea id="answer-${q.id}" placeholder="Twoja odpowiedź..." rows="3"></sl-textarea>
+          ${this.editingId === q.id ? html`
+            <sl-textarea id="question-${q.id}" label="Treść pytania (${q.author || 'Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
+            <sl-textarea id="answer-${q.id}" label="Twoja odpowiedź" placeholder="Wpisz odpowiedź..." rows="3"></sl-textarea>
 
-          <div class="actions">
-            <sl-button size="small" variant="danger" outline @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>
-            <sl-button size="small" variant="success" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id)}>
-               Odpowiedz i publikuj
-            </sl-button>
-          </div>
+            <div class="actions">
+              <sl-button size="small" class="btn-cancel" @click=${() => this.editingId = null}>Anuluj</sl-button>
+              <sl-button size="small" class="btn-save" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id, q.content)}>
+                 Odpowiedz i publikuj
+              </sl-button>
+            </div>
+          ` : html`
+            <div class="content">
+              <sl-icon name="person-circle"></sl-icon>
+              <strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}
+            </div>
+
+            <sl-textarea id="answer-${q.id}" placeholder="Twoja odpowiedź..." rows="3"></sl-textarea>
+
+            <div class="actions">
+              <sl-button size="small" class="btn-delete" @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>
+              <sl-button size="small" class="btn-edit" @click=${() => this.editingId = q.id}>
+                <sl-icon slot="prefix" name="pencil"></sl-icon> Edytuj pytanie
+              </sl-button>
+              <sl-button size="small" class="btn-save" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id, q.content)}>
+                 Odpowiedz i publikuj
+              </sl-button>
+            </div>
+          `}
         </div>
       `)}
 
@@ -153,28 +244,29 @@ export class AppAdminQa extends LitElement {
             <sl-badge variant="success">Widoczne dla wszystkich</sl-badge>
             <span class="date">${new Date(q.createdAt).toLocaleString('pl-PL')}</span>
           </div>
-          <div class="content">
-            <sl-icon name="person-circle"></sl-icon>
-            <strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}
-          </div>
 
-          ${this.editingPublishedId === q.id ? html`
-            <sl-textarea id="answer-${q.id}" .value=${q.answer || ''} rows="3"></sl-textarea>
+          ${this.editingId === q.id ? html`
+            <sl-textarea id="question-${q.id}" label="Treść pytania (${q.author || 'Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
+            <sl-textarea id="answer-${q.id}" label="Odpowiedź duszpasterza" .value=${q.answer || ''} rows="3"></sl-textarea>
             <div class="actions">
-              <sl-button size="small" @click=${() => this.editingPublishedId = null}>Anuluj</sl-button>
-              <sl-button size="small" variant="success" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id)}>
+              <sl-button size="small" class="btn-cancel" @click=${() => this.editingId = null}>Anuluj</sl-button>
+              <sl-button size="small" class="btn-save" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id, q.content)}>
                 Zapisz poprawkę
               </sl-button>
             </div>
           ` : html`
+            <div class="content">
+              <sl-icon name="person-circle"></sl-icon>
+              <strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}
+            </div>
             <div class="answer-section">
                <strong>Odpowiedź duszpasterza:</strong><br/>
                ${q.answer}
             </div>
             <div class="actions">
-              <sl-button size="small" variant="danger" outline @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>
-              <sl-button size="small" variant="default" @click=${() => this.editingPublishedId = q.id}>
-                <sl-icon slot="prefix" name="pencil"></sl-icon> Edytuj treść
+              <sl-button size="small" class="btn-delete" @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>
+              <sl-button size="small" class="btn-edit" @click=${() => this.editingId = q.id}>
+                <sl-icon slot="prefix" name="pencil"></sl-icon> Edytuj
               </sl-button>
             </div>
           `}

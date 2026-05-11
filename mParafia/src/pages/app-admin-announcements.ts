@@ -15,12 +15,12 @@ interface Announcement {
   title: string;
   content: string;
   date: string;
-  isMain: boolean; 
+  isMain: boolean;
 }
 
 @customElement('app-admin-announcements')
 export class AppAdminAnnouncements extends LitElement {
-  
+
   @state() private announcements: Announcement[] = [];
   @state() private isSubmitting = false;
   @state() private editingId: number | null = null;
@@ -51,7 +51,7 @@ export class AppAdminAnnouncements extends LitElement {
 
   async handleSubmit(e: Event) {
     e.preventDefault();
-    
+
     const title = this.titleInput.value;
     const date = this.dateInput.value;
     const content = this.contentInput.value;
@@ -102,7 +102,7 @@ export class AppAdminAnnouncements extends LitElement {
       });
 
       if (response.ok) {
-        if (this.editingId === id) this.resetForm(); 
+        if (this.editingId === id) this.resetForm();
         await this.fetchAnnouncements();
       }
     } catch (error) {
@@ -147,58 +147,129 @@ export class AppAdminAnnouncements extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      :host { display: block; padding: 20px; }
-      .form-section { background-color: #fff; padding: 20px; border-radius: 8px; border: 1px solid var(--color-wood-medium); margin-bottom: 30px; transition: border-color 0.3s ease, box-shadow 0.3s ease; }
-      .form-section.is-editing { border-color: #d97706; box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.2); }
-      .form-title { color: var(--color-wood-dark); margin-top: 0; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; }
-      .form-row { display: flex; gap: 15px; margin-bottom: 15px; }
-      .form-row sl-input { flex: 1; }
-      sl-textarea { margin-bottom: 15px; }
+      :host {
+        display: block;
+        padding: 10px;
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto;
+        box-sizing: border-box;
+      }
+
+      .form-section {
+        background-color: var(--color-sand-light);
+        padding: 25px;
+        border-radius: 12px;
+        border: 2px solid var(--color-wood-medium);
+        margin-bottom: 30px;
+        transition: border-color 0.3s ease, box-shadow 0.3s ease;
+      }
+      .form-section.is-editing {
+        border-color: var(--sl-color-warning-500);
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.2);
+      }
+      .form-title { color: var(--color-wood-dark); margin-top: -20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
+      .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+      .form-row { display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap; }
+      .form-row sl-input { flex: 1; min-width: 200px; }
+      sl-textarea { margin-bottom: 20px; }
+      sl-input, sl-textarea, sl-select {
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+        --sl-input-label-color: var(--color-wood-dark);
+        --sl-input-placeholder-color: var(--color-wood-dark);
+        --sl-input-help-text-color: var(--color-wood-dark);
+      }
       .button-group { display: flex; gap: 10px; }
       .submit-btn { flex: 1; }
-      .list-section h3 { color: var(--color-wood-dark); margin-bottom: 15px; }
-      
-      /* KLUCZOWA ZMIANA: position: relative pozwala umieścić ticka w rogu */
-      .announcement-item { 
-        position: relative; 
-        background-color: #fff; 
-        border: 1px solid var(--color-wood-medium); 
-        border-radius: 8px; 
-        padding: 15px; 
-        margin-bottom: 15px; 
-        display: flex; 
-        flex-direction: column; 
-        gap: 10px; 
+      .list-section h3 { color: var(--color-wood-dark); margin-bottom: 20px; font-size: 1.3rem; }
+
+      .announcement-item {
+        position: relative;
+        background-color: var(--color-sand-light);
+        border: 2px solid var(--color-wood-medium);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
       }
-      
-      .announcement-item.is-main { 
-        border: 2px solid var(--color-wood-dark); 
-        background-color: var(--color-sand-light); 
+
+
+
+      .announcement-item.is-main {
+        border: 2px solid var(--sl-color-success-600);
+        background-color: var(--color-sand-light);
+        box-shadow: 0 2px 8px rgba(25, 135, 84, 0.1);
       }
-      
-      /* NOWE STYLE DLA TICKA */
+
+
       .main-tick {
         position: absolute;
-        top: 15px;
-        right: 15px;
-        font-size: 1.6rem;
-        color: #ccc;
+        top: 20px;
+        right: 20px;
+        font-size: 1.8rem;
+        color: var(--color-wood-medium);
         cursor: pointer;
         transition: transform 0.2s, color 0.2s;
       }
-      
-      .main-tick:hover {
-        transform: scale(1.1);
+
+      .main-tick:hover { transform: scale(1.1); }
+      .main-tick.is-active { color: var(--sl-color-success-600); }
+
+      .announcement-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; padding-right: 40px; }
+      .announcement-info h4 { margin: 0 0 8px 0; color: var(--color-wood-dark); display: flex; align-items: center; gap: 10px; font-size: 1.15rem; }
+      .announcement-info span { font-size: 0.9rem; color: var(--color-wood-dark); opacity: 0.8; }
+      .actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 5px; }
+
+      .btn-edit::part(base) {
+        background-color: #d97706;
+        border-color: #d97706;
       }
-      
-      .main-tick.is-active {
-        color: #198754; /* Ładny zielony kolor zaznaczenia */
+      .btn-edit::part(base):hover { background-color: #db6104; border-color: #db6104; }
+      .btn-edit::part(label), .btn-edit::part(prefix) { color: var(--color-sand-light) !important; }
+
+      .btn-delete::part(base) {
+        background-color: rgba(220, 38, 38, 0.8);
+        border-color: transparent;
+      }
+      .btn-delete::part(base):hover { background-color: rgba(220, 38, 38, 1); }
+      .btn-delete::part(label), .btn-delete::part(prefix) { color: var(--color-sand-light) !important; }
+
+      sl-input, sl-textarea {
+        --sl-input-background-color: var(--color-sand-light);
+        --sl-input-background-color-hover: var(--color-sand-light);
+        --sl-input-background-color-focus: var(--color-sand-light);
+        --sl-input-border-color: var(--color-wood-medium);
+        --sl-input-border-color-hover: var(--color-wood-medium);
+        --sl-input-border-color-focus: var(--color-wood-medium);
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+        --sl-input-label-color: var(--color-wood-dark);
       }
 
-      .announcement-header { display: flex; justify-content: space-between; align-items: flex-start; width: 100%; padding-right: 30px; /* miejsce na ticka */ }
-      .announcement-info h4 { margin: 0 0 5px 0; color: var(--color-wood-dark); display: flex; align-items: center; gap: 8px;}
-      .announcement-info span { font-size: 0.85rem; color: #666; }
-      .actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+      sl-input::part(input)::-webkit-calendar-picker-indicator {
+        filter: invert(30%) sepia(40%) saturate(800%) hue-rotate(345deg) brightness(90%) contrast(90%);
+        cursor: pointer;
+        opacity: 0.8;
+      }
+      sl-input::part(input)::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+      }
+
+      .btn-cancel::part(base) {
+        color: var(--color-wood-dark);
+        border-color: var(--color-wood-medium);
+        background-color: transparent;
+      }
+      .btn-cancel::part(base):hover {
+        background-color: var(--color-cookie-medium);
+        border-color: var(--color-wood-dark);
+      }
     `
   ];
 
@@ -209,10 +280,10 @@ export class AppAdminAnnouncements extends LitElement {
           <h2>${this.editingId ? 'Edytuj ogłoszenie' : 'Dodaj nowe ogłoszenia'}</h2>
           ${this.editingId ? html`<sl-badge variant="warning" pill>Tryb Edycji</sl-badge>` : ''}
         </div>
-        
+
         <form @submit="${this.handleSubmit}">
           <div class="form-row">
-            <sl-input id="title-input" label="Tytuł" placeholder="np. Ogłoszenia - III Niedziela Zwykła" required></sl-input>
+            <sl-input id="title-input" label="Tytuł" placeholder="np. III Niedziela Zwykła" required></sl-input>
             <sl-input id="date-input" type="date" label="Data" required></sl-input>
           </div>
           <sl-textarea id="content-input" label="Treść ogłoszeń" placeholder="Wpisz tutaj treść ogłoszeń..." rows="6" resize="auto" required></sl-textarea>
@@ -221,7 +292,7 @@ export class AppAdminAnnouncements extends LitElement {
               <sl-icon slot="prefix" name="${this.editingId ? 'save' : 'plus-circle'}"></sl-icon>
               ${this.editingId ? 'Zapisz zmiany' : 'Opublikuj ogłoszenia'}
             </sl-button>
-            ${this.editingId ? html`<sl-button variant="default" @click="${this.resetForm}">Anuluj</sl-button>` : ''}
+            ${this.editingId ? html`<sl-button class="btn-cancel" @click="${this.resetForm}">Anuluj</sl-button>` : ''}
           </div>
         </form>
       </div>
@@ -230,15 +301,15 @@ export class AppAdminAnnouncements extends LitElement {
 
       <div class="list-section">
         <h3>Zarządzaj ogłoszeniami</h3>
-        
-        ${this.announcements.length === 0 
-          ? html`<p style="color: #666;">Brak ogłoszeń w bazie.</p>` 
+
+        ${this.announcements.length === 0
+          ? html`<p style="color: var(--color-wood-dark);">Brak ogłoszeń w bazie.</p>`
           : this.announcements.map(ann => html`
             <div class="announcement-item ${ann.isMain ? 'is-main' : ''}">
-              
-              <sl-icon 
-                class="main-tick ${ann.isMain ? 'is-active' : ''}" 
-                name="${ann.isMain ? 'check-circle-fill' : 'check-circle'}" 
+
+              <sl-icon
+                class="main-tick ${ann.isMain ? 'is-active' : ''}"
+                name="${ann.isMain ? 'check-circle-fill' : 'check-circle'}"
                 @click="${() => this.toggleMain(ann.id)}"
                 title="${ann.isMain ? 'Odznacz jako główne' : 'Ustaw jako główne'}">
               </sl-icon>
@@ -254,12 +325,12 @@ export class AppAdminAnnouncements extends LitElement {
               </div>
 
               <div class="actions">
-                <sl-button size="small" @click="${() => this.startEditing(ann)}">
+                <sl-button size="small" class="btn-edit" @click="${() => this.startEditing(ann)}">
                   <sl-icon slot="prefix" name="pencil"></sl-icon>
                   Edytuj
                 </sl-button>
-                
-                <sl-button size="small" variant="danger" outline @click="${() => this.handleDelete(ann.id)}">
+
+                <sl-button size="small" class="btn-delete" @click="${() => this.handleDelete(ann.id)}">
                   <sl-icon slot="prefix" name="trash"></sl-icon>
                   Usuń
                 </sl-button>

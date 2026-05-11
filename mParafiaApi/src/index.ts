@@ -369,6 +369,6 @@ app.delete('/api/questions/:id', async (req, res) => {
 });
 const PORT = 3000;
 app.listen(PORT, () => {
-  console.log(`Serwer odpalony na porcie http://localhost:${PORT} 🚀`);
+  console.log(`Serwer odpalony na porcie http://localhost:${PORT} 🚀 - rakieta <3`);
 });
 

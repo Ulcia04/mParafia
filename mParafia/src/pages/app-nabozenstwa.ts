@@ -32,46 +32,46 @@ export class AppNabozenstwa extends LitElement {
       .wrapper {
         display: flex;
         flex-direction: column;
-        gap: 20px;
+        gap: 15px;
       }
 
       .paper {
         background-color: var(--color-sand-light);
         border: 2px solid var(--color-wood-medium);
         border-radius: 12px;
-        padding: 20px;
+        padding: 15px;
       }
 
       .title-container {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
         color: var(--color-wood-dark);
-        margin-bottom: 10px;
+        margin-bottom: 8px;
       }
 
       .title-container h2 {
         margin: 0;
-        font-size: 1.3rem;
+        font-size: 1.25rem;
       }
 
       .title-container sl-icon {
-        font-size: 1.5rem;
+        font-size: 1.25rem;
       }
 
       .content-block {
         color: var(--color-wood-dark);
-        line-height: 1.6;
-        font-size: 1.05rem;
+        line-height: 1.5;
+        font-size: 1rem;
       }
 
       .content-block p {
-        margin: 10px 0;
+        margin: 8px 0;
       }
 
       .content-block strong {
-        color: var(--color-wood-dark); /* Utrzymujemy brązowy kolor dla pogrubień */
-        font-size: 1.1rem;
+        color: var(--color-wood-dark);
+        font-size: 1.05rem;
       }
 
       ul.custom-list {
@@ -81,8 +81,8 @@ export class AppNabozenstwa extends LitElement {
       }
 
       ul.custom-list li {
-        margin-bottom: 15px;
-        padding-left: 20px;
+        margin-bottom: 12px;
+        padding-left: 18px;
         position: relative;
       }
 
@@ -90,16 +90,16 @@ export class AppNabozenstwa extends LitElement {
         content: "•";
         color: var(--color-wood-medium);
         font-weight: bold;
-        font-size: 1.5rem;
+        font-size: 1.2rem;
         position: absolute;
         left: 0;
-        top: -4px;
+        top: -1px;
       }
 
       ul.msze-list {
         list-style-type: none;
         padding: 0;
-        margin-top: -10px;
+        margin-top: -6px;
       }
 
       ul.msze-list li {
@@ -201,8 +201,10 @@ export class AppNabozenstwa extends LitElement {
           <sl-divider style="--color: var(--color-wood-medium);"></sl-divider>
 
           <div class="content-block" style="text-align: left;">
-            <p>I niedziela miesiąca na Mszy o 14.00 <br>
-III niedziela miesiąca na Mszy o 12.30</p>
+            <p>
+                I niedziela miesiąca na Mszy o 14.00 <br>
+                III niedziela miesiąca na Mszy o 12.30
+            </p>
           </div>
         </div>
 

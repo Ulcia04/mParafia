@@ -28,9 +28,11 @@ export class AppAdmin extends LitElement {
     css`
       :host {
         display: block;
-        padding: 20px;
+        padding: 10px;
         max-width: 900px;
+        width: 100%;
         margin: 0 auto;
+        box-sizing: border-box;
       }
 
       .admin-container {
@@ -38,6 +40,7 @@ export class AppAdmin extends LitElement {
         border: 2px solid var(--color-wood-medium);
         border-radius: 12px;
         overflow: hidden;
+        box-shadow: 0 4px 15px rgba(127, 69, 29, 0.1);
       }
 
       sl-tab-group::part(nav) {
@@ -49,12 +52,18 @@ export class AppAdmin extends LitElement {
         color: var(--color-wood-dark);
         font-weight: 500;
         padding: 15px 20px;
+        transition: background-color 0.2s;
       }
 
       sl-tab[active]::part(base) {
         font-weight: bold;
         border-bottom-color: var(--color-wood-dark);
         color: var(--color-wood-dark);
+        background-color: var(--color-sand-light);
+      }
+
+      sl-tab-panel::part(base) {
+        padding: 25px 15px;
       }
     `
   ];
@@ -69,15 +78,15 @@ export class AppAdmin extends LitElement {
           </sl-tab>
 
           <sl-tab slot="nav" panel="events">
-            <sl-icon name="calendar3" style="margin-right: 8px;"></sl-icon> Wydarzenia
+            <sl-icon name="star-fill" style="margin-right: 8px;"></sl-icon> Wydarzenia
           </sl-tab>
 
           <sl-tab slot="nav" panel="announcements">
-            <sl-icon name="journal-text" style="margin-right: 8px;"></sl-icon> Ogłoszenia
+            <sl-icon name="megaphone-fill" style="margin-right: 8px;"></sl-icon> Ogłoszenia
           </sl-tab>
 
           <sl-tab slot="nav" panel="qa">
-            <sl-icon name="patch-question" style="margin-right: 8px;"></sl-icon> Q&A
+            <sl-icon name="chat-quote-fill" style="margin-right: 8px;"></sl-icon> Q&A
           </sl-tab>
 
           <sl-tab-panel name="groups">

@@ -17,13 +17,14 @@ export class AppSpowiedz extends LitElement {
   static styles = [
     sharedStyles,
     css`
-      :host { display: block; padding: 10px; max-width: 900px; margin: 0 auto; box-sizing: border-box; }
-      .paper { background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; padding: 25px; }
-      .title-container { display: flex; align-items: center; gap: 12px; color: var(--color-wood-dark); margin-bottom: 10px; }
-      .title-container h2 { margin: 0; font-size: 1.4rem; }
-      .content { color: var(--color-wood-dark); line-height: 1.8; font-size: 1.1rem; }
-      .item { margin-bottom: 15px; display: flex; gap: 10px; align-items: flex-start; }
-      .item sl-icon { color: var(--color-wood-medium); font-size: 1.3rem; margin-top: 4px; }
+      :host { display: block; padding: 10px; max-width: 900px; width: 100%; margin: 0 auto; box-sizing: border-box; }
+      .paper { background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; padding: 20px; }
+      .title-container { display: flex; align-items: center; gap: 10px; color: var(--color-wood-dark); margin-bottom: 10px; }
+      .title-container h2 { margin: 0; font-size: 1.25rem; }
+      .title-container sl-icon { font-size: 1.25rem; }
+      .content { color: var(--color-wood-dark); line-height: 1.6; font-size: 1rem; }
+      .item { margin-bottom: 12px; display: flex; gap: 10px; align-items: flex-start; }
+      .item sl-icon { color: var(--color-wood-medium); font-size: 1.15rem; margin-top: 3px; }
     `
   ];
 
@@ -31,7 +32,7 @@ export class AppSpowiedz extends LitElement {
     return html`
       <div class="paper">
         <div class="title-container">
-          <sl-icon name="chat-heart"></sl-icon>
+          <sl-icon name="heart-fill"></sl-icon>
           <h2>Okazja do spowiedzi św.</h2>
         </div>
         <sl-divider style="--color: var(--color-wood-medium);"></sl-divider>
