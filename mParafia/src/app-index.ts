@@ -29,6 +29,7 @@ import './pages/app-spowiedz';
 import './pages/app-kancelaria';
 import './pages/app-dojazd';
 import './pages/app-admins-groups';
+import './pages/app-admin-login';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -228,24 +229,37 @@ export class AppIndex extends LitElement {
     const base = (import.meta as any).env.BASE_URL;
     const router = new Router(outlet, { baseUrl: base });
 
+    // Nasz Strażnik Ścieżek (Route Guard)
+    const adminGuard = (context: any, commands: any) => {
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+
+      if (!isAdmin) {
+        return commands.redirect('/admin-login');
+      }
+
+      return undefined;
+    };
+
     router.setRoutes([
+      // --- STREFA PUBLICZNA ---
       { path: '/', component: 'app-home' },
       { path: '/kalendarz', component: 'app-calendar' },
       { path: '/grupy', component: 'app-groups' },
       { path: '/wydarzenia', component: 'app-events' },
       { path: '/mock-event', component: 'app-event-mock-detail'},
       { path: '/grupa', component: 'app-group-detail' },
-      { path: '/admin', component: 'app-admin' },
-      { path: '/admin/events', component: 'app-admin-events' },
       { path: '/ogloszenia', component: 'app-announcements' },
       { path: '/qa', component: 'app-qa' },
       { path: '/nabozenstwa', component: 'app-nabozenstwa' },
       { path: '/spowiedz', component: 'app-spowiedz' },
       { path: '/kancelaria', component: 'app-kancelaria' },
       { path: '/dojazd', component: 'app-dojazd' },
-      { path: '/adminsgroups', component: 'app-admins-groups' },
+      { path: '/admin-login', component: 'app-admin-login' },
+      // chronione
+      { path: '/admin', component: 'app-admin', action: adminGuard },
+      { path: '/admin/events', component: 'app-admin-events', action: adminGuard },
+      { path: '/adminsgroups', component: 'app-admins-groups', action: adminGuard },
       { path: '(.*)', redirect: '/' }
-
     ]);
   }
 

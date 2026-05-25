@@ -1,11 +1,12 @@
 import { LitElement, html, css } from 'lit';
-import { customElement } from 'lit/decorators.js';
+import { customElement, state } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
 
 import '@shoelace-style/shoelace/dist/components/tab-group/tab-group.js';
 import '@shoelace-style/shoelace/dist/components/tab/tab.js';
 import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
 
 import './app-admin-groups';
 import './app-admin-announcements';
@@ -15,6 +16,7 @@ import './app-admin-kancelaria';
 
 @customElement('app-admin')
 export class AppAdmin extends LitElement {
+  @state() private loggingOut = false;
 
   connectedCallback() {
     super.connectedCallback();
@@ -37,6 +39,7 @@ export class AppAdmin extends LitElement {
       }
 
       .admin-container {
+        position: relative; /* Kluczowe dla pozycjonowania przycisku wyloguj */
         background-color: var(--color-sand-light);
         border: 2px solid var(--color-wood-medium);
         border-radius: 12px;
@@ -44,9 +47,27 @@ export class AppAdmin extends LitElement {
         box-shadow: 0 4px 15px rgba(127, 69, 29, 0.1);
       }
 
+      /* Absolutne pozycjonowanie przycisku w prawym górnym rogu panelu */
+      sl-button.logout-btn {
+        position: absolute;
+        top: 8px;
+        right: 16px;
+        z-index: 10; /* Wyżej niż pasek zakładek */
+      }
+
+      sl-button.logout-btn::part(base) {
+        color: #d32f2f;
+        font-weight: 500;
+      }
+
+      sl-button.logout-btn::part(base):hover {
+        background-color: rgba(211, 47, 47, 0.1);
+      }
+
       sl-tab-group::part(nav) {
         background-color: var(--color-cookie-medium);
         border-bottom: 2px solid var(--color-wood-medium);
+        padding-right: 140px; /* Zabezpieczenie przed nakładaniem się zakładek na przycisk */
       }
 
       sl-tab::part(base) {
@@ -69,11 +90,43 @@ export class AppAdmin extends LitElement {
     `
   ];
 
+  private async handleLogout() {
+    this.loggingOut = true;
+    try {
+      await fetch('http://localhost:3000/api/admin/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Błąd serwera podczas wylogowywania:', error);
+    } finally {
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('isSuperAdmin');
+      localStorage.removeItem('allowedGroups');
+
+      const base = (import.meta as any).env.BASE_URL;
+      const targetPath = '/admin-login';
+      const fullPath = base === '/' ? targetPath : base + targetPath.substring(1);
+
+      window.location.href = fullPath;
+    }
+  }
+
   render() {
     return html`
       <div class="admin-container">
-        <sl-tab-group>
 
+        <sl-button
+          class="logout-btn"
+          variant="text"
+          size="small"
+          ?loading="${this.loggingOut}"
+          @click="${this.handleLogout}">
+          <sl-icon slot="prefix" name="box-arrow-right"></sl-icon>
+          Wyloguj się
+        </sl-button>
+
+        <sl-tab-group>
           <sl-tab slot="nav" panel="groups">
             <sl-icon name="people-fill" style="margin-right: 8px;"></sl-icon> Zarządzaj Grupami
           </sl-tab>
@@ -88,6 +141,10 @@ export class AppAdmin extends LitElement {
 
           <sl-tab slot="nav" panel="qa">
             <sl-icon name="chat-quote-fill" style="margin-right: 8px;"></sl-icon> Q&A
+          </sl-tab>
+
+          <sl-tab slot="nav" panel="kancelaria">
+            <sl-icon name="journal-bookmark-fill" style="margin-right: 8px;"></sl-icon> Kancelaria
           </sl-tab>
 
           <sl-tab-panel name="groups">
@@ -106,14 +163,9 @@ export class AppAdmin extends LitElement {
             <app-admin-qa></app-admin-qa>
           </sl-tab-panel>
 
-          <sl-tab slot="nav" panel="kancelaria">
-            <sl-icon name="journal-bookmark-fill" style="margin-right: 8px;"></sl-icon> Kancelaria
-          </sl-tab>
-
           <sl-tab-panel name="kancelaria">
             <app-admin-kancelaria></app-admin-kancelaria>
           </sl-tab-panel>
-
         </sl-tab-group>
       </div>
     `;

@@ -4,25 +4,40 @@ generator client {
 }
 
 datasource db {
-provider = "postgresql"
+  provider = "postgresql"
 }
 
-model User {
-  id            Int            @id @default(autoincrement())
-  email         String         @unique
-  name          String?
-  groups        Group[]
-  notifications Notification[]
+
+model Admin {
+  id             Int          @id @default(autoincrement())
+  login          String       @unique
+  passwordHash   String
+  isSuperAdmin   Boolean      @default(false)
+
+  managedGroups  AdminGroup[]
 }
+
+model AdminGroup {
+  adminId Int
+  groupId Int
+
+  admin   Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@id([adminId, groupId])
+}
+
 
 model Group {
-  id          Int       @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String?
-  members     User[]
-  events      Event[]
   photoUrl    String?
   color       String?
+
+  // Relacje odwrotne
+  events      GroupEvent[]
+  admins      AdminGroup[]
 }
 
 model Event {
@@ -31,18 +46,20 @@ model Event {
   description String?
   startTime   DateTime
   location    String?
-  groupId     Int?
-  group       Group?   @relation(fields: [groupId], references: [id])
+
+  groups      GroupEvent[]
 }
 
-model Notification {
-  id        Int      @id @default(autoincrement())
-  content   String
-  sendAt    DateTime
-  isSent    Boolean  @default(false)
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+model GroupEvent {
+  groupId Int
+  eventId Int
+
+  group   Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  event   Event @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  @@id([groupId, eventId])
 }
+
 
 model Announcement {
   id        Int      @id @default(autoincrement())
@@ -52,7 +69,6 @@ model Announcement {
   isMain    Boolean  @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
 }
 
 model Question {
