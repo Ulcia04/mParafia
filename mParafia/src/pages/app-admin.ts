@@ -11,6 +11,7 @@ import './app-admin-groups';
 import './app-admin-announcements';
 import './app-admin-events';
 import './app-admin-qa';
+import './app-admin-kancelaria';
 
 @customElement('app-admin')
 export class AppAdmin extends LitElement {
@@ -103,6 +104,14 @@ export class AppAdmin extends LitElement {
 
           <sl-tab-panel name="qa">
             <app-admin-qa></app-admin-qa>
+          </sl-tab-panel>
+
+          <sl-tab slot="nav" panel="kancelaria">
+            <sl-icon name="journal-bookmark-fill" style="margin-right: 8px;"></sl-icon> Kancelaria
+          </sl-tab>
+
+          <sl-tab-panel name="kancelaria">
+            <app-admin-kancelaria></app-admin-kancelaria>
           </sl-tab-panel>
 
         </sl-tab-group>

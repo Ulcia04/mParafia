@@ -185,10 +185,11 @@ export class AppQa extends LitElement {
     } catch (e) { console.error(e); }
   }
 
-  async submitQuestion() {
+async submitQuestion() {
     const content = this.questionInput.value;
     const authorRaw = this.authorInput.value;
-    const author = authorRaw && authorRaw.trim() !== '' ? authorRaw.trim() : null;
+
+    const author = authorRaw && authorRaw.trim() !== '' ? authorRaw.trim() : 'Anonimowy';
 
     if (!content || content.trim() === '') {
       alert('Proszę wpisać treść pytania.');
@@ -200,7 +201,12 @@ export class AppQa extends LitElement {
       const res = await fetch('http://localhost:3000/api/questions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content, author })
+        body: JSON.stringify({
+          content: content,
+          author: author,
+          answer: '',
+          isPublished: false
+        })
       });
 
       if (res.ok) {
@@ -208,9 +214,14 @@ export class AppQa extends LitElement {
         this.questionInput.value = '';
         this.authorInput.value = '';
       } else {
-        alert('Wystąpił błąd podczas wysyłania pytania.');
+        const errorText = await res.text();
+        console.error("Szczegóły błędu od serwera:", errorText);
+        alert(`Błąd serwera (Status: ${res.status}). Otwórz konsolę (F12 -> Console), aby zobaczyć szczegóły.`);
       }
-    } catch (e) { alert('Brak połączenia z serwerem.'); }
+    } catch (e) {
+      console.error("Błąd sieci:", e);
+      alert('Brak połączenia z serwerem.');
+    }
     finally { this.isSubmitting = false; }
   }
 

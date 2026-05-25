@@ -63,3 +63,13 @@ model Question {
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
 }
+
+model KancelariaItem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  icon        String
+  content     String
+  footer      String?
+  fileUrl     String?
+  fileName    String?
+}

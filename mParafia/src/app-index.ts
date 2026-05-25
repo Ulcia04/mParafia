@@ -28,6 +28,7 @@ import './pages/app-nabozenstwa';
 import './pages/app-spowiedz';
 import './pages/app-kancelaria';
 import './pages/app-dojazd';
+import './pages/app-admins-groups';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -242,6 +243,7 @@ export class AppIndex extends LitElement {
       { path: '/spowiedz', component: 'app-spowiedz' },
       { path: '/kancelaria', component: 'app-kancelaria' },
       { path: '/dojazd', component: 'app-dojazd' },
+      { path: '/adminsgroups', component: 'app-admins-groups' },
       { path: '(.*)', redirect: '/' }
 
     ]);

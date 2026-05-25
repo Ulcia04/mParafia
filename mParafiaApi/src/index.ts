@@ -93,19 +93,6 @@ app.post('/api/groups', async (req, res) => {
   }
 });
 
-// app.put('/api/events/:id', async (req, res) => {
-//   const { id } = req.params;
-//   const { title, description, startTime, location, groupId } = req.body;
-//   const updated = await prisma.event.update({
-//     where: { id: Number(id) },
-//     data: { title, description, startTime: new Date(startTime), location, groupId: groupId ? Number(groupId) : null }
-//   });
-//   res.json(updated);
-// });
-// app.delete('/api/events/:id', async (req, res) => {
-//   await prisma.event.delete({ where: { id: Number(req.params.id) } });
-//   res.json({ message: "Usunięto" });
-// });
 
 app.get('/api/events/all', async (req, res) => {
   try {
@@ -285,7 +272,6 @@ app.post('/api/events/bulk', async (req, res) => {
       return res.status(400).json({ error: "Brak danych lub zły format" });
     }
 
-    // Tworzenie wielu wydarzeń (intencji) na raz
     const created = await prisma.event.createMany({
       data: events.map((e: any) => ({
         title: e.title,
@@ -303,8 +289,6 @@ app.post('/api/events/bulk', async (req, res) => {
   }
 });
 
-// --- STREFA Q&A ---
-
 app.get('/api/questions', async (req, res) => {
   try {
     const publishedQuestions = await prisma.question.findMany({
@@ -319,12 +303,19 @@ app.get('/api/questions', async (req, res) => {
 
 app.post('/api/questions', async (req, res) => {
   try {
-    const { content, author } = req.body;
+    const { content, author, answer, isPublished } = req.body;
+
     const newQuestion = await prisma.question.create({
-      data: { content, author }
+      data: {
+        content,
+        author,
+        answer: answer || '',
+        isPublished: isPublished || false
+      }
     });
     res.json(newQuestion);
   } catch (error) {
+    console.error("Błąd podczas dodawania pytania do bazy:", error);
     res.status(500).json({ error: 'Nie udało się wysłać pytania' });
   }
 });
@@ -340,6 +331,33 @@ app.get('/api/questions/all', async (req, res) => {
   }
 });
 
+app.put('/api/questions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { answer, isPublished, content } = req.body;
+
+    const updated = await prisma.question.update({
+      where: { id: Number(id) },
+      data: { answer, isPublished, content }
+    });
+    res.json(updated);
+  } catch (error) {
+    console.error("Błąd edycji pytania:", error);
+    res.status(500).json({ error: 'Nie udało się zaktualizować pytania' });
+  }
+});
+
+app.delete('/api/questions/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.question.delete({
+      where: { id: Number(id) }
+    });
+    res.json({ message: 'Usunięto pytanie' });
+  } catch (error) {
+    res.status(500).json({ error: 'Nie udało się usunąć pytania' });
+  }
+});
 
 
 app.put('/api/questions/:id', async (req, res) => {
@@ -367,6 +385,54 @@ app.delete('/api/questions/:id', async (req, res) => {
     res.status(500).json({ error: 'Nie udało się usunąć pytania' });
   }
 });
+
+
+app.get('/api/kancelaria', async (req, res) => {
+  try {
+    const items = await prisma.kancelariaItem.findMany();
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: 'Błąd pobierania danych' });
+  }
+});
+
+app.post('/api/kancelaria', async (req, res) => {
+  try {
+    const { title, icon, content, footer, fileUrl, fileName } = req.body;
+    const newItem = await prisma.kancelariaItem.create({
+      data: { title, icon, content, footer, fileUrl, fileName }
+    });
+    res.json(newItem);
+  } catch (error) {
+    res.status(500).json({ error: 'Błąd tworzenia' });
+  }
+});
+
+app.put('/api/kancelaria/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, icon, content, footer, fileUrl, fileName } = req.body;
+    const updated = await prisma.kancelariaItem.update({
+      where: { id: Number(id) },
+      data: { title, icon, content, footer, fileUrl, fileName }
+    });
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: 'Błąd aktualizacji' });
+  }
+});
+
+app.delete('/api/kancelaria/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await prisma.kancelariaItem.delete({ where: { id: Number(id) } });
+    res.json({ message: 'Usunięto' });
+  } catch (error) {
+    res.status(500).json({ error: 'Błąd usuwania' });
+  }
+});
+
+
 const PORT = 3000;
 app.listen(PORT, () => {
   console.log(`Serwer odpalony na porcie http://localhost:${PORT} 🚀 - rakieta <3`);
