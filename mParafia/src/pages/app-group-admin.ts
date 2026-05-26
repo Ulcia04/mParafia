@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
@@ -12,7 +13,7 @@ import '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel.js';
 import '@shoelace-style/shoelace/dist/components/avatar/avatar.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
 
-@customElement('app-admins-groups')
+@customElement('app-group-admin')
 export class AppAdminsGroups extends LitElement {
   @state() private groups: any[] = [];
   @state() private selectedGroup: any = null;
@@ -21,6 +22,10 @@ export class AppAdminsGroups extends LitElement {
 
   @state() private editingEvent: any = null;
   @state() private isEventSubmitting = false;
+
+  // NOWY STAN DLA WYLOGOWYWANIA
+  @state() private loggingOut = false;
+
   @query('#event-dialog') eventDialog!: any;
 
   connectedCallback() {
@@ -38,9 +43,19 @@ export class AppAdminsGroups extends LitElement {
 
   async fetchGroups() {
     try {
-      const res = await fetch('http://localhost:3000/api/groups');
+      const res = await apiFetch('/groups');
       if (res.ok) {
-        this.groups = await res.json();
+        const allGroups = await res.json();
+
+        const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
+
+        if (isSuperAdmin) {
+          this.groups = allGroups;
+        } else {
+          const allowedStr = localStorage.getItem('allowedGroups');
+          const allowedGroups = allowedStr ? JSON.parse(allowedStr) : [];
+          this.groups = allGroups.filter((g: any) => allowedGroups.includes(g.id));
+        }
       }
     } catch (e) {
       console.error('Błąd pobierania grup:', e);
@@ -59,7 +74,7 @@ export class AppAdminsGroups extends LitElement {
 
   async fetchGroupEvents(groupId: number) {
     try {
-      const res = await fetch('http://localhost:3000/api/events/all');
+      const res = await apiFetch('/events/all');
       if (res.ok) {
         const allEvents = await res.json();
         this.groupEvents = allEvents
@@ -76,9 +91,8 @@ export class AppAdminsGroups extends LitElement {
     this.isSubmitting = true;
 
     try {
-      const res = await fetch(`http://localhost:3000/api/groups/${this.selectedGroup.id}`, {
+      const res = await apiFetch(`/groups/${this.selectedGroup.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(this.selectedGroup)
       });
 
@@ -94,7 +108,6 @@ export class AppAdminsGroups extends LitElement {
       this.isSubmitting = false;
     }
   }
-
 
   openAddEventDialog() {
     this.editingEvent = {
@@ -120,9 +133,8 @@ export class AppAdminsGroups extends LitElement {
 
     this.isEventSubmitting = true;
     const isEditing = !!this.editingEvent.id;
-    const url = isEditing
-      ? `http://localhost:3000/api/events/${this.editingEvent.id}`
-      : 'http://localhost:3000/api/events';
+
+    const endpoint = isEditing ? `/events/${this.editingEvent.id}` : '/events';
     const method = isEditing ? 'PUT' : 'POST';
 
     let safeDate = this.editingEvent.startTime;
@@ -133,13 +145,12 @@ export class AppAdminsGroups extends LitElement {
     const payload = {
       ...this.editingEvent,
       startTime: safeDate,
-      groupId: this.selectedGroup.id
+      groupIds: [this.selectedGroup.id]
     };
 
     try {
-      const res = await fetch(url, {
+      const res = await apiFetch(endpoint, {
         method,
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       });
 
@@ -160,7 +171,7 @@ export class AppAdminsGroups extends LitElement {
   async deleteEvent(eventId: number) {
     if (!confirm('Czy na pewno chcesz usunąć to wydarzenie?')) return;
     try {
-      const res = await fetch(`http://localhost:3000/api/events/${eventId}`, { method: 'DELETE' });
+      const res = await apiFetch(`/events/${eventId}`, { method: 'DELETE' });
       if (res.ok) {
         await this.fetchGroupEvents(this.selectedGroup.id);
       }
@@ -168,7 +179,28 @@ export class AppAdminsGroups extends LitElement {
       console.error(e);
     }
   }
-static styles = [
+
+  // FUNKCJA WYLOGOWYWANIA
+  private async handleLogout() {
+    this.loggingOut = true;
+    try {
+      await apiFetch('/admin/logout', { method: 'POST' });
+    } catch (error) {
+      console.error('Błąd serwera podczas wylogowywania:', error);
+    } finally {
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('isSuperAdmin');
+      localStorage.removeItem('allowedGroups');
+
+      const base = (import.meta as any).env.BASE_URL || '/';
+      const targetPath = '/admin-login';
+      const fullPath = base === '/' ? targetPath : base + targetPath.substring(1);
+
+      window.location.href = fullPath;
+    }
+  }
+
+  static styles = [
     sharedStyles,
     css`
       :host {
@@ -180,155 +212,71 @@ static styles = [
         box-sizing: border-box;
       }
 
-      /* === STYLE WIDOKU WYBORU GRUPY === */
+      /* STYLE DLA WYLOGOWYWANIA */
+      .top-bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+      }
+
+      sl-button.logout-btn::part(base) {
+        background-color: var(--color-wood-dark);
+        border-color: var(--color-wood-dark);
+        color: white !important;
+        font-weight: 600;
+        border-radius: 8px;
+        transition: filter 0.2s;
+      }
+      sl-button.logout-btn::part(label), sl-button.logout-btn::part(prefix) {
+        color: white !important;
+      }
+      sl-button.logout-btn::part(base):hover {
+        filter: brightness(1.2);
+      }
+
       .header-title { color: var(--color-wood-dark); margin-bottom: 5px; }
       .header-subtitle { color: var(--color-wood-dark); opacity: 0.8; margin-top: 0; margin-bottom: 25px; }
-
-      .list-container {
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-      }
-
-      .list-item {
-        display: flex;
-        align-items: center;
-        background-color: var(--color-sand-light);
-        border: 2px solid var(--color-wood-medium);
-        border-radius: 12px;
-        padding: 15px 20px;
-        transition: background-color 0.2s ease, border-color 0.2s ease;
-      }
-
+      .list-container { display: flex; flex-direction: column; gap: 15px; }
+      .list-item { display: flex; align-items: center; background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; padding: 15px 20px; transition: background-color 0.2s ease, border-color 0.2s ease; }
       .logo-container { margin-right: 20px; }
-
-      .content-container {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
+      .content-container { flex: 1; display: flex; flex-direction: column; }
       .entity-name { font-weight: bold; font-size: 1.15rem; color: var(--color-wood-dark); }
-
-      .entity-desc {
-        font-size: 0.9rem; color: var(--color-wood-dark); opacity: 0.8; margin-top: 6px;
-        display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden;
-      }
-
-      .actions-container {
-        display: flex;
-        gap: 10px;
-        margin-left: 15px;
-      }
-
-      .btn-select::part(base) {
-        background-color: #d97706;
-        border-color: #d97706;
-      }
-      .btn-select::part(base):hover {
-        background-color: #db6104;
-        border-color: #db6104;
-      }
-      .btn-select::part(label),
-      .btn-select::part(suffix) {
-        color: var(--color-sand-light) !important;
-      }
-
-      /* === STYLE WIDOKU ZARZĄDZANIA === */
+      .entity-desc { font-size: 0.9rem; color: var(--color-wood-dark); opacity: 0.8; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+      .actions-container { display: flex; gap: 10px; margin-left: 15px; }
+      .btn-select::part(base) { background-color: #d97706; border-color: #d97706; }
+      .btn-select::part(base):hover { background-color: #db6104; border-color: #db6104; }
+      .btn-select::part(label), .btn-select::part(suffix) { color: var(--color-sand-light) !important; }
       .header-actions { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
       .header-actions h2 { margin: 0; color: var(--color-wood-dark); }
-
-      .admin-container {
-        background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium);
-        border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(127, 69, 29, 0.1);
-      }
-
+      .admin-container { background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(127, 69, 29, 0.1); }
       sl-tab-group::part(nav) { background-color: var(--color-cookie-medium); border-bottom: 2px solid var(--color-wood-medium); }
       sl-tab::part(base) { color: var(--color-wood-dark); font-weight: 500; padding: 15px 20px; transition: background-color 0.2s; }
       sl-tab[active]::part(base) { font-weight: bold; border-bottom-color: var(--color-wood-dark); color: var(--color-wood-dark); background-color: var(--color-sand-light); }
       sl-tab-panel::part(base) { padding: 25px 20px; }
-
-      /* === FORMULARZ I POLA TEKSTOWE === */
-      /* === FORMULARZ I POLA TEKSTOWE === */
       form { display: flex; flex-direction: column; gap: 15px; }
-
-      sl-input, sl-textarea {
-        --sl-input-color: var(--color-wood-dark);
-        --sl-input-label-color: var(--color-wood-dark);
-        --sl-input-border-color: var(--color-wood-medium);
-        --sl-input-border-color-hover: var(--color-wood-dark);
-        --sl-input-border-color-focus: var(--color-wood-dark);
-      }
-
-      /* Tło pól tekstowych cały czas takie jak tło panelu */
-      sl-input::part(base), sl-textarea::part(base) {
-        background-color: var(--color-sand-light) !important;
-        transition: box-shadow 0.2s ease;
-      }
-
-      /* Efekt podświetlenia ramki przy kliknięciu */
-      sl-input::part(base):focus-within, sl-textarea::part(base):focus-within {
-        box-shadow: 0 0 0 3px rgba(127, 69, 29, 0.2) !important;
-      }
-
-      /* === PRZYCISK WRÓĆ === */
-      .btn-back::part(base) {
-        background-color: var(--color-wood-dark);
-        border-color: var(--color-wood-dark);
-        border-radius: 8px;
-        transition: all 0.2s ease;
-      }
-      .btn-back::part(base):hover {
-        background-color: var(--color-wood-medium);
-        border-color: var(--color-wood-medium);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(127, 69, 29, 0.25);
-      }
-      .btn-back::part(label), .btn-back::part(prefix) {
-        color: var(--color-sand-light) !important;
-      }
-
-      .btn-submit::part(base) {
-        background-color: var(--color-wood-dark);
-        border-color: var(--color-wood-dark);
-        border-radius: 8px;
-        transition: all 0.2s ease;
-        padding: 0 10px;
-      }
-      .btn-submit::part(base):hover {
-        background-color: var(--color-wood-medium);
-        border-color: var(--color-wood-medium);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(127, 69, 29, 0.25);
-      }
-      /* Wymuszenie jasnego tekstu i ikony na przycisku! */
-      .btn-submit::part(label), .btn-submit::part(prefix) {
-        color: var(--color-sand-light) !important;
-      }
-
-      sl-dialog {
-        --sl-panel-background-color: var(--color-sand-light);
-      }
+      sl-input, sl-textarea { --sl-input-color: var(--color-wood-dark); --sl-input-label-color: var(--color-wood-dark); --sl-input-border-color: var(--color-wood-medium); --sl-input-border-color-hover: var(--color-wood-dark); --sl-input-border-color-focus: var(--color-wood-dark); }
+      sl-input::part(base), sl-textarea::part(base) { background-color: var(--color-sand-light) !important; transition: box-shadow 0.2s ease; }
+      sl-input::part(base):focus-within, sl-textarea::part(base):focus-within { box-shadow: 0 0 0 3px rgba(127, 69, 29, 0.2) !important; }
+      .btn-back::part(base) { background-color: var(--color-wood-dark); border-color: var(--color-wood-dark); border-radius: 8px; transition: all 0.2s ease; }
+      .btn-back::part(base):hover { background-color: var(--color-wood-medium); border-color: var(--color-wood-medium); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(127, 69, 29, 0.25); }
+      .btn-back::part(label), .btn-back::part(prefix) { color: var(--color-sand-light) !important; }
+      .btn-submit::part(base) { background-color: var(--color-wood-dark); border-color: var(--color-wood-dark); border-radius: 8px; transition: all 0.2s ease; padding: 0 10px; }
+      .btn-submit::part(base):hover { background-color: var(--color-wood-medium); border-color: var(--color-wood-medium); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(127, 69, 29, 0.25); }
+      .btn-submit::part(label), .btn-submit::part(prefix) { color: var(--color-sand-light) !important; }
+      sl-dialog { --sl-panel-background-color: var(--color-sand-light); }
       sl-dialog::part(title) { color: var(--color-wood-dark); font-weight: bold; }
-
-      .event-item {
-        padding: 15px; border: 1px solid var(--color-wood-medium); border-radius: 8px;
-        margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
-        color: var(--color-wood-dark); background-color: var(--color-sand-light);
-      }
+      .event-item { padding: 15px; border: 1px solid var(--color-wood-medium); border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; color: var(--color-wood-dark); background-color: var(--color-sand-light); }
       .event-actions { display: flex; gap: 8px; }
-
       .btn-edit::part(base) { background-color: #d97706; border-color: #d97706; }
       .btn-edit::part(base):hover { background-color: #db6104; border-color: #db6104; }
       .btn-edit::part(label), .btn-edit::part(prefix) { color: var(--color-sand-light) !important; }
-
       .btn-delete::part(base) { background-color: rgba(220, 38, 38, 0.8); border-color: transparent; }
       .btn-delete::part(base):hover { background-color: rgba(220, 38, 38, 1); }
       .btn-delete::part(label), .btn-delete::part(prefix) { color: var(--color-sand-light) !important; }
     `
   ];
 
-renderSelectionView() {
+  renderSelectionView() {
     return html`
       <div>
         <h2 class="header-title">Z której grupy jesteś?</h2>
@@ -338,7 +286,6 @@ renderSelectionView() {
       <div class="list-container">
         ${this.groups.map(g => html`
           <div class="list-item">
-
             <div class="logo-container">
               <sl-avatar
                 image="${g.photoUrl || ''}"
@@ -347,23 +294,21 @@ renderSelectionView() {
                 style="--size: 50px;">
               </sl-avatar>
             </div>
-
             <div class="content-container">
               <span class="entity-name">${g.name}</span>
               ${g.description ? html`<span class="entity-desc">${g.description}</span>` : ''}
             </div>
-
             <div class="actions-container">
               <sl-button size="small" class="btn-select" @click=${() => this.selectGroup(g)}>
                 Zarządzaj <sl-icon slot="suffix" name="arrow-right"></sl-icon>
               </sl-button>
             </div>
-
           </div>
         `)}
       </div>
     `;
   }
+
   renderManagementView() {
     return html`
       <div class="header-actions">
@@ -382,7 +327,7 @@ renderSelectionView() {
             <sl-icon name="calendar-event" style="margin-right: 8px;"></sl-icon> Wydarzenia
           </sl-tab>
 
-       <sl-tab-panel name="info">
+          <sl-tab-panel name="info">
             <form>
               <sl-input label="Nazwa grupy" .value=${this.selectedGroup.name} @sl-input=${(e: any) => this.selectedGroup.name = e.target.value}></sl-input>
               <sl-textarea label="Opis grupy" rows="4" .value=${this.selectedGroup.description || ''} @sl-input=${(e: any) => this.selectedGroup.description = e.target.value}></sl-textarea>
@@ -433,48 +378,32 @@ renderSelectionView() {
 
       <sl-dialog id="event-dialog" label="${this.editingEvent?.id ? 'Edytuj Wydarzenie' : 'Dodaj Nowe Wydarzenie'}">
         <form>
-          <sl-input
-            label="Tytuł"
-            required
-            .value=${this.editingEvent?.title || ''}
-            @sl-input=${(e: any) => this.editingEvent.title = e.target.value}>
-          </sl-input>
-
-          <sl-input
-            type="datetime-local"
-            label="Data i godzina"
-            required
-            .value=${this.editingEvent?.startTime ? this.editingEvent.startTime.substring(0, 16) : ''}
-            @sl-input=${(e: any) => this.editingEvent.startTime = e.target.value}>
-          </sl-input>
-
-          <sl-input
-            label="Lokalizacja (opcjonalnie)"
-            .value=${this.editingEvent?.location || ''}
-            @sl-input=${(e: any) => this.editingEvent.location = e.target.value}>
-          </sl-input>
-
-          <sl-textarea
-            label="Opis"
-            rows="3"
-            .value=${this.editingEvent?.description || ''}
-            @sl-input=${(e: any) => this.editingEvent.description = e.target.value}>
-          </sl-textarea>
+          <sl-input label="Tytuł" required .value=${this.editingEvent?.title || ''} @sl-input=${(e: any) => this.editingEvent.title = e.target.value}></sl-input>
+          <sl-input type="datetime-local" label="Data i godzina" required .value=${this.editingEvent?.startTime ? this.editingEvent.startTime.substring(0, 16) : ''} @sl-input=${(e: any) => this.editingEvent.startTime = e.target.value}></sl-input>
+          <sl-input label="Lokalizacja (opcjonalnie)" .value=${this.editingEvent?.location || ''} @sl-input=${(e: any) => this.editingEvent.location = e.target.value}></sl-input>
+          <sl-textarea label="Opis" rows="3" .value=${this.editingEvent?.description || ''} @sl-input=${(e: any) => this.editingEvent.description = e.target.value}></sl-textarea>
         </form>
-
-      <sl-button class="btn-submit" style="align-self: flex-start; margin-top: 15px;" ?loading=${this.isSubmitting} @click=${this.saveGroupData}>
-            <sl-icon slot="prefix" name="check2-circle"></sl-icon> Zapisz zmiany w profilu
-            </sl-button>
+        <sl-button slot="footer" class="btn-submit" ?loading=${this.isEventSubmitting} @click=${this.saveEvent}>
+          <sl-icon slot="prefix" name="check2-circle"></sl-icon> Zapisz Wydarzenie
+        </sl-button>
       </sl-dialog>
     `;
   }
 
   render() {
     return html`
-      ${!this.selectedGroup
-        ? this.renderSelectionView()
-        : this.renderManagementView()
-      }
+      <div class="top-bar">
+        <sl-button
+          class="logout-btn"
+          size="small"
+          ?loading="${this.loggingOut}"
+          @click="${this.handleLogout}">
+          <sl-icon slot="prefix" name="box-arrow-right"></sl-icon>
+          Wyloguj się
+        </sl-button>
+      </div>
+
+      ${!this.selectedGroup ? this.renderSelectionView() : this.renderManagementView()}
     `;
   }
 }

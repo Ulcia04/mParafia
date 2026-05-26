@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 
 import { ParishEvent } from './app-calendar';
 import '../components/calendar-item';
@@ -9,7 +10,7 @@ import '../components/calendar-item';
 export class AppEvents extends LitElement {
 
   @state() private events: ParishEvent[] = [];
-  @state() private groups: any[] = []; // NOWE: Miejsce na grupy
+  @state() private groups: any[] = [];
 
   connectedCallback() {
     super.connectedCallback();
@@ -26,7 +27,7 @@ export class AppEvents extends LitElement {
 
   async fetchGroups() {
     try {
-      const response = await fetch('http://localhost:3000/api/groups');
+      const response = await apiFetch('/groups');
       if (response.ok) {
         this.groups = await response.json();
       }
@@ -37,8 +38,7 @@ export class AppEvents extends LitElement {
 
   async fetchEvents() {
     try {
-      // Zostawiamy zwykłe /api/events, bo tu chcemy tylko nadchodzące!
-      const response = await fetch('http://localhost:3000/api/events');
+      const response = await apiFetch('/events/all');
       if (!response.ok) throw new Error('Błąd połączenia');
       this.events = await response.json();
     } catch (error) {

@@ -2,6 +2,7 @@ import { LitElement, html, css } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
@@ -24,8 +25,10 @@ export class AppKancelaria extends LitElement {
 
   async firstUpdated() {
     try {
-      const res = await fetch('http://localhost:3000/api/kancelaria');
-      this.kancelariaItems = await res.json();
+      const res = await apiFetch('/kancelaria');
+      if (res.ok) {
+        this.kancelariaItems = await res.json();
+      }
     } catch (e) {
       console.error(e);
     }

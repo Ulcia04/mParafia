@@ -28,8 +28,9 @@ import './pages/app-nabozenstwa';
 import './pages/app-spowiedz';
 import './pages/app-kancelaria';
 import './pages/app-dojazd';
-import './pages/app-admins-groups';
+import './pages/app-group-admin';
 import './pages/app-admin-login';
+import './pages/app-settings';
 
 @customElement('app-index')
 export class AppIndex extends LitElement {
@@ -229,19 +230,28 @@ export class AppIndex extends LitElement {
     const base = (import.meta as any).env.BASE_URL;
     const router = new Router(outlet, { baseUrl: base });
 
-    // Nasz Strażnik Ścieżek (Route Guard)
     const adminGuard = (context: any, commands: any) => {
       const isAdmin = localStorage.getItem('isAdmin') === 'true';
+      if (!isAdmin) {
+        return commands.redirect('/admin-login');
+      }
+      return undefined;
+    };
+
+    const superAdminGuard = (context: any, commands: any) => {
+      const isAdmin = localStorage.getItem('isAdmin') === 'true';
+      const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
 
       if (!isAdmin) {
         return commands.redirect('/admin-login');
       }
-
+      if (!isSuperAdmin) {
+        return commands.redirect('/group-admin');
+      }
       return undefined;
     };
 
     router.setRoutes([
-      // --- STREFA PUBLICZNA ---
       { path: '/', component: 'app-home' },
       { path: '/kalendarz', component: 'app-calendar' },
       { path: '/grupy', component: 'app-groups' },
@@ -254,11 +264,16 @@ export class AppIndex extends LitElement {
       { path: '/spowiedz', component: 'app-spowiedz' },
       { path: '/kancelaria', component: 'app-kancelaria' },
       { path: '/dojazd', component: 'app-dojazd' },
+      { path: '/ustawienia', component: 'app-settings' },
+
       { path: '/admin-login', component: 'app-admin-login' },
-      // chronione
-      { path: '/admin', component: 'app-admin', action: adminGuard },
-      { path: '/admin/events', component: 'app-admin-events', action: adminGuard },
-      { path: '/adminsgroups', component: 'app-admins-groups', action: adminGuard },
+
+      // --- STREFA SUPER ADMINA ---
+      { path: '/admin(.*)', component: 'app-admin', action: superAdminGuard },
+
+      // --- STREFA ZWYKŁEGO ADMINA ---
+      { path: '/group-admin', component: 'app-group-admin', action: adminGuard },
+
       { path: '(.*)', redirect: '/' }
     ]);
   }
@@ -326,7 +341,7 @@ export class AppIndex extends LitElement {
         <header>
           <sl-icon-button name="list" label="Menu" @click="${this.openMenu}"></sl-icon-button>
           <h1>${this.pageTitle}</h1>
-          <sl-icon-button name="bell" label="Powiadomienia"></sl-icon-button>
+          <sl-icon-button name="gear-fill" label="Ustawienia" @click="${() => this.handleNavigation('/ustawienia')}"></sl-icon-button>
         </header>
 
         <main id="router-outlet" @change-title="${this.handleTitleChange}"> </main>

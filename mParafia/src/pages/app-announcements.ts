@@ -1,6 +1,8 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
-import { styles } from '../styles/shared-styles'; // Import zgodny z szablonem
+import { styles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
+
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '@shoelace-style/shoelace/dist/components/divider/divider.js';
@@ -23,7 +25,7 @@ export class AppAnnouncements extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     const event = new CustomEvent('change-title', {
-      detail: { title: 'Ogłoszenia Parafialne' }, // Twój tytuł strony
+      detail: { title: 'Ogłoszenia Parafialne' },
       bubbles: true,
       composed: true
     });
@@ -32,7 +34,7 @@ export class AppAnnouncements extends LitElement {
 
   async firstUpdated() {
     try {
-      const res = await fetch('http://localhost:3000/api/announcements');
+      const res = await apiFetch('/announcements');
       if (res.ok) {
         const data: Announcement[] = await res.json();
         this.mainAnnouncements = data.filter(a => a.isMain);
@@ -51,7 +53,6 @@ export class AppAnnouncements extends LitElement {
     });
   }
 
-  // 2. Struktura stylów identyczna jak w szablonie
   static styles = [
     styles,
     css`

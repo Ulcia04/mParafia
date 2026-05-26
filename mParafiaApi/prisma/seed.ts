@@ -9,40 +9,55 @@ const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
 async function main() {
-  console.log('🌱 Rozpoczynam dodawanie Super Admina...');
+  console.log('🌱 Rozpoczynam zasiewanie bazy danych...');
 
-  const login = 'szefowa';
-
-  const suroweHaslo = process.env.SUPER_ADMIN_PASSWORD;
-
-  if (!suroweHaslo) {
+  // --- 1. SUPER ADMIN (Szefowa) ---
+  const suroweHasloSuper = process.env.SUPER_ADMIN_PASSWORD;
+  if (!suroweHasloSuper) {
     console.error('❌ BŁĄD: Brak zmiennej SUPER_ADMIN_PASSWORD w pliku .env!');
-    console.error('Dodaj ją, zanim uruchomisz seed.');
     process.exit(1);
   }
 
-  const existingAdmin = await prisma.admin.findUnique({
-    where: { login }
-  });
-
-  if (existingAdmin) {
-    console.log(`⚠️ Admin o loginie "${login}" już istnieje w bazie. Przerywam.`);
-    return;
+  const existingSuperAdmin = await prisma.admin.findUnique({ where: { login: 'szefowa' } });
+  if (!existingSuperAdmin) {
+    const passwordHash = await bcrypt.hash(suroweHasloSuper, 10);
+    await prisma.admin.create({
+      data: { login: 'szefowa', passwordHash, isSuperAdmin: true }
+    });
+    console.log(`✅ Stworzono Super Admina: szefowa`);
+  } else {
+    console.log(`⚠️ Super Admin 'szefowa' już istnieje.`);
   }
 
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(suroweHaslo, saltRounds);
+  let groups = await prisma.group.findMany({ take: 3 });
 
-  const superAdmin = await prisma.admin.create({
-    data: {
-      login,
-      passwordHash,
-      isSuperAdmin: true
-    }
-  });
+  // --- 2. ZWYKŁY ADMIN DO TESTÓW (Animator) ---
+  const loginAnimatora = 'animator';
+  const hasloAnimatora = 'testowe123'; // Proste hasło tylko do testów
 
-  console.log(`✅ Sukces! Stworzono Super Admina o ID: ${superAdmin.id}`);
-  console.log(`🔑 Login: ${login}`);
+  const existingAnimator = await prisma.admin.findUnique({ where: { login: loginAnimatora } });
+
+  if (!existingAnimator) {
+    console.log(`👤 Tworzę zwykłego admina: ${loginAnimatora}...`);
+    const passwordHash = await bcrypt.hash(hasloAnimatora, 10);
+
+    await prisma.admin.create({
+      data: {
+        login: loginAnimatora,
+        passwordHash,
+        isSuperAdmin: false,
+        managedGroups: {
+          create: groups.map(g => ({
+            groupId: g.id
+          }))
+        }
+      }
+    });
+    console.log(`✅ Zwykły admin gotowy! Login: ${loginAnimatora}, Hasło: ${hasloAnimatora}`);
+    console.log(`🔗 Przypisano do grup ID: ${groups.map(g => g.id).join(', ')}`);
+  } else {
+    console.log(`⚠️ Zwykły admin '${loginAnimatora}' już istnieje.`);
+  }
 }
 
 main()

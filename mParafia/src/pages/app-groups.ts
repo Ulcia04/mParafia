@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 
@@ -31,7 +32,7 @@ export class AppGroups extends LitElement {
 
   async fetchGroups() {
     try {
-      const response = await fetch('http://localhost:3000/api/groups');
+      const response = await apiFetch('/groups');
       if (!response.ok) throw new Error('Błąd połączenia z serwerem');
       this.groups = await response.json();
     } catch (error) {
@@ -162,14 +163,3 @@ export class AppGroups extends LitElement {
     `;
   }
 }
-
-
-// KOLORKI
-      // .wydarzenie { background-color: var(--color-wood-dark); }
-      // .domowy { background-color: #B87333; }
-      // .lso { background-color: #4A69BD; }
-      // .schola { background-color: #D4AF37; }
-      // .biblijna { background-color: #6B8E23; }
-      // .oaza { background-color: #829583; }
-      // .rada { background-color: #535C68; }
-      // .odb { background-color: #C98B8B; }

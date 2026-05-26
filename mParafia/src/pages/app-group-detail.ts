@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 import '@shoelace-style/shoelace/dist/components/icon/icon.js';
 import '@shoelace-style/shoelace/dist/components/spinner/spinner.js';
 import '../components/calendar-item';
@@ -50,7 +51,7 @@ export class AppGroupDetail extends LitElement {
 
   async fetchGroupDetails() {
     try {
-      const groupResponse = await fetch('http://localhost:3000/api/groups');
+      const groupResponse = await apiFetch('/groups');
       if (groupResponse.ok) {
         const allGroups: ParishGroup[] = await groupResponse.json();
         this.group = allGroups.find(g => g.id === this.groupId) || null;
@@ -62,7 +63,7 @@ export class AppGroupDetail extends LitElement {
         }
       }
 
-      const eventsResponse = await fetch('http://localhost:3000/api/events');
+      const eventsResponse = await apiFetch('/events/all');
       if (eventsResponse.ok) {
         const allEvents: ParishEvent[] = await eventsResponse.json();
         this.events = allEvents.filter(event => event.groupId === this.groupId);
@@ -166,10 +167,10 @@ export class AppGroupDetail extends LitElement {
       }
 
       calendar-item {
-      display: block;
-      width: 100%;
-      cursor: pointer;
-    }
+        display: block;
+        width: 100%;
+        cursor: pointer;
+      }
     `
   ];
 
@@ -214,7 +215,6 @@ export class AppGroupDetail extends LitElement {
               <div class="events-list">
                 ${this.events.map(event => {
                   const timeStr = this.formatDate(event.startTime);
-                  // const category = event.category || 'spotkanie';
 
                   return html`
                     <calendar-item

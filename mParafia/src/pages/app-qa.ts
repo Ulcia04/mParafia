@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 
 import '@shoelace-style/shoelace/dist/components/textarea/textarea.js';
 import '@shoelace-style/shoelace/dist/components/input/input.js';
@@ -180,12 +181,12 @@ export class AppQa extends LitElement {
 
   async fetchQuestions() {
     try {
-      const res = await fetch('http://localhost:3000/api/questions');
+      const res = await apiFetch('/questions');
       if (res.ok) this.publishedQuestions = await res.json();
     } catch (e) { console.error(e); }
   }
 
-async submitQuestion() {
+  async submitQuestion() {
     const content = this.questionInput.value;
     const authorRaw = this.authorInput.value;
 
@@ -198,9 +199,8 @@ async submitQuestion() {
 
     this.isSubmitting = true;
     try {
-      const res = await fetch('http://localhost:3000/api/questions', {
+      const res = await apiFetch('/questions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           content: content,
           author: author,

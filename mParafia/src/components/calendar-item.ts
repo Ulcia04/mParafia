@@ -15,6 +15,11 @@ export class CalendarItem extends LitElement {
   static styles = [
     styles,
     css`
+      :host {
+        display: block;
+        width: 100%;
+      }
+
       .item-container {
         display: flex;
         align-items: center;
@@ -29,6 +34,8 @@ export class CalendarItem extends LitElement {
         transition: transform 0.1s, filter 0.1s;
         margin-bottom: 3px;
         box-shadow: 0 2px 4px rgba(127, 69, 29, 0.15);
+        /* Używamy zmiennej przekazanej przez atrybut style, z fallbackiem do domyślnego koloru, wymuszając priorytet */
+        background-color: var(--local-bg-color, var(--color-wood-dark)) !important;
       }
 
       .item-container.is-multiline {
@@ -74,23 +81,11 @@ export class CalendarItem extends LitElement {
       .item-container.is-multiline sl-icon {
         margin-top: 2px;
       }
-
-      // .wydarzenie { background-color: var(--color-wood-dark); }
-      // .domowy { background-color: #B87333; }
-      // .lso { background-color: #4A69BD; }
-      // .schola { background-color: #D4AF37; }
-      // .biblijna { background-color: #6B8E23; }
-      // .oaza { background-color: #829583; }
-      // .rada { background-color: #535C68; }
-      // .odb { background-color: #C98B8B; }
     `
   ];
 
   private handleClick() {
     if (!this.targetUrl) return;
-    // POTEM ZMIENIĆ
-    // const base = (import.meta as any).env.BASE_URL;
-    // const fullPath = base === '/' ? this.targetUrl : base + this.targetUrl.substring(1);
     const fullPath = '/mParafia/mock-event';
     window.history.pushState({}, '', fullPath);
     window.dispatchEvent(new PopStateEvent('popstate'));
@@ -99,12 +94,14 @@ export class CalendarItem extends LitElement {
   render() {
     const isEvent = this.category === 'wydarzenie';
     const isIntention = this.category === 'intencja';
-    const bgColor = this.groupColor ? this.groupColor : 'var(--color-wood-dark)';
+
+    // Ustalamy kolor tła - jeśli brak przekazanego koloru, Lit użyje fallbacku z CSS (var(--color-wood-dark))
+    const bgColor = this.groupColor ? this.groupColor : '';
 
     return html`
       <div
         class="item-container ${this.multiline ? 'is-multiline' : ''}"
-        style="background-color: ${bgColor};"
+        style="${bgColor ? `--local-bg-color: ${bgColor};` : ''}"
         @click="${this.handleClick}"
       >
         <span class="time">${this.time}</span>

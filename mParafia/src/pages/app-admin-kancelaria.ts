@@ -1,6 +1,7 @@
 import { LitElement, html, css } from 'lit';
 import { customElement, state, query } from 'lit/decorators.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
+import { apiFetch } from '../utils/api';
 
 import '@shoelace-style/shoelace/dist/components/button/button.js';
 import '@shoelace-style/shoelace/dist/components/dialog/dialog.js';
@@ -33,8 +34,8 @@ export class AppAdminKancelaria extends LitElement {
   async firstUpdated() { this.fetchItems(); }
 
   async fetchItems() {
-    const res = await fetch('http://localhost:3000/api/kancelaria');
-    this.items = await res.json();
+    const res = await apiFetch('/kancelaria');
+    if(res.ok) this.items = await res.json();
   }
 
   openEdit(item: any = null) {
@@ -45,11 +46,11 @@ export class AppAdminKancelaria extends LitElement {
   async save() {
     if (!this.editingItem.title) return alert('Tytuł jest wymagany!');
     this.isSubmitting = true;
-    const url = this.editingItem.id ? `http://localhost:3000/api/kancelaria/${this.editingItem.id}` : 'http://localhost:3000/api/kancelaria';
+    const url = this.editingItem.id ? `/kancelaria/${this.editingItem.id}` : '/kancelaria';
     const method = this.editingItem.id ? 'PUT' : 'POST';
 
     try {
-      const res = await fetch(url, { method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(this.editingItem) });
+      const res = await apiFetch(url, { method, body: JSON.stringify(this.editingItem) });
       if (res.ok) { this.dialog.hide(); await this.fetchItems(); }
     } catch (e) { alert('Błąd!'); }
     finally { this.isSubmitting = false; }
@@ -57,7 +58,7 @@ export class AppAdminKancelaria extends LitElement {
 
   async deleteItem(id: number) {
     if (confirm('Usunąć tę sprawę?')) {
-      await fetch(`http://localhost:3000/api/kancelaria/${id}`, { method: 'DELETE' });
+      await apiFetch(`/kancelaria/${id}`, { method: 'DELETE' });
       this.fetchItems();
     }
   }
@@ -68,7 +69,7 @@ export class AppAdminKancelaria extends LitElement {
     const formData = new FormData();
     formData.append('photo', file);
     try {
-      const res = await fetch('http://localhost:3000/api/upload', { method: 'POST', body: formData });
+      const res = await apiFetch('/upload', { method: 'POST', body: formData });
       if (res.ok) {
         const data = await res.json();
         this.editingItem = { ...this.editingItem, fileUrl: data.url, fileName: file.name };
