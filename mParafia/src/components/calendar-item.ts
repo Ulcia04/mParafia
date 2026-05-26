@@ -86,8 +86,10 @@ export class CalendarItem extends LitElement {
 
   private handleClick() {
     if (!this.targetUrl) return;
-    const fullPath = '/mParafia/mock-event';
-    window.history.pushState({}, '', fullPath);
+    // POTEM ZMIENIĆ
+    // const base = (import.meta as any).env.BASE_URL;
+    // const fullPath = base === '/' ? this.targetUrl : base + this.targetUrl.substring(1);
+    window.history.pushState({}, '', this.targetUrl);
     window.dispatchEvent(new PopStateEvent('popstate'));
   }
 
