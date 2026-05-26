@@ -18,7 +18,7 @@ import './pages/app-home';
 import './pages/app-calendar';
 import './pages/app-groups';
 import './pages/app-events';
-import './pages/app-event-mock-detail';
+import './pages/app-event-detail';
 import './pages/app-admin';
 import './pages/app-admin-events';
 import './pages/app-group-detail';
@@ -247,6 +247,7 @@ export class AppIndex extends LitElement {
       { path: '/grupy', component: 'app-groups' },
       { path: '/wydarzenia', component: 'app-events' },
       { path: '/mock-event', component: 'app-event-mock-detail'},
+      { path: '/wydarzenie', component: 'app-event-detail' },
       { path: '/grupa', component: 'app-group-detail' },
       { path: '/ogloszenia', component: 'app-announcements' },
       { path: '/qa', component: 'app-qa' },

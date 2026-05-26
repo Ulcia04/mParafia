@@ -91,8 +91,7 @@ export class CalendarItem extends LitElement {
     // POTEM ZMIENIĆ
     // const base = (import.meta as any).env.BASE_URL;
     // const fullPath = base === '/' ? this.targetUrl : base + this.targetUrl.substring(1);
-    const fullPath = '/mParafia/mock-event';
-    window.history.pushState({}, '', fullPath);
+    window.history.pushState({}, '', this.targetUrl);
     window.dispatchEvent(new PopStateEvent('popstate'));
   }
 
