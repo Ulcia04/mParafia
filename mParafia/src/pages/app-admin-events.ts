@@ -73,6 +73,9 @@ export class AppAdminEvents extends LitElement {
       sl-input, sl-textarea, sl-select { --sl-input-background-color: var(--color-sand-light); --sl-input-background-color-hover: var(--color-sand-light); --sl-input-background-color-focus: var(--color-sand-light); --sl-input-border-color: var(--color-wood-medium); --sl-input-border-color-hover: var(--color-wood-medium); --sl-input-border-color-focus: var(--color-wood-medium); --sl-input-color: var(--color-wood-dark); --sl-input-label-color: var(--color-wood-dark); }
       sl-dialog { --sl-panel-background-color: var(--color-sand-light); color: var(--color-wood-dark); }
       sl-dialog::part(title) { color: var(--color-wood-dark); font-weight: bold; }
+      sl-input::part(input):hover, sl-textarea::part(textarea):hover {
+        color: var(--color-wood-dark) !important;
+      }
       .upload-container { display: flex; flex-direction: column; gap: 20px; padding: 10px 0; }
       .instructions { background-color: var(--color-cookie-medium); padding: 20px; border-left: 5px solid var(--color-wood-dark); border-radius: 8px; color: var(--color-wood-dark); }
       input[type="file"]::file-selector-button { border: 2px solid var(--color-wood-medium); padding: 8px 16px; border-radius: 8px; background-color: var(--color-sand-light); color: var(--color-wood-dark); cursor: pointer; transition: all 0.2s ease; margin-right: 10px; font-weight: bold; }

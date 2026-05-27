@@ -14,6 +14,7 @@ interface Question {
   answer: string;
   author: string | null;
   createdAt: string;
+  isPublished: boolean;
 }
 
 @customElement('app-qa')
@@ -179,11 +180,17 @@ export class AppQa extends LitElement {
     await this.fetchQuestions();
   }
 
-  async fetchQuestions() {
+ async fetchQuestions() {
     try {
-      const res = await apiFetch('/questions');
-      if (res.ok) this.publishedQuestions = await res.json();
-    } catch (e) { console.error(e); }
+      const res = await apiFetch('/questions/all');
+
+      if (res.ok) {
+        const allQuestions: Question[] = await res.json();
+        this.publishedQuestions = allQuestions.filter(q => q.isPublished);
+      }
+    } catch (e) {
+      console.error('Błąd podczas pobierania pytań:', e);
+    }
   }
 
   async submitQuestion() {

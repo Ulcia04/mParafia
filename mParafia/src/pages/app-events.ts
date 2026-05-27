@@ -137,10 +137,13 @@ export class AppEvents extends LitElement {
               const isIntention = event.title.startsWith('Intencja:');
               const displayName = isIntention ? event.title.replace('Intencja:', '').trim() : event.title;
 
-              const group = this.groups.find(g => g.id === event.groupId);
+              const firstGroupRelation = event.groups && event.groups.length > 0 ? event.groups[0] : null;
+              const matchedGroup = firstGroupRelation
+                ? this.groups.find(g => Number(g.id) === Number(firstGroupRelation.groupId))
+                : null;
 
-              let category = group ? 'grupa' : 'wydarzenie';
-              let color = group && group.color ? group.color : '';
+              let category = matchedGroup ? 'grupa' : 'wydarzenie';
+              let color = matchedGroup && matchedGroup.color ? matchedGroup.color : '';
 
               if (isIntention) {
                 category = 'intencja';

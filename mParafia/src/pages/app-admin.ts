@@ -61,10 +61,31 @@ async firstUpdated() {
     css`
       :host { display: block; padding: 10px; max-width: 900px; width: 100%; margin: 0 auto; box-sizing: border-box; }
       .admin-wrapper { position: relative; width: 100%; }
-      sl-button.logout-btn { position: absolute; bottom: 100%; right: 0; margin-bottom: 15px; }
-      sl-button.logout-btn::part(base) { background-color: var(--color-wood-dark); border-color: var(--color-wood-dark); color: white !important; font-weight: 600; border-radius: 8px; transition: filter 0.2s; }
-      sl-button.logout-btn::part(label), sl-button.logout-btn::part(prefix) { color: white !important; }
-      sl-button.logout-btn::part(base):hover { filter: brightness(1.2); }
+      .btn-logout {
+        margin-left: auto; /* Wypycha przycisk do prawej */
+        margin-right: 15px;
+        align-self: center; /* Wyrównuje pionowo do środka */
+      }
+
+      .btn-logout::part(base) {
+        background-color: var(--color-wood-dark);
+        border-color: var(--color-wood-dark);
+        /* Wymuszamy jasny kolor tekstu */
+        color: var(--color-sand-light) !important;
+        font-weight: 600;
+        transition: all 0.3s ease;
+      }
+
+      /* Wymuszamy kolor dla etykiety i ikony */
+      .btn-logout::part(label),
+      .btn-logout::part(prefix) {
+        color: var(--color-sand-light) !important;
+      }
+
+      .btn-logout::part(base):hover {
+        background-color: var(--color-wood-medium);
+        border-color: var(--color-wood-medium);
+      }
       .admin-container { background-color: var(--color-sand-light); border: 2px solid var(--color-wood-medium); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 15px rgba(127, 69, 29, 0.1); }
       sl-tab-group::part(nav) { background-color: var(--color-cookie-medium); border-bottom: 2px solid var(--color-wood-medium); }
       sl-tab::part(base) { color: var(--color-wood-dark); font-weight: 500; padding: 15px 20px; transition: background-color 0.2s; }
@@ -93,14 +114,18 @@ async firstUpdated() {
   render() {
     return html`
       <div class="admin-wrapper">
-        <sl-button class="logout-btn" size="medium" ?loading="${this.loggingOut}" @click="${this.handleLogout}"><sl-icon slot="prefix" name="box-arrow-right"></sl-icon> Wyloguj się</sl-button>
         <div class="admin-container">
           <sl-tab-group @sl-tab-show=${this.handleTabChange}>
-            <sl-tab slot="nav" panel="groups"><sl-icon name="people-fill" style="margin-right: 8px;"></sl-icon> Zarządzaj Grupami</sl-tab>
+            <sl-tab slot="nav" panel="groups"><sl-icon name="people-fill" style="margin-right: 8px;"></sl-icon> Grupy</sl-tab>
             <sl-tab slot="nav" panel="events"><sl-icon name="star-fill" style="margin-right: 8px;"></sl-icon> Wydarzenia</sl-tab>
             <sl-tab slot="nav" panel="announcements"><sl-icon name="megaphone-fill" style="margin-right: 8px;"></sl-icon> Ogłoszenia</sl-tab>
             <sl-tab slot="nav" panel="qa"><sl-icon name="chat-quote-fill" style="margin-right: 8px;"></sl-icon> Q&A</sl-tab>
             <sl-tab slot="nav" panel="kancelaria"><sl-icon name="journal-bookmark-fill" style="margin-right: 8px;"></sl-icon> Kancelaria</sl-tab>
+
+            <sl-button slot="nav" class="btn-logout" size="small" ?loading="${this.loggingOut}" @click="${this.handleLogout}">
+              <sl-icon slot="prefix" name="box-arrow-right"></sl-icon>
+              Wyloguj się
+            </sl-button>
 
             <sl-tab-panel name="groups"><app-admin-groups></app-admin-groups></sl-tab-panel>
             <sl-tab-panel name="events"><app-admin-events></app-admin-events></sl-tab-panel>

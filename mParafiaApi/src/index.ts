@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import type { Request, Response, NextFunction } from 'express'; // ZMIANA: import type
+import type { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import { Pool } from 'pg';
 import { PrismaPg } from '@prisma/adapter-pg';
@@ -65,7 +65,6 @@ if (!JWT_SECRET) {
 }
 
 // --- STRAŻNICY (MIDDLEWARE AUTORYZACJI) ---
-
 const verifyAdmin = (req: AuthRequest, res: Response, next: NextFunction): any => {
   const token = req.cookies.admin_token;
   if (!token) return res.status(401).json({ error: "Brak dostępu - zaloguj się" });
@@ -89,7 +88,6 @@ const verifySuperAdmin = (req: AuthRequest, res: Response, next: NextFunction): 
 };
 
 // --- ENDPOINTY AUTORYZACJI ---
-
 app.post('/api/admin/login', async (req: Request, res: Response): Promise<any> => {
   const { login, password } = req.body;
   if (!login || !password) return res.status(400).json({ error: "Podaj login i hasło" });
@@ -129,7 +127,6 @@ app.post('/api/admin/logout', (req: Request, res: Response) => {
 });
 
 // --- PUBLICZNE ENDPOINTY ---
-
 app.get('/api/status', (req: Request, res: Response) => {
   res.json({ message: 'Serwer mParafia działa z systemem Adminów! ✨ (TypeScript)' });
 });
@@ -187,7 +184,7 @@ app.get('/api/announcements', async (req: Request, res: Response) => {
 });
 
 app.get('/api/announcements/:id', async (req: Request, res: Response) => {
-  const id = req.params.id as string; // ZMIANA: jawne rzutowanie na string
+  const id = req.params.id as string;
   try {
     const announcement = await prisma.announcement.findUnique({
       where: { id: parseInt(id) },
@@ -232,9 +229,11 @@ app.get('/api/kancelaria', async (req: Request, res: Response) => {
     const items = await prisma.kancelariaItem.findMany();
     res.json(items);
   } catch (error) {
+    console.error("BŁĄD BACKENDU (GET KANCELARIA):", error);
     res.status(500).json({ error: 'Błąd pobierania danych' });
   }
 });
+
 
 // --- CHRONIONE ENDPOINTY (Wymagają logowania) ---
 
@@ -242,10 +241,12 @@ app.post('/api/upload', verifyAdmin, upload.single('photo'), (req: AuthRequest, 
   if (!req.file) {
     return res.status(400).json({ error: 'Brak pliku' });
   }
-  const fileUrl = `http://localhost:3000/uploads/${req.file.filename}`;
+  const port = process.env.PORT || 3000;
+  const fileUrl = `${req.protocol}://${req.hostname}:${port}/uploads/${req.file.filename}`;
   res.json({ url: fileUrl });
 });
 
+// -- GRUPY --
 app.post('/api/groups', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {
     const { name, description, photoUrl, color } = req.body;
@@ -274,6 +275,7 @@ app.delete('/api/groups/:id', verifyAdmin, async (req: AuthRequest, res: Respons
   res.json({ message: "Usunięto grupę" });
 });
 
+// -- WYDARZENIA --
 app.post('/api/events', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, startTime, location, groupIds } = req.body;
@@ -353,6 +355,7 @@ app.post('/api/events/bulk', verifyAdmin, async (req: AuthRequest, res: Response
   }
 });
 
+// -- OGŁOSZENIA --
 app.post('/api/announcements', verifyAdmin, async (req: AuthRequest, res: Response) => {
   const { title, content, date } = req.body;
   try {
@@ -405,6 +408,7 @@ app.put('/api/announcements/:id/toggle-main', verifyAdmin, async (req: AuthReque
   }
 });
 
+// -- Q&A --
 app.get('/api/questions/all', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {
     const questions = await prisma.question.findMany({ orderBy: { createdAt: 'desc' } });
@@ -438,14 +442,16 @@ app.delete('/api/questions/:id', verifyAdmin, async (req: AuthRequest, res: Resp
   }
 });
 
+// -- KANCELARIA (NOWE ENDPOINTY DLA ZDJĘĆ I PLIKÓW) --
 app.post('/api/kancelaria', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {
-    const { title, icon, content, footer, fileUrl, fileName } = req.body;
+    const { title, photoUrl, content, footer, files } = req.body;
     const newItem = await prisma.kancelariaItem.create({
-      data: { title, icon, content, footer, fileUrl, fileName }
+      data: { title, photoUrl, content, footer, files: files || [] }
     });
     res.json(newItem);
   } catch (error) {
+    console.error("BŁĄD BACKENDU (POST KANCELARIA):", error);
     res.status(500).json({ error: 'Błąd tworzenia' });
   }
 });
@@ -453,13 +459,14 @@ app.post('/api/kancelaria', verifyAdmin, async (req: AuthRequest, res: Response)
 app.put('/api/kancelaria/:id', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {
     const id = req.params.id as string;
-    const { title, icon, content, footer, fileUrl, fileName } = req.body;
+    const { title, photoUrl, content, footer, files } = req.body;
     const updated = await prisma.kancelariaItem.update({
       where: { id: Number(id) },
-      data: { title, icon, content, footer, fileUrl, fileName }
+      data: { title, photoUrl, content, footer, files: files || [] }
     });
     res.json(updated);
   } catch (error) {
+    console.error("BŁĄD BACKENDU (PUT KANCELARIA):", error);
     res.status(500).json({ error: 'Błąd aktualizacji' });
   }
 });
