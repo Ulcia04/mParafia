@@ -167,10 +167,34 @@ export class AppEventDetail extends LitElement {
       .description {
         margin-top: 20px;
         padding-top: 15px;
-        border-top: 1px dashed var(--color-wood-medium);
+        padding-left: calc(1.5rem + 12px);
+        text-align: left;
+        color: var(--color-wood-dark);
+      }
+
+      .desc-title {
+        margin-bottom: 5px;
+      }
+
+      .desc-content {
         white-space: pre-wrap;
         line-height: 1.6;
-        text-align: justify;
+      }
+
+      sl-button[variant="default"]::part(base) {
+        background-color: #4A4A4A !important;
+        border-color: #4A4A4A !important;
+        color: var(--color-sand-light) !important;
+      }
+
+      sl-button[variant="default"]::part(base):hover,
+      sl-button[variant="default"]::part(base):active {
+        background-color: #333333 !important;
+        border-color: #333333 !important;
+      }
+
+      sl-button::part(prefix) {
+        margin-right: 8px;
       }
 
       .actions {
@@ -227,19 +251,21 @@ export class AppEventDetail extends LitElement {
 
         ${this.event.description ? html`
           <div class="description">
-            <strong>Opis:</strong><br />
-            ${this.event.description}
+            ${this.event.title.startsWith('Intencja:')
+              ? html`<div class="desc-title"><strong>Intencja:</strong></div><div class="desc-content">${this.event.description.replace(/Od kogo:/gi, '').trim()}</div>`
+              : html`<div class="desc-title"><strong>Opis:</strong></div><div class="desc-content">${this.event.description}</div>`
+            }
           </div>
         ` : ''}
 
         <div class="actions">
           <sl-button variant="default" @click=${() => window.history.back()}>
-            <sl-icon slot="prefix" name="arrow-left"></sl-icon>
+            <sl-icon slot="prefix" name="chevron-left"></sl-icon>
             Wróć
           </sl-button>
 
           <sl-button variant="primary" @click=${this.downloadCalendarEvent}>
-            <sl-icon slot="prefix" name="bell"></sl-icon>
+            <sl-icon slot="prefix" name="bell-fill"></sl-icon>
             Dodaj przypomnienie (Kalendarz)
           </sl-button>
         </div>

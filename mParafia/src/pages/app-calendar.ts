@@ -409,7 +409,7 @@ export class AppCalendar extends LitElement {
           .category="${category}"
           .groupColor="${color}"
           ?multiline=${isMultiline}
-          targetUrl="${showUrl ? `/mParafia/wydarzenia/${e.id}` : ''}"
+          targetUrl="${showUrl ? `/mParafia/wydarzenie?id=${e.id}` : ''}"
         >
         </calendar-item>
       `;
