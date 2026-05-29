@@ -17,7 +17,7 @@ export class AppAdminLogin extends LitElement {
 
   @state() private loading = false;
   @state() private errorMessage = '';
-  @state() private successMessage = '';
+  // @state() private successMessage = '';
   @state() private isChangingPassword = false;
 
   connectedCallback() {
@@ -89,7 +89,7 @@ export class AppAdminLogin extends LitElement {
   private toggleMode() {
     this.isChangingPassword = !this.isChangingPassword;
     this.errorMessage = '';
-    this.successMessage = '';
+    // this.successMessage = '';
     this.passwordValue = '';
     this.newPasswordValue = '';
     this.confirmPasswordValue = '';
@@ -98,7 +98,7 @@ export class AppAdminLogin extends LitElement {
   private async handleSubmit(e: Event) {
     e.preventDefault();
     this.errorMessage = '';
-    this.successMessage = '';
+    // this.successMessage = '';
     this.loading = true;
 
     try {

@@ -232,7 +232,7 @@ export class AppIndex extends LitElement {
     const base = (import.meta as any).env.BASE_URL;
     const router = new Router(outlet, { baseUrl: base });
 
-    const adminGuard = (context: any, commands: any) => {
+    const adminGuard = (_context: any, commands: any) => {
       const isAdmin = localStorage.getItem('isAdmin') === 'true';
       if (!isAdmin) {
         return commands.redirect('/admin-login');
@@ -240,7 +240,7 @@ export class AppIndex extends LitElement {
       return undefined;
     };
 
-    const superAdminGuard = (context: any, commands: any) => {
+    const superAdminGuard = (_context: any, commands: any) => {
       const isAdmin = localStorage.getItem('isAdmin') === 'true';
       const isSuperAdmin = localStorage.getItem('isSuperAdmin') === 'true';
 

@@ -92,6 +92,7 @@ export class AppCalendar extends LitElement {
       const response = await apiFetch('/groups');
       if (response.ok) {
         this.groups = await response.json();
+        console.log(this.groups);
       }
     } catch (error) {
       console.error('Nie udało się pobrać grup:', error);
