@@ -180,7 +180,6 @@ export class AppAdminsGroups extends LitElement {
     }
   }
 
-  // FUNKCJA WYLOGOWYWANIA
   private async handleLogout() {
     this.loggingOut = true;
     try {
@@ -212,7 +211,6 @@ export class AppAdminsGroups extends LitElement {
         box-sizing: border-box;
       }
 
-      /* STYLE DLA WYLOGOWYWANIA */
       .top-bar {
         display: flex;
         justify-content: flex-end;
@@ -222,13 +220,13 @@ export class AppAdminsGroups extends LitElement {
       sl-button.logout-btn::part(base) {
         background-color: var(--color-wood-dark);
         border-color: var(--color-wood-dark);
-        color: white !important;
+        color: var(--color-sand-light) !important;
         font-weight: 600;
         border-radius: 8px;
         transition: filter 0.2s;
       }
       sl-button.logout-btn::part(label), sl-button.logout-btn::part(prefix) {
-        color: white !important;
+        color: var(--color-sand-light) !important;
       }
       sl-button.logout-btn::part(base):hover {
         filter: brightness(1.2);
@@ -254,9 +252,29 @@ export class AppAdminsGroups extends LitElement {
       sl-tab[active]::part(base) { font-weight: bold; border-bottom-color: var(--color-wood-dark); color: var(--color-wood-dark); background-color: var(--color-sand-light); }
       sl-tab-panel::part(base) { padding: 25px 20px; }
       form { display: flex; flex-direction: column; gap: 15px; }
-      sl-input, sl-textarea { --sl-input-color: var(--color-wood-dark); --sl-input-label-color: var(--color-wood-dark); --sl-input-border-color: var(--color-wood-medium); --sl-input-border-color-hover: var(--color-wood-dark); --sl-input-border-color-focus: var(--color-wood-dark); }
-      sl-input::part(base), sl-textarea::part(base) { background-color: var(--color-sand-light) !important; transition: box-shadow 0.2s ease; }
-      sl-input::part(base):focus-within, sl-textarea::part(base):focus-within { box-shadow: 0 0 0 3px rgba(127, 69, 29, 0.2) !important; }
+      sl-input, sl-textarea {
+        --sl-input-color: var(--color-wood-dark);
+        --sl-input-color-hover: var(--color-wood-dark);
+        --sl-input-color-focus: var(--color-wood-dark);
+        --sl-input-label-color: var(--color-wood-dark);
+        --sl-input-border-color: var(--color-wood-medium);
+        --sl-input-border-color-hover: var(--color-wood-dark);
+        --sl-input-border-color-focus: var(--color-wood-dark);
+      }
+      sl-input::part(base), sl-textarea::part(base) {
+        background-color: var(--color-sand-light) !important;
+        transition: box-shadow 0.2s ease;
+      }
+      sl-input::part(base):focus-within, sl-textarea::part(base):focus-within {
+        box-shadow: 0 0 0 3px rgba(127, 69, 29, 0.2) !important;
+      }
+      sl-input::part(input), sl-textarea::part(textarea) {
+        color: var(--color-wood-dark) !important;
+      }
+      sl-input::part(input):hover, sl-input::part(input):focus,
+      sl-textarea::part(textarea):hover, sl-textarea::part(textarea):focus {
+        color: var(--color-wood-dark) !important;
+      }
       .btn-back::part(base) { background-color: var(--color-wood-dark); border-color: var(--color-wood-dark); border-radius: 8px; transition: all 0.2s ease; }
       .btn-back::part(base):hover { background-color: var(--color-wood-medium); border-color: var(--color-wood-medium); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(127, 69, 29, 0.25); }
       .btn-back::part(label), .btn-back::part(prefix) { color: var(--color-sand-light) !important; }
@@ -279,8 +297,7 @@ export class AppAdminsGroups extends LitElement {
   renderSelectionView() {
     return html`
       <div>
-        <h2 class="header-title">Z której grupy jesteś?</h2>
-        <p class="header-subtitle">Wybierz swoją grupę, aby zarządzać jej profilem i wydarzeniami.</p>
+        <h2 class="header-title">Wybierz grupę</h2>
       </div>
 
       <div class="list-container">

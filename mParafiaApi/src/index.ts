@@ -246,6 +246,151 @@ app.post('/api/upload', verifyAdmin, upload.single('photo'), (req: AuthRequest, 
   res.json({ url: fileUrl });
 });
 
+
+// -- ADMINI (Zarządzanie administratorami) --
+
+app.get('/api/admins', verifySuperAdmin, async (req: AuthRequest, res: Response) => {
+  try {
+    const admins = await prisma.admin.findMany({
+      include: { managedGroups: true }
+    });
+
+    // ZAWSZE usuwamy hasła przed wysłaniem danych na frontend!
+    const safeAdmins = admins.map(a => {
+      const { passwordHash, ...rest } = a;
+      return rest;
+    });
+
+    res.json(safeAdmins);
+  } catch (error) {
+    res.status(500).json({ error: "Błąd pobierania administratorów" });
+  }
+});
+
+app.post('/api/admins', verifySuperAdmin, async (req: AuthRequest, res: Response): Promise<any> => {
+  try {
+    const { login, password, isSuperAdmin, allowedGroupIds } = req.body;
+
+    if (!login || !password) {
+      return res.status(400).json({ error: "Login i hasło są wymagane dla nowego admina!" });
+    }
+
+    // Sprawdzamy, czy admin o takim loginie już istnieje
+    const existingAdmin = await prisma.admin.findUnique({ where: { login } });
+    if (existingAdmin) {
+      return res.status(400).json({ error: "Użytkownik o takim loginie już istnieje." });
+    }
+
+    // Hashowanie hasła
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(password, salt);
+
+    const newAdmin = await prisma.admin.create({
+      data: {
+        login,
+        passwordHash,
+        isSuperAdmin: isSuperAdmin || false,
+        // Tworzymy relacje do grup (tylko jeśli podano)
+        managedGroups: {
+          create: (allowedGroupIds || []).map((id: number) => ({
+            group: { connect: { id: Number(id) } }
+          }))
+        }
+      }
+    });
+
+    const { passwordHash: _, ...safeAdmin } = newAdmin;
+    res.json(safeAdmin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Nie udało się utworzyć administratora." });
+  }
+});
+
+app.put('/api/admins/:id', verifySuperAdmin, async (req: AuthRequest, res: Response): Promise<any> => {
+  try {
+    const id = Number(req.params.id);
+    const { login, isSuperAdmin, allowedGroupIds } = req.body;
+
+    const updateData: any = {
+      login,
+      isSuperAdmin: isSuperAdmin || false,
+      managedGroups: {
+        deleteMany: {}, // Najpierw usuwamy stare przypisania
+        create: (allowedGroupIds || []).map((gId: number) => ({
+          group: { connect: { id: Number(gId) } }
+        }))
+      }
+    };
+
+    const updatedAdmin = await prisma.admin.update({
+      where: { id },
+      data: updateData
+    });
+
+    const { passwordHash: _, ...safeAdmin } = updatedAdmin;
+    res.json(safeAdmin);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Nie udało się zaktualizować administratora." });
+  }
+});
+
+app.delete('/api/admins/:id', verifySuperAdmin, async (req: AuthRequest, res: Response): Promise<any> => {
+  try {
+    const id = Number(req.params.id);
+    if (req.admin?.adminId === id) {
+      return res.status(400).json({ error: "Nie możesz usunąć własnego konta w ten sposób!" });
+    }
+
+    await prisma.admin.delete({ where: { id } });
+    res.json({ message: "Administrator został usunięty." });
+  } catch (error) {
+    res.status(500).json({ error: "Nie udało się usunąć administratora." });
+  }
+});
+
+app.post('/api/admin/change-password', async (req: Request, res: Response): Promise<any> => {
+  const { login, currentPassword, newPassword } = req.body;
+
+  if (!login || !currentPassword || !newPassword) {
+    return res.status(400).json({ error: "Wypełnij wszystkie pola" });
+  }
+
+  try {
+    const admin = await prisma.admin.findUnique({
+      where: { login },
+      include: { managedGroups: true }
+    });
+
+    if (!admin) return res.status(401).json({ error: "Błędne dane logowania" });
+    const isMatch = await bcrypt.compare(currentPassword, admin.passwordHash);
+    if (!isMatch) return res.status(401).json({ error: "Aktualne hasło jest nieprawidłowe!" });
+    const salt = await bcrypt.genSalt(10);
+    const newPasswordHash = await bcrypt.hash(newPassword, salt);
+
+    await prisma.admin.update({
+      where: { id: admin.id },
+      data: { passwordHash: newPasswordHash }
+    });
+    const allowedGroupIds = admin.managedGroups.map((ag: any) => ag.groupId);
+    const payload = { adminId: admin.id, isSuperAdmin: admin.isSuperAdmin, allowedGroupIds };
+    const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '12h' });
+
+    res.cookie('admin_token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 12 * 60 * 60 * 1000
+    });
+
+    res.json({ message: "Hasło zmienione i zalogowano!", isSuperAdmin: admin.isSuperAdmin, allowedGroupIds });
+  } catch (error) {
+    res.status(500).json({ error: "Błąd serwera podczas zmiany hasła" });
+  }
+});
+
+
 // -- GRUPY --
 app.post('/api/groups', verifyAdmin, async (req: AuthRequest, res: Response) => {
   try {

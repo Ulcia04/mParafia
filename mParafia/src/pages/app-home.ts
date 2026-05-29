@@ -52,6 +52,11 @@ export class AppHome extends LitElement {
         max-width: 500px;
       }
 
+      /* --- NOWA KLASA: KAFELEK NA CAŁĄ SZEROKOŚĆ --- */
+      .full-width {
+        grid-column: span 2;
+      }
+
       /* --- STYLE DLA POJEDYNCZEGO KAFELKA --- */
       sl-button.tile-button::part(base) {
         background-color: var(--color-wood-dark);
@@ -150,9 +155,9 @@ export class AppHome extends LitElement {
           <img src="./icons/icon_512.png" class="logo-img" alt="Ikona mParafia">
         </div>
 
-<div class="grid-container">
+        <div class="grid-container">
 
-          <sl-button class="tile-button" @click="${() => this.handleNavigation('/ogloszenia')}">
+          <sl-button class="tile-button full-width" @click="${() => this.handleNavigation('/ogloszenia')}">
             <sl-icon name="megaphone-fill"></sl-icon>
             <span>Ogłoszenia</span>
           </sl-button>
@@ -192,17 +197,11 @@ export class AppHome extends LitElement {
             <span>Dojazd</span>
           </sl-button>
 
-          <sl-button class="tile-button" @click="${() => this.handleNavigation('/dokumenty')}">
-            <sl-icon name="file-earmark-text-fill"></sl-icon>
-            <span>Dokumenty</span>
-          </sl-button>
-
           <sl-button class="tile-button" @click="${() => this.handleNavigation('/qa')}">
             <sl-icon name="chat-quote-fill"></sl-icon>
             <span>Pytania (Q&A)</span>
           </sl-button>
 
-        </div>
         </div>
 
         ${this.deferredPrompt ? html`

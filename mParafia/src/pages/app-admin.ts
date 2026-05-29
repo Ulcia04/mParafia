@@ -14,6 +14,7 @@ import './app-admin-announcements';
 import './app-admin-events';
 import './app-admin-qa';
 import './app-admin-kancelaria';
+import './app-admin-admins';
 
 @customElement('app-admin')
 export class AppAdmin extends LitElement {
@@ -45,6 +46,7 @@ async firstUpdated() {
     else if (path.includes('/announcements')) tabGroup.show('announcements');
     else if (path.includes('/qa')) tabGroup.show('qa');
     else if (path.includes('/kancelaria')) tabGroup.show('kancelaria');
+    else if (path.includes('/admini')) tabGroup.show('admini');
     else tabGroup.show('groups');
   }
 
@@ -62,21 +64,19 @@ async firstUpdated() {
       :host { display: block; padding: 10px; max-width: 900px; width: 100%; margin: 0 auto; box-sizing: border-box; }
       .admin-wrapper { position: relative; width: 100%; }
       .btn-logout {
-        margin-left: auto; /* Wypycha przycisk do prawej */
+        margin-left: auto;
         margin-right: 15px;
-        align-self: center; /* Wyrównuje pionowo do środka */
+        align-self: center;
       }
 
       .btn-logout::part(base) {
         background-color: var(--color-wood-dark);
         border-color: var(--color-wood-dark);
-        /* Wymuszamy jasny kolor tekstu */
         color: var(--color-sand-light) !important;
         font-weight: 600;
         transition: all 0.3s ease;
       }
 
-      /* Wymuszamy kolor dla etykiety i ikony */
       .btn-logout::part(label),
       .btn-logout::part(prefix) {
         color: var(--color-sand-light) !important;
@@ -121,6 +121,7 @@ async firstUpdated() {
             <sl-tab slot="nav" panel="announcements"><sl-icon name="megaphone-fill" style="margin-right: 8px;"></sl-icon> Ogłoszenia</sl-tab>
             <sl-tab slot="nav" panel="qa"><sl-icon name="chat-quote-fill" style="margin-right: 8px;"></sl-icon> Q&A</sl-tab>
             <sl-tab slot="nav" panel="kancelaria"><sl-icon name="journal-bookmark-fill" style="margin-right: 8px;"></sl-icon> Kancelaria</sl-tab>
+            <sl-tab slot="nav" panel="admini"><sl-icon name="shield-lock-fill" style="margin-right: 8px;"></sl-icon> Admini</sl-tab>
 
             <sl-button slot="nav" class="btn-logout" size="small" ?loading="${this.loggingOut}" @click="${this.handleLogout}">
               <sl-icon slot="prefix" name="box-arrow-right"></sl-icon>
@@ -132,6 +133,7 @@ async firstUpdated() {
             <sl-tab-panel name="announcements"><app-admin-announcements></app-admin-announcements></sl-tab-panel>
             <sl-tab-panel name="qa"><app-admin-qa></app-admin-qa></sl-tab-panel>
             <sl-tab-panel name="kancelaria"><app-admin-kancelaria></app-admin-kancelaria></sl-tab-panel>
+            <sl-tab-panel name="admini"><app-admin-admins></app-admin-admins></sl-tab-panel>
           </sl-tab-group>
         </div>
       </div>

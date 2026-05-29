@@ -28,7 +28,25 @@ export class AppAdminQa extends LitElement {
       .question-card[style*="border-left"] { border-left: 6px solid var(--sl-color-warning-500) !important; }
       .q-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
       .date { font-size: 0.9rem; color: var(--color-wood-dark); opacity: 0.8; }
-      .content { font-size: 1.1rem; color: var(--color-wood-dark); font-weight: 500; margin-bottom: 15px; line-height: 1.5; }
+
+      /* --- POPRAWIONE STYLE DLA TREŚCI --- */
+      .content {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        font-size: 1.1rem;
+        color: var(--color-wood-dark);
+        font-weight: 500;
+        margin-bottom: 15px;
+        line-height: 1.5;
+      }
+      .content sl-icon {
+        font-size: 1.4rem;
+        flex-shrink: 0;
+        margin-top: 2px;
+      }
+      /* ---------------------------------- */
+
       .answer-section { background: var(--color-cookie-medium); padding: 15px 20px; border-radius: 8px; margin-bottom: 15px; color: var(--color-wood-dark); border-left: 4px solid var(--sl-color-success-600); line-height: 1.5; }
       .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 15px;}
       sl-textarea { --sl-input-color: var(--color-wood-dark); --sl-input-color-hover: var(--color-wood-dark); --sl-input-color-focus: var(--color-wood-dark); --sl-input-label-color: var(--color-wood-dark); --sl-input-placeholder-color: var(--color-wood-medium); --sl-input-background-color: var(--color-sand-light); --sl-input-background-color-hover: var(--color-sand-light); --sl-input-background-color-focus: var(--color-sand-light); --sl-input-border-color: var(--color-wood-medium); --sl-input-border-color-hover: var(--color-wood-medium); --sl-input-border-color-focus: var(--color-wood-medium); }
@@ -98,14 +116,17 @@ export class AppAdminQa extends LitElement {
         <div class="question-card" style="border-left: 5px solid #d97706;">
           <div class="q-header"><sl-badge variant="warning">Nowe</sl-badge><span class="date">${new Date(q.createdAt).toLocaleString('pl-PL')}</span></div>
           ${this.editingId === q.id ? html`
-            <sl-textarea id="question-${q.id}" label="Treść pytania (${q.author || 'Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
+            <sl-textarea id="question-${q.id}" label="Treść pytania (${ q.author || ' Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
             <sl-textarea id="answer-${q.id}" label="Twoja odpowiedź" placeholder="Wpisz odpowiedź..." rows="3"></sl-textarea>
             <div class="actions">
               <sl-button size="small" class="btn-cancel" @click=${() => this.editingId = null}>Anuluj</sl-button>
               <sl-button size="small" class="btn-save" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id, q.content)}>Odpowiedz i publikuj</sl-button>
             </div>
           ` : html`
-            <div class="content"><sl-icon name="person-circle"></sl-icon><strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}</div>
+            <div class="content">
+              <sl-icon name="person-circle"></sl-icon>
+              <div><strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}</div>
+            </div>
             <sl-textarea id="answer-${q.id}" placeholder="Twoja odpowiedź..." rows="3"></sl-textarea>
             <div class="actions">
               <sl-button size="small" class="btn-delete" @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>
@@ -123,14 +144,17 @@ export class AppAdminQa extends LitElement {
         <div class="question-card">
           <div class="q-header"><sl-badge variant="success">Widoczne dla wszystkich</sl-badge><span class="date">${new Date(q.createdAt).toLocaleString('pl-PL')}</span></div>
           ${this.editingId === q.id ? html`
-            <sl-textarea id="question-${q.id}" label="Treść pytania (${q.author || 'Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
+            <sl-textarea id="question-${q.id}" label="Treść pytania (${ q.author || ' Anonimowy'})" .value=${q.content} rows="2" style="margin-bottom: 15px;"></sl-textarea>
             <sl-textarea id="answer-${q.id}" label="Odpowiedź duszpasterza" .value=${q.answer || ''} rows="3"></sl-textarea>
             <div class="actions">
               <sl-button size="small" class="btn-cancel" @click=${() => this.editingId = null}>Anuluj</sl-button>
               <sl-button size="small" class="btn-save" ?loading=${this.isSubmitting} @click=${() => this.handleSave(q.id, q.content)}>Zapisz poprawkę</sl-button>
             </div>
           ` : html`
-            <div class="content"><sl-icon name="person-circle"></sl-icon><strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}</div>
+            <div class="content">
+              <sl-icon name="person-circle"></sl-icon>
+              <div><strong>${q.author ? q.author : 'Anonimowy'}:</strong> ${q.content}</div>
+            </div>
             <div class="answer-section"><strong>Odpowiedź duszpasterza:</strong><br/>${q.answer}</div>
             <div class="actions">
               <sl-button size="small" class="btn-delete" @click=${() => this.handleDelete(q.id)}>Usuń</sl-button>

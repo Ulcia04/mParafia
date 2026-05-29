@@ -227,6 +227,12 @@ export class AppSettings extends LitElement {
     if (this.isDarkMode) {
       return html`
         <div class="dark-mode-overlay">
+          Odpowiedział im więc Jezus: «Jeszcze przez krótki czas przebywa wśród was światłość. </br>
+          Chodźcie, dopóki macie światłość, aby was ciemność nie ogarnęła. </br>
+          A kto chodzi w ciemności, nie wie, dokąd idzie. </br>
+          Dopóki światłość macie, wierzcie w światłość, abyście byli synami światłości». </br>
+          To powiedział Jezus i odszedł, i ukrył się przed nimi. </br>
+          J 12, 35-36
           <h2>Ciemny motyw nie istnieje i nie będzie istniał, bo te kolorki w jasnym są za ładne! 😊</h2>
           <sl-button size="large" @click=${() => this.isDarkMode = false}>
             Wróć na jasną stronę mocy

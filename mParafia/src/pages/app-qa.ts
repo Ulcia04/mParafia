@@ -182,7 +182,7 @@ export class AppQa extends LitElement {
 
  async fetchQuestions() {
     try {
-      const res = await apiFetch('/questions/all');
+      const res = await apiFetch('/questions');
 
       if (res.ok) {
         const allQuestions: Question[] = await res.json();

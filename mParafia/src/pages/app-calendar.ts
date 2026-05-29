@@ -11,7 +11,6 @@ import '@shoelace-style/shoelace/dist/components/button/button.js';
 import { styles as sharedStyles } from '../styles/shared-styles';
 import '../components/calendar-item';
 
-// Zaktualizowana struktura relacji grupy z backendu (Prisma GroupEvent)
 export interface GroupRelation {
   groupId: number;
   eventId: number;
@@ -31,7 +30,7 @@ export interface ParishEvent {
   startTime: string;
   location: string;
   category?: string;
-  groups?: GroupRelation[]; // Zmiana z groupId na tablicę relacji grup
+  groups?: GroupRelation[];
 }
 
 type CalendarView = 'month' | 'week' | 'day';
@@ -46,7 +45,6 @@ export class AppCalendar extends LitElement {
   @state() private displayMode: 'all' | 'events' | 'intentions' = 'all';
   @state() private firstDayOfWeek = localStorage.getItem('firstDay') || 'monday';
 
-  // Referencja do funkcji zbindowanej, zapobiegająca wyciekom pamięci
   private boundRefreshSettings = this.refreshSettings.bind(this);
 
   connectedCallback() {
@@ -109,16 +107,12 @@ export class AppCalendar extends LitElement {
       filtered = filtered.filter(e => e.title.startsWith('Intencja:'));
     }
 
-    // POPRAWIONE FILTROWANIE GRUP DLA RELACJI WIELE-DO-WIELU
     if (this.showOnlyMyGroups && this.displayMode !== 'intentions') {
       const saved = localStorage.getItem('myGroups');
       const myGroupIds = saved ? JSON.parse(saved).map(Number) : [];
 
       filtered = filtered.filter(e => {
-        // Główne wydarzenia bez przypisanej żadnej grupy pokazujemy zawsze
         if (!e.groups || e.groups.length === 0) return true;
-
-        // Wydarzenie zostaje, jeśli chociaż jedna z jego grup jest zaznaczona przez użytkownika
         return e.groups.some(ge => myGroupIds.includes(Number(ge.groupId)));
       });
     }
