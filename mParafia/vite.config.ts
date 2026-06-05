@@ -3,7 +3,8 @@ import { VitePWA } from 'vite-plugin-pwa';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/mParafia/",
+  // base: "/mParafia/",
+  base: "/",
   build: {
     sourcemap: true,
     target: ["esnext"],
@@ -15,7 +16,7 @@ export default defineConfig({
       manifest: false,
       workbox: {
         globPatterns: ['**/*.{html,js,css,json,png,ico,svg,jpg}'],
-        navigateFallback: '/mParafia/index.html',
+        navigateFallback: '/index.html',
 
         runtimeCaching: [
           {

@@ -242,7 +242,8 @@ app.post('/api/upload', verifyAdmin, upload.single('photo'), (req: AuthRequest, 
     return res.status(400).json({ error: 'Brak pliku' });
   }
   const port = process.env.PORT || 3000;
-  const fileUrl = `${req.protocol}://${req.hostname}:${port}/uploads/${req.file.filename}`;
+  // const fileUrl = `${req.protocol}://${req.hostname}:${port}/uploads/${req.file.filename}`;
+  const fileUrl = `/uploads/${req.file.filename}`;
   res.json({ url: fileUrl });
 });
 
