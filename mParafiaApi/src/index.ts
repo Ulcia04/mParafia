@@ -21,9 +21,17 @@ const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 const adapter = new PrismaPg(pool);
 const prisma = new PrismaClient({ adapter });
 
+// // MIDDLEWARE
+// app.use(cors({
+//   origin: true,
+//   credentials: true
+// }));
+// app.use(express.json());
+// app.use(cookieParser());
+
 // MIDDLEWARE
 app.use(cors({
-  origin: true,
+  origin: ['https://www.app.mbkp.eu', 'https://app.mbkp.eu', 'http://localhost:5173'],
   credentials: true
 }));
 app.use(express.json());
