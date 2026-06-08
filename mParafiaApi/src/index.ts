@@ -56,7 +56,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads')));
+// app.use('/uploads', express.static(path.join(__dirname, '../../public/uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+
 
 // --- TYPY DLA TYPESCRIPT ---
 interface AdminPayload {
