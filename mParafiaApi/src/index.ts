@@ -388,10 +388,16 @@ app.post('/api/admin/change-password', async (req: Request, res: Response): Prom
     const payload = { adminId: admin.id, isSuperAdmin: admin.isSuperAdmin, allowedGroupIds };
     const token = jwt.sign(payload, process.env.JWT_SECRET as string, { expiresIn: '12h' });
 
+    // res.cookie('admin_token', token, {
+    //   httpOnly: true,
+    //   secure: process.env.NODE_ENV === 'production',
+    //   sameSite: 'strict',
+    //   maxAge: 12 * 60 * 60 * 1000
+    // });
     res.cookie('admin_token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'strict',
+      secure: true,
+      sameSite: 'none',
       maxAge: 12 * 60 * 60 * 1000
     });
 
