@@ -40,7 +40,9 @@ app.use(express.json());
 app.use(cookieParser());
 
 // UPLOAD PLIKÓW
-const uploadDir = path.join(__dirname, '../../public/uploads');
+// const uploadDir = path.join(__dirname, '../../public/uploads');
+const uploadDir = path.join(__dirname, '../public/uploads');
+
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
