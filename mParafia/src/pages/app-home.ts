@@ -10,7 +10,7 @@ export class AppHome extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     const event = new CustomEvent('change-title', {
-      detail: { title: 'Strona Główna' },
+      detail: { title: 'Strona Główna ZAMIANA NA POTRZEBY OBRONY PROJEKTU' },
       bubbles: true,
       composed: true
     });

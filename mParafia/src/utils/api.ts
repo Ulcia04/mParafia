@@ -6,14 +6,17 @@ const API_BASE_URL = 'https://mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azur
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const isFormData = options.body instanceof FormData;
   const headers: any = { ...options.headers };
-
+  const token = localStorage.getItem('admin_token');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
   if (!isFormData && !headers['Content-Type']) {
     headers['Content-Type'] = 'application/json';
   }
 
   const fetchOptions: RequestInit = {
     ...options,
-    credentials: 'include',
+    credentials: 'omit',
     headers,
   };
 

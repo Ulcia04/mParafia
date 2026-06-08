@@ -9,7 +9,7 @@ export class AppSpowiedz extends LitElement {
   connectedCallback() {
     super.connectedCallback();
     this.dispatchEvent(new CustomEvent('change-title', {
-      detail: { title: 'Sakrament Pokuty' },
+      detail: { title: 'Sakrament Pokuty i Pojednania' },
       bubbles: true, composed: true
     }));
   }

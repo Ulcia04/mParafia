@@ -109,7 +109,7 @@ export class AppAdminLogin extends LitElement {
           return;
         }
 
-        const response = await apiFetch('admin/change-password', {
+        const response = await apiFetch('/admin/change-password', {
           method: 'POST',
           body: JSON.stringify({
             login: this.loginValue,
@@ -128,7 +128,7 @@ export class AppAdminLogin extends LitElement {
 
       } else {
         // STANDARDOWE LOGOWANIE
-        const response = await apiFetch('admin/login', {
+        const response = await apiFetch('/admin/login', {
           method: 'POST',
           body: JSON.stringify({ login: this.loginValue, password: this.passwordValue })
         });
@@ -150,6 +150,9 @@ export class AppAdminLogin extends LitElement {
 
   private handleSuccessLogin(data: any) {
     localStorage.setItem('isAdmin', 'true');
+    if (data.token) {
+      localStorage.setItem('admin_token', data.token);
+    }
     if (data.isSuperAdmin) {
       localStorage.setItem('isSuperAdmin', 'true');
     } else {
