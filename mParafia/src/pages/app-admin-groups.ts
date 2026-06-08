@@ -126,7 +126,7 @@ export class AppAdminGroups extends LitElement {
           <div style="display: flex; flex-direction: column; gap: 8px;">
             <label style="font-size: 0.9rem; color: var(--color-wood-dark);">Logo grupy (Zdjęcie z komputera)</label>
             <input type="file" accept="image/*" @change=${this.handleFileUpload} />
-            ${this.editingGroup?.photoUrl ? html`<img src="${this.editingGroup.photoUrl}" style="max-width: 100px; border-radius: 8px; border: 1px solid var(--color-wood-medium);" />` : ''}
+            ${this.editingGroup?.photoUrl ? html`<img src="${this.editingGroup.photoUrl.replace('http://localhost:3000', 'https://mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net')}" style="max-width: 100px; border-radius: 8px; border: 1px solid var(--color-wood-medium);" />` : ''}
           </div>
           <sl-textarea label="Opis" .value=${this.editingGroup?.description} @sl-input=${(e:any) => this.editingGroup.description = e.target.value}></sl-textarea>
         </form>

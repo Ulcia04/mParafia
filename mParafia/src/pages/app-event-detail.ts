@@ -46,8 +46,8 @@ export class AppEventDetail extends LitElement {
     try {
       console.log('🔍 1. Szukam wydarzenia z ID:', this.eventId);
 
-      const res = await fetch('http://localhost:3000/api/events/all');
-
+      // const res = await fetch('http://localhost:3000/api/events/all');
+      const res = await fetch('https://mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net/api/events/all');
       if (res.ok) {
         const allEvents: ParishEvent[] = await res.json();
         console.log('📦 2. Pobrane wszystkie wydarzenia z bazy:', allEvents);

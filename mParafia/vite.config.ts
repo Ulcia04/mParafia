@@ -19,33 +19,59 @@ export default defineConfig({
         navigateFallback: '/index.html',
 
         runtimeCaching: [
+          // {
+          //   urlPattern: /^http:\/\/localhost:3000\/api\/.*/i,
+          //   handler: 'NetworkFirst',
+          //   options: {
+          //     cacheName: 'mparafia-api-cache',
+          //     expiration: {
+          //       maxEntries: 100,
+          //       maxAgeSeconds: 60 * 60 * 24 * 7 // Trzymaj je przez 7 dni
+          //     },
+          //     cacheableResponse: {
+          //       statuses: [0, 200]
+          //     }
+          //   }
+          // },
           {
-            urlPattern: /^http:\/\/localhost:3000\/api\/.*/i,
-            handler: 'NetworkFirst',
-            options: {
-              cacheName: 'mparafia-api-cache',
-              expiration: {
-                maxEntries: 100,
-                maxAgeSeconds: 60 * 60 * 24 * 7 // Trzymaj je przez 7 dni
-              },
-              cacheableResponse: {
-                statuses: [0, 200]
-              }
-            }
+        // Reguła dla API (zapaże zapytania zawierające /api/)
+        urlPattern: /.*\/api\/.*/i,
+        handler: 'NetworkFirst',
+        options: {
+          cacheName: 'mparafia-api-cache',
+          expiration: {
+            maxEntries: 100,
+            maxAgeSeconds: 60 * 60 * 24 * 7 // 7 dni
           },
+          cacheableResponse: { statuses: [0, 200] }
+        }
+      },
           // NOWA REGUŁA DLA WGRANYCH ZDJĘĆ:
+          // {
+          //   urlPattern: /^http:\/\/localhost:3000\/uploads\/.*/i,
+          //   handler: 'CacheFirst',
+          //   options: {
+          //     cacheName: 'mparafia-images-cache',
+          //     expiration: {
+          //       maxEntries: 50,
+          //       maxAgeSeconds: 60 * 60 * 24 * 30 // Trzymaj je przez 30 dni
+          //     },
+          //     cacheableResponse: { statuses: [0, 200] }
+          //   }
+          // }
           {
-            urlPattern: /^http:\/\/localhost:3000\/uploads\/.*/i,
-            handler: 'CacheFirst',
-            options: {
-              cacheName: 'mparafia-images-cache',
-              expiration: {
-                maxEntries: 50,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // Trzymaj je przez 30 dni
-              },
-              cacheableResponse: { statuses: [0, 200] }
-            }
-          }
+        // Reguła dla wgranych zdjęć (zapaże zapytania zawierające /uploads/)
+        urlPattern: /.*\/uploads\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'mparafia-images-cache',
+          expiration: {
+            maxEntries: 50,
+            maxAgeSeconds: 60 * 60 * 24 * 30 // 30 dni
+          },
+          cacheableResponse: { statuses: [0, 200] }
+        }
+      }
         ]
       },
       devOptions: {

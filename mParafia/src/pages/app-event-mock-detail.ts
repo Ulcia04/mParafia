@@ -15,7 +15,7 @@ export class AppEventMockDetail extends LitElement {
   }
 
   private _navHome() {
-    window.history.pushState({}, '', '/mParafia/');
+    window.history.pushState({}, '', '/');
     window.dispatchEvent(new PopStateEvent('popstate'));
   }
 

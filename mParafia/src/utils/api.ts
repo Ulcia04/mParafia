@@ -1,5 +1,7 @@
 // const API_BASE_URL = (import.meta as any).env.VITE_API_URL || 'http://localhost:3000/api';
-const API_BASE_URL = 'mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net/api';
+// const API_BASE_URL = 'mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net/api';
+
+const API_BASE_URL = 'https://mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net/api';
 
 export async function apiFetch(endpoint: string, options: RequestInit = {}) {
   const isFormData = options.body instanceof FormData;

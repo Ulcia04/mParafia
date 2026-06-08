@@ -221,7 +221,7 @@ export class AppGroupDetail extends LitElement {
                       .time="${timeStr}"
                       .name="${event.title}"
                       .groupColor="${this.group?.color || ''}"
-                      .targetUrl="/mParafia/wydarzenie?id=${event.id}"
+                      .targetUrl="/wydarzenie?id=${event.id}"
                       category="grupa"
                       multiline
                     ></calendar-item>

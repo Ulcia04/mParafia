@@ -156,7 +156,7 @@ export class AppEvents extends LitElement {
                   .name="${displayName}"
                   .category="${category}"
                   .groupColor="${color}"
-                  .targetUrl="/mParafia/wydarzenie?id=${event.id}"
+                  .targetUrl="/wydarzenie?id=${event.id}"
                   multiline
                 ></calendar-item>
               `;

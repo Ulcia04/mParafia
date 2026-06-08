@@ -142,11 +142,11 @@ export class AppGroups extends LitElement {
     return html`
       <div class="groups-grid">
         ${this.groups.map(group => html`
-          <div class="group-card" @click=${() => window.location.href = `/mParafia/grupa?id=${group.id}`}>
+         <div class="group-card" @click=${() => window.location.href = `/grupa?id=${group.id}`}>
 
-            <div class="group-photo">
+         <div class="group-photo">
               ${group.photoUrl
-                ? html`<img src="${group.photoUrl}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`
+                ? html`<img src="${group.photoUrl.replace('http://localhost:3000', 'https://mparafiaapi-a9g7ewgvbhhce6fa.polandcentral-01.azurewebsites.net')}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;" />`
                 : html`<sl-icon name="people-fill" style="font-size: 24px; color: var(--color-wood-dark);"></sl-icon>`
               }
             </div>

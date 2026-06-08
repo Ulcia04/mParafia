@@ -278,7 +278,7 @@ export class AppSettings extends LitElement {
         <sl-switch .checked=${this.isDarkMode} @sl-change=${this.handleDarkModeToggle}>Ciemny motyw</sl-switch>
       </div>
 
-      <sl-button variant="primary" class="btn-login" href="/mParafia/admin">
+      <sl-button variant="primary" class="btn-login" href="/admin">
         <sl-icon slot="prefix" name="box-arrow-in-right"></sl-icon>
         Panel Administratora
       </sl-button>
