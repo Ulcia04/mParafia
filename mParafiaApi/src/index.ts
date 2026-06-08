@@ -75,10 +75,34 @@ if (!JWT_SECRET) {
 }
 
 // --- STRAŻNICY (MIDDLEWARE AUTORYZACJI) ---
-const verifyAdmin = (req: AuthRequest, res: Response, next: NextFunction): any => {
-  const token = req.cookies.admin_token;
-  if (!token) return res.status(401).json({ error: "Brak dostępu - zaloguj się" });
+// const verifyAdmin = (req: AuthRequest, res: Response, next: NextFunction): any => {
+//   const token = req.cookies.admin_token;
+//   if (!token) return res.status(401).json({ error: "Brak dostępu - zaloguj się" });
 
+//   try {
+//     const decoded = jwt.verify(token, JWT_SECRET) as AdminPayload;
+//     req.admin = decoded;
+//     next();
+//   } catch (err) {
+//     return res.status(401).json({ error: "Nieprawidłowy lub wygasły token" });
+//   }
+// };
+const verifyAdmin = (req: AuthRequest, res: Response, next: NextFunction): any => {
+  // 1. Domyślnie próbujemy pobrać token ze starych ciasteczek
+  let token = req.cookies?.admin_token;
+
+  // 2. SPRAWDZAMY NAGŁÓWEK: Zobacz, czy frontend przysłał bilet w nagłówku "Authorization"
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    token = authHeader.split(' ')[1]; // Wyciąga sam ciąg znaków tokenu, odcinając słowo "Bearer "
+  }
+
+  // 3. Jeśli tokenu nie ma ani w nagłówku, ani w ciasteczku – wyrzucamy błąd
+  if (!token) {
+    return res.status(401).json({ error: "Brak dostępu - zaloguj się" });
+  }
+
+  // 4. Weryfikacja tokenu (ten fragment zostaje dokładnie taki, jaki miałaś!)
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as AdminPayload;
     req.admin = decoded;
@@ -125,7 +149,8 @@ app.post('/api/admin/login', async (req: Request, res: Response): Promise<any> =
       maxAge: 12 * 60 * 60 * 1000
     });
 
-    res.json({ message: "Zalogowano", isSuperAdmin: admin.isSuperAdmin, allowedGroupIds });
+    // res.json({ message: "Zalogowano", isSuperAdmin: admin.isSuperAdmin, allowedGroupIds });
+    res.json({ message: "Zalogowano", isSuperAdmin: admin.isSuperAdmin, allowedGroupIds, token });
   } catch (error) {
     res.status(500).json({ error: "Błąd serwera podczas logowania" });
   }
